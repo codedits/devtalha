@@ -11,8 +11,8 @@ export default function Footer({ data }: { data?: FooterSection | null }) {
   const email = data?.email ?? 'hello@talha.com';
 
   return (
-    <footer className="w-full px-4 pb-4 cv-auto mt-20 relative z-10 section-dark">
-      <div className="w-full bg-[#0a0a0a] rounded-[2rem] md:rounded-[3rem] overflow-hidden pt-24 pb-12">
+    <footer className="w-full px-4 pb-4 cv-auto mt-20 relative z-10 section-dark ">
+      <div className="w-full bg-[#000000] rounded-[2rem] md:rounded-[3rem] overflow-hidden pt-24 pb-12">
         <div className="container mx-auto px-6 md:px-8 max-w-7xl">
 
         <div className="flex flex-col lg:flex-row justify-between lg:items-start gap-16 lg:gap-0 mb-20 lg:mb-32 w-full mx-auto">

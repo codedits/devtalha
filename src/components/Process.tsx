@@ -69,13 +69,13 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground block">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/80 block">
             {label}
           </span>
         </motion.div>
         
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-border"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-white/15"
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ delay: 0.2, duration: 0.8 }}
@@ -91,7 +91,7 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
                 backgroundColor: "hsl(var(--card))",
                 transition: { duration: 0.3 }
               } : undefined}
-              className={`flex flex-col justify-between p-8 md:p-10 min-h-[300px] lg:min-h-[450px] bg-background group cursor-default border-b lg:border-b-0 ${idx !== 3 ? 'lg:border-r' : ''} border-border relative overflow-hidden`}
+              className={`flex flex-col justify-between p-8 md:p-10 min-h-[300px] lg:min-h-[450px] bg-background group cursor-default border-b lg:border-b-0 ${idx !== 3 ? 'lg:border-r' : ''} border-white/15 relative overflow-hidden`}
             >
               {/* Hover line accent */}
               <motion.div
@@ -104,13 +104,13 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
               {/* Card Top */}
               <div className="flex justify-between items-start">
                 <motion.span 
-                  className="text-xs font-bold tracking-[0.2em] text-muted-foreground/60 group-hover:text-foreground transition-colors duration-500"
+                  className="text-xs font-bold tracking-[0.2em] text-foreground/80 group-hover:text-foreground transition-colors duration-500"
                   whileHover={allowHover ? { x: 5 } : undefined}
                 >
                   {step.number}
                 </motion.span>
                 <motion.span 
-                  className="text-muted-foreground/40 group-hover:text-foreground transition-all duration-500"
+                  className="text-foreground/60 group-hover:text-foreground transition-all duration-500"
                   whileHover={allowHover ? {
                     x: 5,
                     y: -5,
@@ -132,7 +132,7 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
                   {step.title}
                 </motion.h3>
                 <motion.p 
-                  className="text-[14px] text-muted-foreground/70 leading-[1.7] group-hover:text-muted-foreground transition-colors duration-500"
+                  className="text-[15px] text-foreground/80 leading-[1.7] group-hover:text-foreground transition-colors duration-500 font-medium"
                   initial={{ opacity: 0.7 }}
                   whileHover={{ opacity: 1 }}
                 >

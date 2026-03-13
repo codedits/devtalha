@@ -76,7 +76,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
             transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
             <motion.span 
-              className="text-xs font-bold uppercase tracking-[0.2em] mb-12 text-muted-foreground block"
+              className="text-xs font-bold uppercase tracking-[0.2em] mb-12 text-foreground/70 block"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
               transition={{ delay: 0.2 }}
@@ -106,7 +106,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
             </motion.div>
             
             <motion.p 
-              className="text-[13px] text-muted-foreground leading-[1.6] max-w-[280px] mb-8"
+              className="text-[14px] text-foreground/80 leading-[1.6] max-w-[280px] mb-8 font-medium"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.4, duration: 0.6 }}
@@ -129,7 +129,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
           {/* Right Column (Accordion) */}
           <div className="lg:col-span-9 lg:mt-16">
             <motion.div 
-              className="border-t border-border"
+              className="border-t border-white/15"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
               transition={{ delay: 0.3, duration: 0.8 }}
@@ -140,7 +140,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                 return (
                   <motion.div 
                     key={service.id} 
-                    className="border-b border-border"
+                    className="border-b border-white/15"
                     initial={{ opacity: 0, y: 30 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ delay: 0.2 + idx * 0.1, duration: 0.6 }}
@@ -154,7 +154,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                       <motion.span 
                         className="block text-3xl md:text-5xl tracking-tight font-medium transition-all duration-500 text-foreground"
                         animate={{ 
-                          opacity: isOpen ? 1 : 0.7,
+                          opacity: isOpen ? 1 : 0.85,
                         }}
                       >
                         {service.title}
@@ -179,7 +179,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                         >
                           <div className="pb-8 pt-2">
                             <motion.p 
-                              className="text-[17px] text-muted-foreground max-w-2xl leading-relaxed mb-8"
+                              className="text-[18px] text-foreground/90 max-w-2xl leading-relaxed mb-8 font-medium"
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.1, duration: 0.4 }}
@@ -196,7 +196,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                               {service.tags.map((tag, tagIdx) => (
                                 <motion.span 
                                   key={tag} 
-                                  className="border border-border px-5 py-2 text-[11px] font-medium tracking-wider text-foreground/80 uppercase hover:bg-foreground hover:text-background transition-colors duration-300 cursor-default"
+                                  className="border border-white/20 px-5 py-2 text-[11px] font-medium tracking-wider text-foreground uppercase hover:bg-foreground hover:text-background transition-colors duration-300 cursor-default"
                                   initial={{ opacity: 0, y: 10 }}
                                   animate={{ opacity: 1, y: 0 }}
                                   transition={{ delay: 0.2 + tagIdx * 0.05 }}
