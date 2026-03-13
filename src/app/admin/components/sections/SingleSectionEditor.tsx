@@ -4,6 +4,7 @@ import { Loader2, Save } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 import { SectionForm } from "@/app/admin/components/sections/SectionForm";
+import { resolvePendingUploads } from "@/lib/admin/uploads";
 import type { SectionConfig, SectionRecord } from "@/lib/admin/types";
 
 type SingleSectionEditorProps = {
@@ -51,10 +52,12 @@ export function SingleSectionEditor({ config, addToast }: SingleSectionEditorPro
 
     setSaving(true);
     try {
+      const payloadToSave = await resolvePendingUploads(data, config.fields);
+
       const res = await fetch(`/api/admin/${config.section}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(payloadToSave),
       });
       const payload = await res.json();
       if (!res.ok) throw new Error(payload.error ?? "Save failed");

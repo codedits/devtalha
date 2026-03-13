@@ -31,6 +31,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { SectionForm } from "@/app/admin/components/sections/SectionForm";
+import { resolvePendingUploads } from "@/lib/admin/uploads";
 import type { SectionConfig, SectionRecord } from "@/lib/admin/types";
 
 type SortableRowProps = {
@@ -167,10 +168,6 @@ export function CollectionSectionEditor({ config, addToast }: CollectionSectionE
     const id = String(record.id ?? "");
     const isNew = !id;
     const method = isNew ? "POST" : "PUT";
-    const payloadRecord =
-      isNew && !String(record.id ?? "").trim()
-        ? (({ id: _id, ...rest }) => rest)(record)
-        : record;
     const tempId = `temp-${Date.now()}`;
     const optimistic = isNew ? { ...record, id: tempId } : record;
     const previousRows = rows;
@@ -180,6 +177,12 @@ export function CollectionSectionEditor({ config, addToast }: CollectionSectionE
 
     setSaving(true);
     try {
+      const resolvedRecord = await resolvePendingUploads(record, config.fields);
+      const payloadRecord =
+        isNew && !String(resolvedRecord.id ?? "").trim()
+          ? (({ id: _id, ...rest }) => rest)(resolvedRecord)
+          : resolvedRecord;
+
       const res = await fetch(`/api/admin/${config.section}`, {
         method,
         headers: { "Content-Type": "application/json" },

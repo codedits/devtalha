@@ -2,80 +2,34 @@
 
 import Image from "next/image";
 
-import { Eye, Loader2, Upload } from "lucide-react";
-import { useState } from "react";
+import { Eye, Upload, X } from "lucide-react";
+import type { ChangeEvent } from "react";
 
 import { cn } from "@/lib/utils";
 
 type ImageUploaderProps = {
   currentUrl: string;
-  onUpload: (url: string) => void;
-  onProgress?: (progress: number) => void;
+  onSelectFile: (file: File, previewUrl: string) => void;
+  onClear?: () => void;
   buttonLabel?: string;
+  selectedFileName?: string;
 };
 
-export function ImageUploader({ currentUrl, onUpload, onProgress, buttonLabel }: ImageUploaderProps) {
-  const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [error, setError] = useState<string | null>(null);
+export function ImageUploader({
+  currentUrl,
+  onSelectFile,
+  onClear,
+  buttonLabel,
+  selectedFileName,
+}: ImageUploaderProps) {
+  const hasPendingFile = Boolean(selectedFileName?.trim());
 
-  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelect = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
-    setUploading(true);
-    setProgress(0);
-    setError(null);
-    onProgress?.(0);
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const payload = await new Promise<{ url?: string }>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "/api/admin/upload");
-
-        xhr.upload.onprogress = (progressEvent) => {
-          if (!progressEvent.lengthComputable) return;
-          const nextProgress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-          setProgress(nextProgress);
-          onProgress?.(nextProgress);
-        };
-
-        xhr.onload = () => {
-          if (xhr.status < 200 || xhr.status >= 300) {
-            try {
-              const payload = JSON.parse(xhr.responseText) as { error?: string };
-              reject(new Error(payload.error ?? "Upload failed"));
-            } catch {
-              reject(new Error("Upload failed"));
-            }
-            return;
-          }
-
-          try {
-            resolve(JSON.parse(xhr.responseText) as { url?: string });
-          } catch {
-            reject(new Error("Invalid upload response"));
-          }
-        };
-
-        xhr.onerror = () => reject(new Error("Upload request failed"));
-        xhr.send(formData);
-      });
-
-      if (payload.url) {
-        onUpload(payload.url);
-      }
-    } catch (uploadError) {
-      setError(uploadError instanceof Error ? uploadError.message : "Upload failed");
-    } finally {
-      setUploading(false);
-      setProgress(0);
-      onProgress?.(0);
-      event.target.value = "";
-    }
+    const previewUrl = URL.createObjectURL(file);
+    onSelectFile(file, previewUrl);
+    event.target.value = "";
   };
 
   return (
@@ -97,25 +51,29 @@ export function ImageUploader({ currentUrl, onUpload, onProgress, buttonLabel }:
       )}
       <label
         className={cn(
-          "flex items-center justify-center gap-2 rounded-md border border-dashed px-4 py-2.5 text-xs font-semibold cursor-pointer transition-all",
-          uploading
-            ? "border-zinc-200 bg-zinc-100 text-zinc-400"
-            : "border-zinc-300 bg-white text-zinc-700 hover:border-zinc-400 hover:bg-zinc-50"
+          "flex items-center justify-center gap-2 rounded-md border border-dashed px-4 py-2.5 text-xs font-semibold cursor-pointer transition-all border-zinc-300 bg-white text-zinc-700 hover:border-zinc-400 hover:bg-zinc-50"
         )}
       >
-        {uploading ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
-        {uploading ? `Uploading ${progress}%` : buttonLabel ?? "Upload Image"}
-        <input type="file" accept="image/*" onChange={handleUpload} disabled={uploading} className="hidden" />
+        <Upload size={14} />
+        {hasPendingFile ? "Change Selected Image" : buttonLabel ?? "Choose Image"}
+        <input type="file" accept="image/*" onChange={handleSelect} className="hidden" />
       </label>
-      {uploading && (
-        <div className="h-1.5 overflow-hidden rounded-full bg-zinc-200">
-          <div
-            className="h-full rounded-full bg-zinc-900 transition-all"
-            style={{ width: `${progress}%` }}
-          />
+      {hasPendingFile ? (
+        <div className="flex items-center justify-between gap-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900">
+          <span className="truncate">Selected: {selectedFileName}</span>
+          <button
+            type="button"
+            onClick={onClear}
+            className="inline-flex items-center gap-1 rounded-md border border-amber-300 bg-white px-2 py-1 text-[11px] font-semibold text-amber-900 hover:bg-amber-100"
+          >
+            <X size={12} />
+            Clear
+          </button>
         </div>
-      )}
-      {error ? <p className="text-xs text-red-600">{error}</p> : null}
+      ) : null}
+      {hasPendingFile ? (
+        <p className="text-xs text-amber-700">Image will upload when you click Save.</p>
+      ) : null}
     </div>
   );
 }

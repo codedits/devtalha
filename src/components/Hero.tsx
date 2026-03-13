@@ -71,7 +71,7 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
             alt="Hero Background"
             fill
             priority
-            quality={80}
+            quality={85}
             className="object-cover"
             sizes="(max-width: 768px) calc(100vw - 1rem), calc(100vw - 1rem)"
             onLoad={() => setIsLoaded(true)}

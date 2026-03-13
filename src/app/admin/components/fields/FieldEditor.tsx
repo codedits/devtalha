@@ -1,6 +1,7 @@
 "use client";
 
 import { fromTextValue, toTextValue } from "@/lib/admin/converters";
+import { isPendingUploadValue, type PendingUploadValue } from "@/lib/admin/uploads";
 import { Plus, Trash2 } from "lucide-react";
 import type { FieldConfig, SocialItem, StatItem } from "@/lib/admin/types";
 import { cn } from "@/lib/utils";
@@ -193,9 +194,9 @@ export function FieldEditor({ field, value, onChange }: FieldEditorProps) {
   }
 
   if (field.type === "image-list") {
-    const list = Array.isArray(value) ? value.map((item) => String(item)) : [];
+    const list = Array.isArray(value) ? value : [];
 
-    const updateItem = (index: number, next: string) => {
+    const updateItem = (index: number, next: unknown) => {
       onChange(list.map((item, i) => (i === index ? next : item)));
     };
 
@@ -212,11 +213,38 @@ export function FieldEditor({ field, value, onChange }: FieldEditorProps) {
         {list.map((item, index) => (
           <div key={`${field.key}-${index}`} className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
             <div className="space-y-2">
+              {(() => {
+                const pending = isPendingUploadValue(item) ? item : null;
+                const currentUrl = pending ? pending.previewUrl : String(item ?? "");
+                return (
               <ImageUploader
-                currentUrl={item}
-                onUpload={(url) => updateItem(index, url)}
+                currentUrl={currentUrl}
+                selectedFileName={pending?.file.name}
+                onSelectFile={(file, previewUrl) => {
+                  const previous = list[index];
+                  if (isPendingUploadValue(previous)) {
+                    URL.revokeObjectURL(previous.previewUrl);
+                  }
+
+                  const pendingUpload: PendingUploadValue = {
+                    __type: "pending-upload",
+                    file,
+                    previewUrl,
+                    originalUrl: typeof previous === "string" ? previous : undefined,
+                  };
+                  updateItem(index, pendingUpload);
+                }}
+                onClear={() => {
+                  const previous = list[index];
+                  if (isPendingUploadValue(previous)) {
+                    URL.revokeObjectURL(previous.previewUrl);
+                    updateItem(index, previous.originalUrl ?? "");
+                  }
+                }}
                 buttonLabel={`Upload Image ${index + 1}`}
               />
+                );
+              })()}
               <button
                 type="button"
                 onClick={() => removeItem(index)}
@@ -243,14 +271,39 @@ export function FieldEditor({ field, value, onChange }: FieldEditorProps) {
   }
 
   if (field.type === "image") {
+    const pending = isPendingUploadValue(value) ? value : null;
+    const currentUrl = pending ? pending.previewUrl : textValue;
+
     return (
       <div className="space-y-3">
-        {textValue ? (
+        {currentUrl ? (
           <p className="rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-600 break-all">
-            {textValue}
+            {pending ? `Selected: ${pending.file.name}` : currentUrl}
           </p>
         ) : null}
-        <ImageUploader currentUrl={textValue} onUpload={onChange as (url: string) => void} />
+        <ImageUploader
+          currentUrl={currentUrl}
+          selectedFileName={pending?.file.name}
+          onSelectFile={(file, previewUrl) => {
+            if (pending) {
+              URL.revokeObjectURL(pending.previewUrl);
+            }
+
+            const pendingUpload: PendingUploadValue = {
+              __type: "pending-upload",
+              file,
+              previewUrl,
+              originalUrl: textValue,
+            };
+            onChange(pendingUpload);
+          }}
+          onClear={() => {
+            if (pending) {
+              URL.revokeObjectURL(pending.previewUrl);
+              onChange(pending.originalUrl ?? "");
+            }
+          }}
+        />
       </div>
     );
   }
