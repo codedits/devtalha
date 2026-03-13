@@ -117,12 +117,36 @@ export type Database = {
         }
         Relationships: []
       }
+      process_meta: {
+        Row: {
+          id: string
+          label: string
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          label?: string
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          label?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       reachus: {
         Row: {
           email: string
           heading: string
           id: string
+          inquiry_text: string
+          inquiry_title: string
           label: string
+          office_line_1: string
+          office_line_2: string
+          office_line_3: string
+          office_title: string
           socials: Json
           updated_at: string | null
         }
@@ -130,7 +154,13 @@ export type Database = {
           email?: string
           heading?: string
           id?: string
+          inquiry_text?: string
+          inquiry_title?: string
           label?: string
+          office_line_1?: string
+          office_line_2?: string
+          office_line_3?: string
+          office_title?: string
           socials?: Json
           updated_at?: string | null
         }
@@ -138,7 +168,13 @@ export type Database = {
           email?: string
           heading?: string
           id?: string
+          inquiry_text?: string
+          inquiry_title?: string
           label?: string
+          office_line_1?: string
+          office_line_2?: string
+          office_line_3?: string
+          office_title?: string
           socials?: Json
           updated_at?: string | null
         }
@@ -173,6 +209,36 @@ export type Database = {
           sort_order?: number
           tags?: string[]
           title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      services_meta: {
+        Row: {
+          cta_text: string
+          cta_url: string
+          id: string
+          intro_text: string
+          label: string
+          profile_image_url: string
+          updated_at: string | null
+        }
+        Insert: {
+          cta_text?: string
+          cta_url?: string
+          id?: string
+          intro_text?: string
+          label?: string
+          profile_image_url?: string
+          updated_at?: string | null
+        }
+        Update: {
+          cta_text?: string
+          cta_url?: string
+          id?: string
+          intro_text?: string
+          label?: string
+          profile_image_url?: string
           updated_at?: string | null
         }
         Relationships: []
@@ -215,6 +281,33 @@ export type Database = {
           sort_order?: number
           summary?: string
           title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      works_meta: {
+        Row: {
+          archive_heading: string
+          featured_count: number
+          homepage_heading: string
+          homepage_label: string
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          archive_heading?: string
+          featured_count?: number
+          homepage_heading?: string
+          homepage_label?: string
+          id?: string
+          updated_at?: string | null
+        }
+        Update: {
+          archive_heading?: string
+          featured_count?: number
+          homepage_heading?: string
+          homepage_label?: string
+          id?: string
           updated_at?: string | null
         }
         Relationships: []

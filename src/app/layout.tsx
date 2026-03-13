@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { getFooter } from "@/lib/queries";
-import { ThemeTransitionWrapper } from "../components/ThemeTransitionWrapper";
+import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -26,10 +23,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const footerData = await getFooter();
 
   return (
-    <html lang="en" className="dark scroll-smooth">
+    <html lang="en" className="scroll-smooth">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="preconnect" href="https://images.unsplash.com" />
@@ -39,15 +35,9 @@ export default async function RootLayout({
       <body
         className={`${plusJakartaSans.variable} ${spaceGrotesk.variable} antialiased bg-background text-foreground`}
       >
-        <ThemeTransitionWrapper>
-          <div className="min-h-screen w-full">
-            <Navbar />
-            <main className="min-h-screen w-full flex flex-col gap-10 md:gap-14">
-              {children}
-            </main>
-            <Footer data={footerData} />
-          </div>
-        </ThemeTransitionWrapper>
+        <div className="min-h-screen w-full">
+          {children}
+        </div>
       </body>
     </html>
   );

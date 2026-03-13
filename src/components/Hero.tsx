@@ -14,7 +14,7 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
   const bgImage = data?.background_image_url ?? 'https://images.unsplash.com/photo-1582150816999-5c92a8c15401?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
   const nameLabel = data?.name_label ?? 'TALHA IRFAN';
 
-  const containerRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"]
@@ -37,7 +37,8 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
   );
 
   return (
-    <section ref={containerRef} className="relative h-screen w-full flex flex-col items-start justify-end overflow-hidden pb-20 md:pb-24 px-10 md:px-16 lg:px-20">
+    <section className="h-screen w-full px-2 pt-2 relative z-10">
+      <div ref={containerRef} className="relative h-full w-full flex flex-col items-start justify-end rounded-[1.5rem] md:rounded-[2rem] overflow-hidden pb-20 md:pb-24 px-10 md:px-16 lg:px-20 border border-white/10">
       {/* Animated Background with Parallax */}
       <motion.div
         className="absolute inset-0 z-0"
@@ -48,6 +49,7 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
           alt="Hero Background"
           fill
           priority
+          quality={80}
           className="object-cover"
           sizes="100vw"
         />
@@ -66,6 +68,14 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
         style={{ y: textY }}
       >
         <div className="flex flex-col items-start text-left">
+          <motion.span
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.15 }}
+            className="mb-4 text-[10px] font-bold tracking-[0.22em] uppercase text-white/80"
+          >
+            {nameLabel}
+          </motion.span>
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
@@ -84,6 +94,7 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
           </motion.div>
         </div>
       </motion.div>
+      </div>
     </section>
   );
 }

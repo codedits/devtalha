@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Globe, Mail } from "lucide-react";
 import { LiquidButton } from "@/components/ui/LiquidButton";
 
-import { getWorkById } from "@/lib/queries";
+import { getReachus, getWorkById } from "@/lib/queries";
 
 type ProjectDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -12,7 +12,7 @@ type ProjectDetailPageProps = {
 
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const { id } = await params;
-  const work = await getWorkById(id);
+  const [work, reachus] = await Promise.all([getWorkById(id), getReachus()]);
 
   if (!work) {
     notFound();
@@ -27,6 +27,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
     "This project blends strategy, clean UI, and performance-focused implementation. The result is a polished digital experience designed to look premium and feel effortless across devices.";
 
   const projectUrl = work.project_url?.trim() ?? "";
+  const contactEmail = reachus.email?.trim() || 'hello@talha.com';
   const galleryImages = Array.isArray(work.gallery_images)
     ? work.gallery_images.filter((img): img is string => typeof img === "string" && img.trim().length > 0)
     : [];
@@ -36,7 +37,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
   );
 
   return (
-    <main className="min-h-screen pt-20">
+    <main className="min-h-screen pt-44 md:pt-52">
       <section className="border-b border-border/10">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 md:px-8">
           <Link
@@ -122,7 +123,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
             ) : (
               <LiquidButton
                 as="a"
-                href={`mailto:hello@talha.com?subject=Project Live Link Request: ${projectTitle}`}
+                href={`mailto:${contactEmail}?subject=Project Live Link Request: ${projectTitle}`}
               >
                 <Mail size={14} />
                 Request Link

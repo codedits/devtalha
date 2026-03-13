@@ -5,7 +5,7 @@ import { Plus, Minus, ArrowRight } from 'lucide-react';
 import Image from "next/image";
 import { motion, AnimatePresence, useInView, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import { LiquidButton } from "./ui/LiquidButton";
-import type { ServicesItem } from "@/types/content";
+import type { ServicesItem, ServicesMetaSection } from "@/types/content";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
 interface Service {
@@ -16,57 +16,19 @@ interface Service {
   images: string[];
 }
 
-const SERVICES: Service[] = [
-  {
-    id: 'brand-strategy',
-    title: 'Brand Strategy',
-    description: 'Building the foundation of your brand from positioning and tone to messaging and visual direction. We define how your brand should feel and communicate.',
-    tags: ['Brand Positioning', 'Visual Identity', 'Messaging Framework', 'Creative Direction'],
-    images: [
-      'https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1512413914844-083f47459220?auto=format&fit=crop&q=80&w=600'
-    ]
-  },
-  {
-    id: 'website-design',
-    title: 'Website Design',
-    description: 'Crafting digital experiences that bridge the gap between aesthetics and performance. We build websites that don’t just look good, but convert.',
-    tags: ['UI/UX Design', 'Responsive Design', 'Design Systems', 'Prototyping'],
-    images: [
-      'https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1559028012-481c04fa702d?auto=format&fit=crop&q=80&w=600'
-    ]
-  },
-  {
-    id: 'content-creation',
-    title: 'Content Creation',
-    description: 'Storytelling through media. We produce high-quality visual and written content that resonates with your audience and builds trust.',
-    tags: ['Photography', 'Videography', 'Copywriting', 'Social Media'],
-    images: [
-      'https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1542744094-24638eff58bb?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=600'
-    ]
-  },
-  {
-    id: 'product-design',
-    title: 'Product Design',
-    description: 'User-centric interfaces for modern software. We design intuitive, scalable products that solve complex problems simply.',
-    tags: ['SaaS Design', 'Mobile Apps', 'Interaction Design', 'Usability Testing'],
-    images: [
-      'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1586717791821-3f44a563eb4c?auto=format&fit=crop&q=80&w=600',
-      'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&q=80&w=600'
-    ]
-  },
-];
-
-export default function Services({ data }: { data?: ServicesItem[] | null }) {
+export default function Services({ data, meta }: { data?: ServicesItem[] | null; meta?: ServicesMetaSection | null }) {
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
   const allowHover = !prefersReducedMotion && !isMobile;
+  const label = meta?.label?.trim() || '[ OUR SERVICES ]';
+  const profileImageUrl =
+    meta?.profile_image_url?.trim() ||
+    'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=800';
+  const introText =
+    meta?.intro_text?.trim() ||
+    'We define the foundation of your brand voice, visuals, and values shaped into a system built for long-term clarity.';
+  const ctaText = meta?.cta_text?.trim() || 'Start a project';
+  const ctaUrl = meta?.cta_url?.trim() || '#contact';
   const servicesList: Service[] = data && data.length > 0
     ? data.map((s) => ({
         id: s.id,
@@ -75,7 +37,7 @@ export default function Services({ data }: { data?: ServicesItem[] | null }) {
         tags: s.tags ?? [],
         images: s.images ?? [],
       }))
-    : SERVICES;
+    : [];
   const [openService, setOpenService] = useState<string>(servicesList[0]?.id ?? '');
 
   const sectionRef = useRef<HTMLElement>(null);
@@ -92,7 +54,7 @@ export default function Services({ data }: { data?: ServicesItem[] | null }) {
   );
 
   return (
-    <section id="services" className="section-dark py-24 md:py-32 relative overflow-hidden section-shell" ref={sectionRef}>
+    <section id="services" className="section-dark bg-background text-foreground pt-24 md:pt-32 pb-12 md:pb-16 relative overflow-hidden section-shell" ref={sectionRef}>
       {/* Background decorative elements */}
       <motion.div 
         className="absolute top-0 left-0 w-[400px] h-[400px] rounded-full bg-white/[0.02] blur-3xl pointer-events-none"
@@ -119,7 +81,7 @@ export default function Services({ data }: { data?: ServicesItem[] | null }) {
               animate={isInView ? { opacity: 1 } : {}}
               transition={{ delay: 0.2 }}
             >
-              [ OUR SERVICES ]
+              {label}
             </motion.span>
             
             <motion.div 
@@ -133,7 +95,7 @@ export default function Services({ data }: { data?: ServicesItem[] | null }) {
                 className="w-full h-full"
               >
                 <Image
-                  src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=800"
+                  src={profileImageUrl}
                   alt="Representative Profile"
                   fill
                   className="object-cover grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700"
@@ -149,7 +111,7 @@ export default function Services({ data }: { data?: ServicesItem[] | null }) {
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              We define the foundation of your brand voice, visuals, and values shaped into a system built for long-term clarity.
+              {introText}
             </motion.p>
             
             <motion.div
@@ -158,8 +120,8 @@ export default function Services({ data }: { data?: ServicesItem[] | null }) {
               transition={{ delay: 0.5, duration: 0.6 }}
               className="w-full flex justify-center md:justify-start"
             >
-              <LiquidButton className="w-full max-w-[260px]">
-                Start a project <ArrowRight size={14} strokeWidth={2.5} />
+              <LiquidButton as="a" href={ctaUrl} className="w-full max-w-[260px]">
+                {ctaText} <ArrowRight size={14} strokeWidth={2.5} />
               </LiquidButton>
             </motion.div>
           </motion.div>
@@ -278,6 +240,9 @@ export default function Services({ data }: { data?: ServicesItem[] | null }) {
                   </motion.div>
                 );
               })}
+              {servicesList.length === 0 ? (
+                <div className="py-10 text-sm text-muted-foreground">No services added yet.</div>
+              ) : null}
             </motion.div>
           </div>
         </div>

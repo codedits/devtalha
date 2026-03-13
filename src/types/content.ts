@@ -5,6 +5,9 @@ export type WorksItem = Tables<"works">;
 export type ServicesItem = Tables<"services">;
 export type ProcessStepItem = Tables<"process_steps">;
 export type FooterSection = Tables<"footer">;
+export type WorksMetaSection = Tables<"works_meta">;
+export type ServicesMetaSection = Tables<"services_meta">;
+export type ProcessMetaSection = Tables<"process_meta">;
 
 export type AboutStat = {
   value: number;

@@ -11,16 +11,25 @@ import {
   type AboutSection,
   type FooterSection,
   type HeroSection,
+  type ProcessMetaSection,
   type ProcessStepItem,
   type ReachusSection,
+  type ServicesMetaSection,
   type ServicesItem,
+  type WorksMetaSection,
   type WorksItem,
 } from "@/types/content";
 import type { Tables } from "@/types/supabase";
 
 async function fetchSingle<K extends "hero" | "about" | "reachus" | "footer">(section: K) {
-  const { data, error } = await supabase.from(section).select("*").single<Tables<K>>();
+  const { data, error } = await supabase
+    .from(section)
+    .select("*")
+    .order("updated_at", { ascending: false, nullsFirst: false })
+    .limit(1)
+    .maybeSingle<Tables<K>>();
   if (error) throw new Error(error.message);
+  if (!data) throw new Error(`No rows found for ${section}`);
   return data;
 }
 
@@ -32,6 +41,20 @@ async function fetchList<K extends "works" | "services" | "process_steps">(secti
     .returns<Tables<K>[]>();
   if (error) throw new Error(error.message);
   return data ?? [];
+}
+
+async function fetchOptionalSingle<K extends "works_meta" | "services_meta" | "process_meta">(section: K) {
+  const { data, error } = await supabase
+    .from(section)
+    .select("*")
+    .order("updated_at", { ascending: false, nullsFirst: false })
+    .limit(1)
+    .maybeSingle<Tables<K>>();
+  if (error) {
+    // Allow deployments where meta tables are not migrated yet.
+    return null;
+  }
+  return data;
 }
 
 const getHeroCached = unstable_cache(
@@ -97,6 +120,33 @@ const getFooterCached = unstable_cache(
   }
 );
 
+const getWorksMetaCached = unstable_cache(
+  async () => fetchOptionalSingle("works_meta"),
+  ["portfolio-query-works-meta"],
+  {
+    revalidate: PORTFOLIO_CACHE_REVALIDATE_SECONDS,
+    tags: getSectionTags("works_meta"),
+  }
+);
+
+const getServicesMetaCached = unstable_cache(
+  async () => fetchOptionalSingle("services_meta"),
+  ["portfolio-query-services-meta"],
+  {
+    revalidate: PORTFOLIO_CACHE_REVALIDATE_SECONDS,
+    tags: getSectionTags("services_meta"),
+  }
+);
+
+const getProcessMetaCached = unstable_cache(
+  async () => fetchOptionalSingle("process_meta"),
+  ["portfolio-query-process-meta"],
+  {
+    revalidate: PORTFOLIO_CACHE_REVALIDATE_SECONDS,
+    tags: getSectionTags("process_meta"),
+  }
+);
+
 export async function getHero() {
   return getHeroCached() as Promise<HeroSection>;
 }
@@ -111,6 +161,20 @@ export async function getAbout() {
 
 export async function getWorks() {
   return getWorksCached() as Promise<WorksItem[]>;
+}
+
+export async function getWorksMeta() {
+  const meta = (await getWorksMetaCached()) as Tables<"works_meta"> | null;
+  return (
+    meta ?? {
+      id: "",
+      homepage_label: "[ FEATURED PROJECTS ]",
+      homepage_heading: "Works.",
+      featured_count: 4,
+      archive_heading: "Archive.",
+      updated_at: null,
+    }
+  ) satisfies WorksMetaSection;
 }
 
 export async function getWorkById(id: string) {
@@ -128,8 +192,36 @@ export async function getServices() {
   return getServicesCached() as Promise<ServicesItem[]>;
 }
 
+export async function getServicesMeta() {
+  const meta = (await getServicesMetaCached()) as Tables<"services_meta"> | null;
+  return (
+    meta ?? {
+      id: "",
+      label: "[ OUR SERVICES ]",
+      profile_image_url:
+        "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=800",
+      intro_text:
+        "We define the foundation of your brand voice, visuals, and values shaped into a system built for long-term clarity.",
+      cta_text: "Start a project",
+      cta_url: "#contact",
+      updated_at: null,
+    }
+  ) satisfies ServicesMetaSection;
+}
+
 export async function getProcessSteps() {
   return getProcessStepsCached() as Promise<ProcessStepItem[]>;
+}
+
+export async function getProcessMeta() {
+  const meta = (await getProcessMetaCached()) as Tables<"process_meta"> | null;
+  return (
+    meta ?? {
+      id: "",
+      label: "[ OUR PROCESS ]",
+      updated_at: null,
+    }
+  ) satisfies ProcessMetaSection;
 }
 
 export async function getReachus() {

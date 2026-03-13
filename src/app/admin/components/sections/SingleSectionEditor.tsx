@@ -19,22 +19,27 @@ export function SingleSectionEditor({ config, addToast }: SingleSectionEditorPro
 
   const loadData = useCallback(async () => {
     setLoading(true);
-    const res = await fetch(`/api/admin/${config.section}`);
-    if (res.status === 401) {
-      window.location.href = "/admin/login";
-      return;
-    }
+    try {
+      const res = await fetch(`/api/admin/${config.section}`);
+      if (res.status === 401) {
+        window.location.href = "/admin/login";
+        return;
+      }
 
-    const payload = await res.json();
-    if (!res.ok) {
-      addToast("error", payload.error ?? "Failed to load data");
+      const payload = await res.json();
+      if (!res.ok) {
+        addToast("error", payload.error ?? "Failed to load data");
+        setLoading(false);
+        return;
+      }
+
+      setData(payload as SectionRecord);
+      setOriginalData(payload as SectionRecord);
+    } catch {
+      addToast("error", "Network error while loading data");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    setData(payload as SectionRecord);
-    setOriginalData(payload as SectionRecord);
-    setLoading(false);
   }, [config.section, addToast]);
 
   useEffect(() => {

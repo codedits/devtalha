@@ -17,6 +17,7 @@ type ImageUploaderProps = {
 export function ImageUploader({ currentUrl, onUpload, onProgress, buttonLabel }: ImageUploaderProps) {
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [error, setError] = useState<string | null>(null);
 
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -24,6 +25,7 @@ export function ImageUploader({ currentUrl, onUpload, onProgress, buttonLabel }:
 
     setUploading(true);
     setProgress(0);
+    setError(null);
     onProgress?.(0);
 
     const formData = new FormData();
@@ -43,7 +45,12 @@ export function ImageUploader({ currentUrl, onUpload, onProgress, buttonLabel }:
 
         xhr.onload = () => {
           if (xhr.status < 200 || xhr.status >= 300) {
-            reject(new Error("Upload failed"));
+            try {
+              const payload = JSON.parse(xhr.responseText) as { error?: string };
+              reject(new Error(payload.error ?? "Upload failed"));
+            } catch {
+              reject(new Error("Upload failed"));
+            }
             return;
           }
 
@@ -61,6 +68,8 @@ export function ImageUploader({ currentUrl, onUpload, onProgress, buttonLabel }:
       if (payload.url) {
         onUpload(payload.url);
       }
+    } catch (uploadError) {
+      setError(uploadError instanceof Error ? uploadError.message : "Upload failed");
     } finally {
       setUploading(false);
       setProgress(0);
@@ -106,6 +115,7 @@ export function ImageUploader({ currentUrl, onUpload, onProgress, buttonLabel }:
           />
         </div>
       )}
+      {error ? <p className="text-xs text-red-600">{error}</p> : null}
     </div>
   );
 }

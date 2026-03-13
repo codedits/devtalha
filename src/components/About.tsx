@@ -50,6 +50,7 @@ export default function About({ data }: { data?: AboutSection | null }) {
     { value: 100, suffix: "%", label: "Code Quality Focus" },
   ];
   const stats: AboutStat[] = data?.stats?.length ? data.stats : defaultStats;
+  const label = data?.label?.trim() || '[ WHO I AM ]';
   const heading = data?.heading ?? 'A student and developer building premium digital products at unprecedented speed';
   const description = data?.description;
 
@@ -86,7 +87,7 @@ export default function About({ data }: { data?: AboutSection | null }) {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-xs font-bold tracking-[0.2em] uppercase text-muted-foreground block"
           >
-            [ WHO I AM ]
+            {label}
           </motion.span>
         </motion.div>
 

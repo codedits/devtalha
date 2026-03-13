@@ -29,8 +29,15 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
   const allowHover = !prefersReducedMotion && !isMobile;
+  const label = data?.label?.trim() || '[ REACH US ]';
   const heading = data?.heading ?? 'Have a bold idea? Let\'s shape it.';
   const email = data?.email ?? 'hello@talha.com';
+  const officeTitle = data?.office_title?.trim() || 'OFFICE';
+  const officeLine1 = data?.office_line_1?.trim() || 'Available Worldwide';
+  const officeLine2 = data?.office_line_2?.trim() || 'Working Remotely';
+  const officeLine3 = data?.office_line_3?.trim() || 'Based in PK';
+  const inquiryTitle = data?.inquiry_title?.trim() || 'INQUIRIES';
+  const inquiryText = data?.inquiry_text?.trim() || 'For new projects and partnership questions:';
   const socials: ReachSocial[] = data?.socials?.length ? data.socials : [
     { name: 'INSTAGRAM', href: '#' },
     { name: 'X / TWITTER', href: '#' },
@@ -73,7 +80,7 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
               animate={isInView ? { opacity: 1 } : {}}
               transition={{ delay: 0.2 }}
             >
-              [ REACH US ]
+              {label}
             </motion.span>
             <h2 className="text-5xl md:text-8xl lg:text-[110px] leading-[0.95] tracking-tighter font-medium mb-12">
               <BlurText 
@@ -114,23 +121,22 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
               {/* HQ */}
               <motion.div variants={itemVariants}>
                 <span className="text-xs font-bold uppercase tracking-[0.2em] mb-6 block text-muted-foreground/60">
-                  OFFICE
+                  {officeTitle}
                 </span>
                 <p className="text-muted-foreground text-[15px] leading-relaxed">
-                  Available Worldwide <br />
-                  Working Remotely <br />
-                  Based in PK
+                  {officeLine1} <br />
+                  {officeLine2} <br />
+                  {officeLine3}
                 </p>
               </motion.div>
 
               {/* Inquiry */}
               <motion.div variants={itemVariants}>
                 <span className="text-xs font-bold uppercase tracking-[0.2em] mb-6 block text-muted-foreground/60">
-                  INQUIRIES
+                  {inquiryTitle}
                 </span>
                 <p className="text-muted-foreground text-[15px] leading-relaxed mb-8">
-                  For new projects and <br />
-                  partnership questions:
+                  {inquiryText}
                 </p>
                 <div className="flex flex-col gap-4">
                   {socials.map((social, idx) => (

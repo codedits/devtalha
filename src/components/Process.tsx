@@ -3,7 +3,7 @@
 import React, { useRef } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { motion, useInView, useScroll, useTransform, useReducedMotion } from 'framer-motion';
-import type { ProcessStepItem } from "@/types/content";
+import type { ProcessMetaSection, ProcessStepItem } from "@/types/content";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
 interface ProcessStep {
@@ -12,33 +12,6 @@ interface ProcessStep {
   title: string;
   description: string;
 }
-
-const PROCESS_STEPS: ProcessStep[] = [
-  { 
-    id: '01', 
-    number: '[ 01 ]', 
-    title: 'Discovery', 
-    description: 'We cut through the noise, understand your brand, your audience, and your goals. No cookie-cutter playbooks only sharp strategies.',
-  },
-  { 
-    id: '02', 
-    number: '[ 02 ]', 
-    title: 'Designing', 
-    description: 'From sketches to high-fidelity prototypes, we shape bold concepts into tangible visuals. Expect motion, layouts, and interactions.',
-  },
-  { 
-    id: '03', 
-    number: '[ 03 ]', 
-    title: 'Development', 
-    description: "Design isn't enough, it has to perform. We develop responsive, fast, and scalable systems, seamlessly integrating CMS, animations, and tech.",
-  },
-  { 
-    id: '04', 
-    number: '[ 04 ]', 
-    title: 'Launch', 
-    description: "We don't vanish after launch. From performance optimization to continuous iterations, we ensure your brand stays sharp, fast, and relevant.",
-  },
-];
 
 // Card animation variants
 const cardVariants = {
@@ -54,10 +27,11 @@ const cardVariants = {
   })
 };
 
-export default function Process({ data }: { data?: ProcessStepItem[] | null }) {
+export default function Process({ data, meta }: { data?: ProcessStepItem[] | null; meta?: ProcessMetaSection | null }) {
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
   const allowHover = !prefersReducedMotion && !isMobile;
+  const label = meta?.label?.trim() || '[ OUR PROCESS ]';
   const steps = data && data.length > 0
     ? data.map((s) => ({
         id: s.id,
@@ -65,7 +39,7 @@ export default function Process({ data }: { data?: ProcessStepItem[] | null }) {
         title: s.title,
         description: s.description,
       }))
-    : PROCESS_STEPS;
+    : [];
 
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
@@ -81,7 +55,7 @@ export default function Process({ data }: { data?: ProcessStepItem[] | null }) {
   );
 
   return (
-    <section id="process" className="section-dark py-24 md:py-32 relative overflow-hidden section-shell" ref={sectionRef}>
+    <section id="process" className="section-dark bg-background text-foreground pt-12 md:pt-16 pb-24 md:pb-32 relative overflow-hidden section-shell" ref={sectionRef}>
       {/* Animated background gradient */}
       <motion.div 
         className="absolute top-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-white/[0.02] blur-3xl pointer-events-none"
@@ -96,7 +70,7 @@ export default function Process({ data }: { data?: ProcessStepItem[] | null }) {
           transition={{ duration: 0.6 }}
         >
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground block">
-            [ OUR PROCESS ]
+            {label}
           </span>
         </motion.div>
         
@@ -167,6 +141,9 @@ export default function Process({ data }: { data?: ProcessStepItem[] | null }) {
               </div>
             </motion.div>
           ))}
+          {steps.length === 0 ? (
+            <div className="col-span-full p-8 text-sm text-muted-foreground">No process steps added yet.</div>
+          ) : null}
         </motion.div>
       </div>
     </section>

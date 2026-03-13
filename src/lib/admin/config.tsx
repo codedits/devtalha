@@ -5,6 +5,7 @@ import {
   Layers,
   Mail,
   PanelBottom,
+  Settings,
   User,
 } from "lucide-react";
 
@@ -69,6 +70,19 @@ export const SECTION_CONFIGS: SectionConfig[] = [
     },
   },
   {
+    title: "Works Section",
+    section: "works_meta",
+    mode: "single",
+    icon: <Settings size={18} />,
+    description: "Homepage/archive works section labels and display limits.",
+    fields: [
+      { key: "homepage_label", label: "Homepage Label", type: "text", placeholder: "[ FEATURED PROJECTS ]" },
+      { key: "homepage_heading", label: "Homepage Heading", type: "text", placeholder: "Works." },
+      { key: "featured_count", label: "Homepage Featured Count", type: "number" },
+      { key: "archive_heading", label: "Archive Page Heading", type: "text", placeholder: "Archive." },
+    ],
+  },
+  {
     title: "Services",
     section: "services",
     mode: "collection",
@@ -82,6 +96,20 @@ export const SECTION_CONFIGS: SectionConfig[] = [
       { key: "sort_order", label: "Sort Order", type: "number" },
     ],
     createDefaults: { title: "", description: "", tags: [], images: [], sort_order: 0 },
+  },
+  {
+    title: "Services Section",
+    section: "services_meta",
+    mode: "single",
+    icon: <Settings size={18} />,
+    description: "Services section hero content, side image, and CTA.",
+    fields: [
+      { key: "label", label: "Section Label", type: "text", placeholder: "[ OUR SERVICES ]" },
+      { key: "profile_image_url", label: "Profile Image", type: "image" },
+      { key: "intro_text", label: "Intro Text", type: "textarea", placeholder: "Short intro copy" },
+      { key: "cta_text", label: "CTA Text", type: "text", placeholder: "Start a project" },
+      { key: "cta_url", label: "CTA Link", type: "text", placeholder: "#contact" },
+    ],
   },
   {
     title: "Process",
@@ -98,6 +126,14 @@ export const SECTION_CONFIGS: SectionConfig[] = [
     createDefaults: { number: "", title: "", description: "", sort_order: 0 },
   },
   {
+    title: "Process Section",
+    section: "process_meta",
+    mode: "single",
+    icon: <Settings size={18} />,
+    description: "Process section headline label settings.",
+    fields: [{ key: "label", label: "Section Label", type: "text", placeholder: "[ OUR PROCESS ]" }],
+  },
+  {
     title: "Reach Us",
     section: "reachus",
     mode: "single",
@@ -107,6 +143,12 @@ export const SECTION_CONFIGS: SectionConfig[] = [
       { key: "label", label: "Section Label", type: "text", placeholder: "[ REACH US ]" },
       { key: "heading", label: "Heading", type: "textarea", placeholder: "Contact heading" },
       { key: "email", label: "Email", type: "text", placeholder: "hello@example.com" },
+      { key: "office_title", label: "Office Block Title", type: "text", placeholder: "OFFICE" },
+      { key: "office_line_1", label: "Office Line 1", type: "text", placeholder: "Available Worldwide" },
+      { key: "office_line_2", label: "Office Line 2", type: "text", placeholder: "Working Remotely" },
+      { key: "office_line_3", label: "Office Line 3", type: "text", placeholder: "Based in PK" },
+      { key: "inquiry_title", label: "Inquiry Block Title", type: "text", placeholder: "INQUIRIES" },
+      { key: "inquiry_text", label: "Inquiry Text", type: "textarea", placeholder: "For new projects and partnership questions:" },
       {
         key: "socials",
         label: "Social Links",

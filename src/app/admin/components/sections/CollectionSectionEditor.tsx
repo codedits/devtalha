@@ -159,14 +159,18 @@ export function CollectionSectionEditor({ config, addToast }: CollectionSectionE
   const createEmptyRow = () =>
     ({
       id: "",
-      sort_order: rows.length + 1,
       ...(config.createDefaults ?? {}),
+      sort_order: rows.length + 1,
     }) as SectionRecord;
 
   const upsertRow = async (record: SectionRecord) => {
     const id = String(record.id ?? "");
     const isNew = !id;
     const method = isNew ? "POST" : "PUT";
+    const payloadRecord =
+      isNew && !String(record.id ?? "").trim()
+        ? (({ id: _id, ...rest }) => rest)(record)
+        : record;
     const tempId = `temp-${Date.now()}`;
     const optimistic = isNew ? { ...record, id: tempId } : record;
     const previousRows = rows;
@@ -179,7 +183,7 @@ export function CollectionSectionEditor({ config, addToast }: CollectionSectionE
       const res = await fetch(`/api/admin/${config.section}`, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(record),
+        body: JSON.stringify(payloadRecord),
       });
       const payload = await res.json();
       if (!res.ok) throw new Error(payload.error ?? "Save failed");
@@ -256,19 +260,24 @@ export function CollectionSectionEditor({ config, addToast }: CollectionSectionE
       });
 
       await Promise.all(
-        updates.map((item) =>
-          fetch(`/api/admin/${config.section}`, {
+        updates.map(async (item) => {
+          const response = await fetch(`/api/admin/${config.section}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(item),
-          })
-        )
+          });
+
+          if (!response.ok) {
+            const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+            throw new Error(payload?.error ?? "Failed to update order");
+          }
+        })
       );
 
       addToast("success", "Order updated");
-    } catch {
+    } catch (error) {
       setRows(previousRows);
-      addToast("error", "Reorder failed");
+      addToast("error", error instanceof Error ? error.message : "Reorder failed");
     }
   };
 
