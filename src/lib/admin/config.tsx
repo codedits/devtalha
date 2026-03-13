@@ -1,4 +1,5 @@
 import {
+  ArrowUpDown,
   Briefcase,
   GitBranch,
   Image as ImageIcon,
@@ -12,6 +13,18 @@ import {
 import type { SectionConfig } from "@/lib/admin/types";
 
 export const SECTION_CONFIGS: SectionConfig[] = [
+  {
+    title: "Section Builder",
+    section: "section_order",
+    mode: "collection",
+    icon: <ArrowUpDown size={18} />,
+    description: "Rearrange homepage section order with drag and drop.",
+    fields: [
+      { key: "title", label: "Title", type: "text" },
+      { key: "section_key", label: "Section Key", type: "text" },
+      { key: "sort_order", label: "Sort Order", type: "number" },
+    ],
+  },
   {
     title: "Hero",
     section: "hero",

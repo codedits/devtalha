@@ -98,6 +98,19 @@ CREATE TABLE IF NOT EXISTS process_meta (
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- 5e. Homepage Section Order (multiple rows)
+CREATE TABLE IF NOT EXISTS section_order (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  section_key TEXT NOT NULL UNIQUE,
+  title TEXT NOT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now(),
+  CONSTRAINT section_order_valid_key CHECK (
+    section_key IN ('hero', 'about', 'works', 'services', 'process', 'reachus')
+  )
+);
+
 -- 6. Reach Us Section (single row)
 CREATE TABLE IF NOT EXISTS reachus (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -148,6 +161,7 @@ ALTER TABLE process_steps ENABLE ROW LEVEL SECURITY;
 ALTER TABLE works_meta ENABLE ROW LEVEL SECURITY;
 ALTER TABLE services_meta ENABLE ROW LEVEL SECURITY;
 ALTER TABLE process_meta ENABLE ROW LEVEL SECURITY;
+ALTER TABLE section_order ENABLE ROW LEVEL SECURITY;
 ALTER TABLE reachus ENABLE ROW LEVEL SECURITY;
 ALTER TABLE footer ENABLE ROW LEVEL SECURITY;
 
@@ -168,6 +182,8 @@ DROP POLICY IF EXISTS "Public read" ON services_meta;
 CREATE POLICY "Public read" ON services_meta FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Public read" ON process_meta;
 CREATE POLICY "Public read" ON process_meta FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Public read" ON section_order;
+CREATE POLICY "Public read" ON section_order FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Public read" ON reachus;
 CREATE POLICY "Public read" ON reachus FOR SELECT USING (true);
 DROP POLICY IF EXISTS "Public read" ON footer;
@@ -266,6 +282,22 @@ WHERE NOT EXISTS (SELECT 1 FROM services_meta);
 INSERT INTO process_meta (label)
 SELECT * FROM (VALUES ('[ OUR PROCESS ]')) AS seed(label)
 WHERE NOT EXISTS (SELECT 1 FROM process_meta);
+
+-- Seed Homepage Section Order
+INSERT INTO section_order (section_key, title, sort_order)
+SELECT * FROM (VALUES
+  ('hero', 'Hero', 1),
+  ('about', 'About', 2),
+  ('works', 'Works', 3),
+  ('services', 'Services', 4),
+  ('process', 'Process', 5),
+  ('reachus', 'Reach Us', 6)
+) AS seed(section_key, title, sort_order)
+ON CONFLICT (section_key) DO UPDATE
+SET
+  title = EXCLUDED.title,
+  sort_order = EXCLUDED.sort_order,
+  updated_at = now();
 
 -- Seed Reachus
 INSERT INTO reachus (label, heading, email, office_title, office_line_1, office_line_2, office_line_3, inquiry_title, inquiry_text, socials)

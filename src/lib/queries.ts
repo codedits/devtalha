@@ -20,6 +20,16 @@ import {
   type WorksItem,
 } from "@/types/content";
 import type { Tables } from "@/types/supabase";
+import {
+  HOMEPAGE_SECTION_DEFINITIONS,
+  normalizeHomepageSectionOrder,
+  type HomepageSectionKey,
+} from "@/lib/admin/homepageSections";
+
+type SectionOrderRow = {
+  section_key: string;
+  sort_order: number;
+};
 
 function clampNonNegativeInteger(value: unknown, fallback: number) {
   const parsed = typeof value === "number" ? value : Number(value);
@@ -153,6 +163,28 @@ const getProcessMetaCached = unstable_cache(
   }
 );
 
+const getHomepageSectionOrderCached = unstable_cache(
+  async () => {
+    const { data, error } = await supabase
+      .from("section_order")
+      .select("section_key, sort_order")
+      .order("sort_order", { ascending: true })
+      .returns<SectionOrderRow[]>();
+
+    if (error) {
+      // Allow deployments where section_order is not migrated yet.
+      return null;
+    }
+
+    return data ?? [];
+  },
+  ["portfolio-query-section-order"],
+  {
+    revalidate: PORTFOLIO_CACHE_REVALIDATE_SECONDS,
+    tags: getSectionTags("section_order"),
+  }
+);
+
 export async function getHero() {
   return getHeroCached() as Promise<HeroSection>;
 }
@@ -245,4 +277,18 @@ export async function getReachus() {
 
 export async function getFooter() {
   return getFooterCached() as Promise<FooterSection>;
+}
+
+export async function getHomepageSectionOrder() {
+  const rows = await getHomepageSectionOrderCached();
+  if (!rows || rows.length === 0) {
+    return HOMEPAGE_SECTION_DEFINITIONS.map((item) => item.key);
+  }
+
+  const ordered = rows
+    .slice()
+    .sort((a, b) => Number(a.sort_order ?? 0) - Number(b.sort_order ?? 0))
+    .map((item) => String(item.section_key ?? "").trim());
+
+  return normalizeHomepageSectionOrder(ordered) as HomepageSectionKey[];
 }

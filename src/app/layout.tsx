@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   description: "Premium portfolio — Web development, modern frameworks, and AI-accelerated workflows.",
 };
 
+import PageTransition from "@/components/PageTransition";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -33,11 +35,13 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://fregldukggdkbemysbho.supabase.co" />
       </head>
       <body
-        className={`${plusJakartaSans.variable} ${spaceGrotesk.variable} antialiased bg-background text-foreground`}
+        className={`${plusJakartaSans.variable} ${spaceGrotesk.variable} antialiased bg-background text-foreground overflow-x-hidden`}
       >
-        <div className="min-h-screen w-full">
-          {children}
-        </div>
+        <PageTransition>
+          <div className="min-h-screen w-full">
+            {children}
+          </div>
+        </PageTransition>
       </body>
     </html>
   );

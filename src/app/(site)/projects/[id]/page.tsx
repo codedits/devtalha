@@ -37,7 +37,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
   );
 
   return (
-    <main className="min-h-screen pt-44 md:pt-52">
+    <div className="min-h-screen pt-32 md:pt-40">
       <section className="border-b border-border/10">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 md:px-8">
           <Link
@@ -140,6 +140,6 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

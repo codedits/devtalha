@@ -180,6 +180,33 @@ export type Database = {
         }
         Relationships: []
       }
+      section_order: {
+        Row: {
+          created_at: string | null
+          id: string
+          section_key: string
+          sort_order: number
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          section_key: string
+          sort_order?: number
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          section_key?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       services: {
         Row: {
           created_at: string | null

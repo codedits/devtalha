@@ -10,6 +10,7 @@ import {
   isSingleRowSection,
   type AdminSection,
 } from '@/lib/admin/sections';
+import { isHomepageSectionKey } from '@/lib/admin/homepageSections';
 import { createAdminClient } from '@/lib/supabase';
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -49,6 +50,11 @@ function sanitizePayload(section: AdminSection, raw: Record<string, unknown>) {
 
     if (field === 'tags' || field === 'images' || field === 'gallery_images') {
       sanitized[field] = toStringArray(value);
+      continue;
+    }
+
+    if (field === 'section_key') {
+      sanitized[field] = typeof value === 'string' ? value.trim().toLowerCase() : String(value ?? '').trim().toLowerCase();
       continue;
     }
 
@@ -172,6 +178,13 @@ export async function POST(
     }
   }
 
+  if (section === 'section_order') {
+    const sectionKey = insertPayload.section_key;
+    if (typeof sectionKey !== 'string' || !isHomepageSectionKey(sectionKey)) {
+      return NextResponse.json({ error: 'Invalid section_key' }, { status: 400 });
+    }
+  }
+
   const { data, error } = await supabase
     .from(section)
     .insert({ ...insertPayload, updated_at: new Date().toISOString() })
@@ -244,6 +257,12 @@ export async function PUT(
   const updates = sanitizePayload(section, parsedBody.body);
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });
+  }
+
+  if (section === 'section_order' && updates.section_key !== undefined) {
+    if (typeof updates.section_key !== 'string' || !isHomepageSectionKey(updates.section_key)) {
+      return NextResponse.json({ error: 'Invalid section_key' }, { status: 400 });
+    }
   }
 
   const { data, error } = await supabase

@@ -10,6 +10,7 @@ import {
 } from "@/app/admin/components";
 import {
   CollectionSectionEditor,
+  SectionBuilderEditor,
   SingleSectionEditor,
 } from "@/app/admin/components/sections";
 import { useAdminToast } from "@/hooks/useAdminToast";
@@ -68,6 +69,8 @@ export default function AdminDashboard() {
         <main className="p-6 md:p-8 max-w-6xl">
           {!config ? (
             <DashboardOverview onNavigate={handleNavigation} />
+          ) : config.section === "section_order" ? (
+            <SectionBuilderEditor addToast={addToast} />
           ) : config.mode === "single" ? (
             <SingleSectionEditor config={config} addToast={addToast} />
           ) : (

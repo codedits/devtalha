@@ -8,7 +8,7 @@ export const SINGLE_ROW_SECTIONS = [
   "process_meta",
 ] as const;
 
-export const MULTI_ROW_SECTIONS = ["works", "services", "process_steps"] as const;
+export const MULTI_ROW_SECTIONS = ["works", "services", "process_steps", "section_order"] as const;
 
 export const ADMIN_SECTIONS = [...SINGLE_ROW_SECTIONS, ...MULTI_ROW_SECTIONS] as const;
 
@@ -38,12 +38,14 @@ export const EDITABLE_FIELDS: Record<AdminSection, readonly string[]> = {
   works: ["title", "client", "summary", "project_url", "image_url", "hover_image_url", "gallery_images", "sort_order"],
   services: ["title", "description", "tags", "images", "sort_order"],
   process_steps: ["number", "title", "description", "sort_order"],
+  section_order: ["section_key", "title", "sort_order"],
 };
 
 export const REQUIRED_MULTI_ROW_FIELDS: Partial<Record<AdminMultiRowSection, readonly string[]>> = {
   works: ["title", "client", "image_url"],
   services: ["title"],
   process_steps: ["number", "title"],
+  section_order: ["section_key", "title"],
 };
 
 export function isAdminSection(value: string): value is AdminSection {
