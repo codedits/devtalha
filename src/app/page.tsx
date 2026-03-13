@@ -7,10 +7,9 @@ import Process from "@/components/Process";
 import Reachus from "@/components/Reachus";
 import Footer from "@/components/Footer";
 import { SectionParallax } from "@/components/SectionParallax";
-import { PORTFOLIO_CACHE_REVALIDATE_SECONDS } from "@/lib/admin/cache";
 import { getHero, getAbout, getWorks, getServices, getProcessSteps, getReachus, getFooter } from "@/lib/queries";
 
-export const revalidate = PORTFOLIO_CACHE_REVALIDATE_SECONDS;
+export const revalidate = 604800; // 7 days in seconds
 
 export default async function Home() {
   // Fetch all sections in parallel
