@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { X, Menu } from "lucide-react";
 import Link from "next/link";
 
+import { RollText } from "./ui/RollText";
+
 const navLinks = [
   { label: "HOME", href: "/" },
   { label: "WORKS", href: "/#work" },
@@ -50,9 +52,9 @@ export default function Navbar() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="text-[14px] font-bold uppercase tracking-normal hover:opacity-50 transition-opacity whitespace-nowrap"
+                className="text-[14px] font-bold uppercase tracking-normal transition-opacity whitespace-nowrap"
               >
-                {link.label}
+                <RollText>{link.label}</RollText>
               </Link>
             ))}
           </div>

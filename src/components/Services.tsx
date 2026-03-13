@@ -16,6 +16,8 @@ interface Service {
   images: string[];
 }
 
+import { RollText } from "./ui/RollText";
+
 export default function Services({ data, meta }: { data?: ServicesItem[] | null; meta?: ServicesMetaSection | null }) {
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
@@ -125,7 +127,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
               </LiquidButton>
             </motion.div>
           </motion.div>
-
+ 
           {/* Right Column (Accordion) */}
           <div className="lg:col-span-9 lg:mt-16">
             <motion.div 
@@ -147,7 +149,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                   >
                     <motion.button 
                       onClick={() => setOpenService(isOpen ? '' : service.id)}
-                      className="w-full py-6 md:py-8 flex justify-between items-center group text-left"
+                      className="w-full py-6 md:py-8 flex justify-between items-center group/service text-left"
                       whileHover={allowHover ? { x: 10 } : undefined}
                       transition={allowHover ? { duration: 0.3 } : undefined}
                     >
@@ -167,7 +169,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                         {isOpen ? <Minus size={24} strokeWidth={1} /> : <Plus size={24} strokeWidth={1} />}
                       </motion.span>
                     </motion.button>
-
+ 
                     <AnimatePresence>
                       {isOpen && (
                         <motion.div 
@@ -196,13 +198,13 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                               {service.tags.map((tag, tagIdx) => (
                                 <motion.span 
                                   key={tag} 
-                                  className="border border-white/20 px-5 py-2 text-[11px] font-medium tracking-wider text-foreground uppercase hover:bg-foreground hover:text-background transition-colors duration-300 cursor-default"
+                                  className="border border-white/20 px-5 py-2 text-[11px] font-medium tracking-wider text-foreground uppercase hover:bg-foreground hover:text-background transition-colors duration-300 cursor-default group/roll"
                                   initial={{ opacity: 0, y: 10 }}
                                   animate={{ opacity: 1, y: 0 }}
                                   transition={{ delay: 0.2 + tagIdx * 0.05 }}
                                   whileHover={allowHover ? { scale: 1.05 } : undefined}
                                 >
-                                  {tag}
+                                  <RollText>{tag}</RollText>
                                 </motion.span>
                               ))}
                             </motion.div>

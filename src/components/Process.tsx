@@ -13,6 +13,8 @@ interface ProcessStep {
   description: string;
 }
 
+import { RollText } from "./ui/RollText";
+
 // Card animation variants
 const cardVariants = {
   hidden: { opacity: 0, y: 60 },
@@ -91,7 +93,7 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
                 backgroundColor: "hsl(var(--card))",
                 transition: { duration: 0.3 }
               } : undefined}
-              className={`flex flex-col justify-between p-8 md:p-10 min-h-[300px] lg:min-h-[450px] bg-background group cursor-default border-b lg:border-b-0 ${idx !== 3 ? 'lg:border-r' : ''} border-white/15 relative overflow-hidden`}
+              className={`flex flex-col justify-between p-8 md:p-10 min-h-[300px] lg:min-h-[450px] bg-background group/roll cursor-default border-b lg:border-b-0 ${idx !== 3 ? 'lg:border-r' : ''} border-white/15 relative overflow-hidden`}
             >
               {/* Hover line accent */}
               <motion.div
@@ -104,13 +106,13 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
               {/* Card Top */}
               <div className="flex justify-between items-start">
                 <motion.span 
-                  className="text-xs font-bold tracking-[0.2em] text-foreground/80 group-hover:text-foreground transition-colors duration-500"
+                  className="text-xs font-bold tracking-[0.2em] text-foreground/80 group-hover/roll:text-foreground transition-colors duration-500"
                   whileHover={allowHover ? { x: 5 } : undefined}
                 >
-                  {step.number}
+                  <RollText>{step.number}</RollText>
                 </motion.span>
                 <motion.span 
-                  className="text-foreground/60 group-hover:text-foreground transition-all duration-500"
+                  className="text-foreground/60 group-hover/roll:text-foreground transition-all duration-500"
                   whileHover={allowHover ? {
                     x: 5,
                     y: -5,
@@ -129,10 +131,10 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
                   whileHover={allowHover ? { x: 10 } : undefined}
                   transition={allowHover ? { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } : undefined}
                 >
-                  {step.title}
+                  <RollText>{step.title}</RollText>
                 </motion.h3>
                 <motion.p 
-                  className="text-[15px] text-foreground/80 leading-[1.7] group-hover:text-foreground transition-colors duration-500 font-medium"
+                  className="text-[15px] text-foreground/80 leading-[1.7] group-hover/roll:text-foreground transition-colors duration-500 font-medium"
                   initial={{ opacity: 0.7 }}
                   whileHover={{ opacity: 1 }}
                 >

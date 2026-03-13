@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
         hostname: 'framerusercontent.com',
       }
     ],
-    qualities: [75, 80],
+    qualities: [70, 75, 80, 85],
   },
 };
 

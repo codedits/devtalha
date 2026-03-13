@@ -1,9 +1,15 @@
-import React from 'react';
+"use client";
+
 import { Star } from 'lucide-react';
 import Image from 'next/image';
+import { useRef } from 'react';
+import { useInView } from 'framer-motion';
 import type { WhyChooseUsSection } from '@/types/content';
 
 export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { once: true, margin: "-10% 0px" });
+
   // Chart data to mimic the upward trending bar chart
   const chartBars = [
     12, 16, 20, 24, 28,
@@ -14,18 +20,22 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
   ];
 
   return (
-    <section className="bg-white text-black font-sans selection:bg-black selection:text-white" id="why-choose-us">
+    <section 
+      ref={containerRef}
+      className={`bg-white text-black font-sans selection:bg-black selection:text-white overflow-hidden ${isInView ? 'is-visible' : ''}`} 
+      id="why-choose-us"
+    >
       <div className="container mx-auto px-6 md:px-8 max-w-7xl py-16 sm:py-24 lg:py-32">
 
         {/* Header Section */}
         <div className="flex flex-col md:flex-row gap-6 md:gap-12 mb-12 sm:mb-16 lg:mb-20">
           <div className="md:w-1/4 lg:w-[20%] shrink-0 pt-3">
-            <span className="text-xs sm:text-sm font-bold tracking-[0.2em] uppercase text-muted-foreground">
+            <span className="reveal-up text-xs sm:text-sm font-bold tracking-[0.2em] uppercase text-muted-foreground block">
               {data.label}
             </span>
           </div>
           <div className="md:w-3/4 lg:w-[80%]">
-            <h2 className="text-[1.5rem] sm:text-4xl md:text-4xl lg:text-[5.5rem] font-medium tracking-tight leading-[1.05] text-black max-w-[50rem] whitespace-pre-line">
+            <h2 className="reveal-up text-[1.5rem] sm:text-4xl md:text-4xl lg:text-[5.5rem] font-medium tracking-tight leading-[1.05] text-black max-w-[50rem] whitespace-pre-line" style={{ animationDelay: '0.1s' }}>
               {data.heading}
             </h2>
           </div>
@@ -35,7 +45,10 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
 
           {/* Card 1: Main Image / Brand */}
-          <div className="relative group min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] bg-[#1a1a1a] overflow-hidden flex flex-col justify-between p-6 sm:p-8 rounded-2xl">
+          <div 
+            className="reveal-up relative group min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] bg-[#1a1a1a] overflow-hidden flex flex-col justify-between p-6 sm:p-8 rounded-2xl"
+            style={{ animationDelay: '0.2s' }}
+          >
             {/* Background Image */}
             <Image
               src={data.studio_image_url}
@@ -61,7 +74,10 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
           </div>
 
           {/* Card 2: Testimonial */}
-          <div className="border border-zinc-200 bg-white p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col justify-between rounded-2xl">
+          <div 
+            className="reveal-up border border-zinc-200 bg-white p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col justify-between rounded-2xl"
+            style={{ animationDelay: '0.3s' }}
+          >
             <div className="flex flex-col xl:flex-row xl:items-center gap-4 mb-8">
               {/* Avatars */}
               <div className="flex -space-x-3 shrink-0">
@@ -88,7 +104,10 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
           </div>
 
           {/* Card 3: Stats / Chart */}
-          <div className="border border-zinc-200 bg-[#f7f7f7] p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col relative rounded-2xl">
+          <div 
+            className="reveal-up border border-zinc-200 bg-[#f7f7f7] p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col relative rounded-2xl"
+            style={{ animationDelay: '0.4s' }}
+          >
             <div>
               <h3 className="text-6xl sm:text-7xl lg:text-[5rem] font-medium tracking-tighter text-black leading-none mb-3">
                 {data.revenue_stat}
@@ -104,8 +123,8 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
                 {chartBars.map((height, index) => (
                   <div
                     key={index}
-                    style={{ height: `${height}%` }}
-                    className="w-[1px] sm:w-[2px] bg-black rounded-t-sm"
+                    style={{ height: `${height}%`, animationDelay: `${0.5 + index * 0.02}s` }}
+                    className="w-[1px] sm:w-[2px] bg-black rounded-t-sm bar-initial bar-animate"
                   />
                 ))}
               </div>
@@ -122,7 +141,10 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
           </div>
 
           {/* Card 4: Info / Scale */}
-          <div className="border border-zinc-200 bg-white p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col relative overflow-hidden rounded-2xl">
+          <div 
+            className="reveal-up border border-zinc-200 bg-white p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col relative overflow-hidden rounded-2xl"
+            style={{ animationDelay: '0.5s' }}
+          >
             <div className="relative z-10">
               <h3 className="text-6xl sm:text-7xl lg:text-[5rem] font-medium tracking-tighter text-black leading-none mb-6">
                 {data.scale_stat}
