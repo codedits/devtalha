@@ -1,10 +1,15 @@
 import Hero from "@/components/Hero";
 import About from "@/components/About";
+import WhyChooseUs from "@/components/WhyChooseUs";
 import Works from "@/components/Works";
 import Services from "@/components/Services";
 import Process from "@/components/Process";
 import Reachus from "@/components/Reachus";
 import { SectionParallax } from "@/components/SectionParallax";
+import {
+  HOMEPAGE_SECTION_DEFINITIONS,
+  type HomepageSectionKey,
+} from "@/lib/admin/homepageSections";
 import {
   getHero,
   getAbout,
@@ -16,15 +21,29 @@ import {
   getProcessSteps,
   getProcessMeta,
   getReachus,
+  getWhyChooseUs,
 } from "@/lib/queries";
 
 export const revalidate = 604800; // 7 days in seconds
 
 export default async function Home() {
   // Fetch all sections in parallel
-  const [hero, about, works, worksMeta, services, servicesMeta, processSteps, processMeta, reachus, sectionOrder] = await Promise.all([
+  const [
+    hero,
+    about,
+    why,
+    works,
+    worksMeta,
+    services,
+    servicesMeta,
+    processSteps,
+    processMeta,
+    reachus,
+    sectionOrder,
+  ] = await Promise.all([
     getHero(),
     getAbout(),
+    getWhyChooseUs(),
     getWorks(),
     getWorksMeta(),
     getServices(),
@@ -38,6 +57,7 @@ export default async function Home() {
   const sectionContent = {
     hero: <Hero data={hero} />,
     about: <About data={about} />,
+    why: <WhyChooseUs data={why} />,
     works: (
       <Works
         data={works}
@@ -55,6 +75,7 @@ export default async function Home() {
   const strengthByKey = {
     hero: 80,
     about: 100,
+    why: 0,
     works: 60,
     services: 45,
     process: 45,
@@ -64,6 +85,7 @@ export default async function Home() {
   const classNameByKey = {
     hero: undefined,
     about: "cv-auto",
+    why: "cv-auto",
     works: undefined,
     services: "cv-auto",
     process: "cv-auto",
@@ -72,7 +94,7 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
-      {sectionOrder.map((key, index) => (
+      {sectionOrder.map((key: HomepageSectionKey, index: number) => (
         <SectionParallax
           key={key}
           zIndex={10 + index}

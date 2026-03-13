@@ -18,6 +18,7 @@ import {
   type ServicesItem,
   type WorksMetaSection,
   type WorksItem,
+  type WhyChooseUsSection,
 } from "@/types/content";
 import type { Tables } from "@/types/supabase";
 import {
@@ -37,13 +38,13 @@ function clampNonNegativeInteger(value: unknown, fallback: number) {
   return Math.max(0, Math.trunc(parsed));
 }
 
-async function fetchSingle<K extends "hero" | "about" | "reachus" | "footer">(section: K) {
+async function fetchSingle<K extends "hero" | "about" | "reachus" | "footer" | "why_choose_us">(section: K) {
   const { data, error } = await supabase
     .from(section)
     .select("*")
     .order("updated_at", { ascending: false, nullsFirst: false })
     .limit(1)
-    .maybeSingle<Tables<K>>();
+    .maybeSingle<any>();
   if (error) throw new Error(error.message);
   if (!data) throw new Error(`No rows found for ${section}`);
   return data;
@@ -163,6 +164,15 @@ const getProcessMetaCached = unstable_cache(
   }
 );
 
+const getWhyChooseUsCached = unstable_cache(
+  async () => fetchSingle("why_choose_us"),
+  ["portfolio-query-why-choose-us"],
+  {
+    revalidate: PORTFOLIO_CACHE_REVALIDATE_SECONDS,
+    tags: getSectionTags("why_choose_us"),
+  }
+);
+
 const getHomepageSectionOrderCached = unstable_cache(
   async () => {
     const { data, error } = await supabase
@@ -265,6 +275,30 @@ export async function getProcessMeta() {
       updated_at: null,
     }
   ) satisfies ProcessMetaSection;
+}
+
+export async function getWhyChooseUs() {
+  const meta = (await getWhyChooseUsCached()) as WhyChooseUsSection | null;
+  if (!meta) {
+    return {
+      id: "",
+      label: "[ WHY CHOOSE US ]",
+      heading: "A studio cut for brands that refuse to play safe",
+      studio_name: "Talha Studio®",
+      studio_image_url:
+        "https://images.unsplash.com/photo-1611042553365-9b101441c135?q=80&w=1000&auto=format&fit=crop",
+      studio_since: "Since 2019",
+      testimonial_text:
+        '"Working with this team was the difference between having a website and having a digital brand. Our bounce rate dropped by nearly half within the first month, the site finally feels like it represents us"',
+      revenue_stat: "$20M+",
+      revenue_label: "Revenue generated for our clients",
+      scale_stat: "120+",
+      scale_description:
+        "From New York to Dubai, our work has no borders. We collaborate across time zones to deliver systems and designs that scale.",
+      updated_at: null,
+    } satisfies WhyChooseUsSection;
+  }
+  return meta as WhyChooseUsSection;
 }
 
 export async function getReachus() {

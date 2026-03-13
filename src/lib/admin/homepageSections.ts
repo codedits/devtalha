@@ -1,6 +1,7 @@
 export const HOMEPAGE_SECTION_KEYS = [
   "hero",
   "about",
+  "why",
   "works",
   "services",
   "process",
@@ -17,6 +18,7 @@ export type HomepageSectionDefinition = {
 export const HOMEPAGE_SECTION_DEFINITIONS: HomepageSectionDefinition[] = [
   { key: "hero", title: "Hero" },
   { key: "about", title: "About" },
+  { key: "why", title: "Why Choose Us" },
   { key: "works", title: "Works" },
   { key: "services", title: "Services" },
   { key: "process", title: "Process" },

@@ -9,6 +9,21 @@ export type WorksMetaSection = Tables<"works_meta">;
 export type ServicesMetaSection = Tables<"services_meta">;
 export type ProcessMetaSection = Tables<"process_meta">;
 
+export type WhyChooseUsSection = {
+  id: string;
+  label: string;
+  heading: string;
+  studio_name: string;
+  studio_image_url: string;
+  studio_since: string;
+  testimonial_text: string;
+  revenue_stat: string;
+  revenue_label: string;
+  scale_stat: string;
+  scale_description: string;
+  updated_at: string | null;
+};
+
 export type AboutStat = {
   value: number;
   suffix: string;

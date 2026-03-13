@@ -6,6 +6,7 @@ export const SINGLE_ROW_SECTIONS = [
   "works_meta",
   "services_meta",
   "process_meta",
+  "why_choose_us",
 ] as const;
 
 export const MULTI_ROW_SECTIONS = ["works", "services", "process_steps", "section_order"] as const;
@@ -35,6 +36,18 @@ export const EDITABLE_FIELDS: Record<AdminSection, readonly string[]> = {
   works_meta: ["homepage_label", "homepage_heading", "featured_count", "archive_heading"],
   services_meta: ["label", "profile_image_url", "intro_text", "cta_text", "cta_url"],
   process_meta: ["label"],
+  why_choose_us: [
+    "label",
+    "heading",
+    "studio_name",
+    "studio_image_url",
+    "studio_since",
+    "testimonial_text",
+    "revenue_stat",
+    "revenue_label",
+    "scale_stat",
+    "scale_description",
+  ],
   works: ["title", "client", "summary", "project_url", "image_url", "hover_image_url", "gallery_images", "sort_order"],
   services: ["title", "description", "tags", "images", "sort_order"],
   process_steps: ["number", "title", "description", "sort_order"],
