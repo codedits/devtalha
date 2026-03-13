@@ -30,10 +30,11 @@ export const SECTION_CONFIGS: SectionConfig[] = [
     section: "hero",
     mode: "single",
     icon: <ImageIcon size={18} />,
-    description: "Main hero banner - heading, background image, and name label.",
+    description: "Main hero banner - heading, desktop/mobile background images, and name label.",
     fields: [
       { key: "heading", label: "Heading", type: "textarea", placeholder: "Main hero heading text" },
-      { key: "background_image_url", label: "Background Image", type: "image" },
+      { key: "background_image_url", label: "Desktop Background Image", type: "image" },
+      { key: "mobile_background_image_url", label: "Mobile Background Image", type: "image" },
       { key: "name_label", label: "Name Label", type: "text", placeholder: "e.g. TALHA IRFAN" },
     ],
   },

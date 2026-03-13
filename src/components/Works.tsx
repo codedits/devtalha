@@ -72,7 +72,7 @@ const WorkCard: React.FC<{ work: WorkCardData; index: number }> = ({ work, index
             alt={work.title}
             fill
             className={`object-cover transition-opacity duration-700 ease-in-out ${allowHover ? "group-hover:opacity-0" : ""}`}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes="(max-width: 768px) 100vw, 50vw"
             quality={80}
           />
         </motion.div>
@@ -92,7 +92,7 @@ const WorkCard: React.FC<{ work: WorkCardData; index: number }> = ({ work, index
                 alt={`${work.title} Hover`}
                 fill
                 className="object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                sizes="(max-width: 768px) 100vw, 50vw"
                 quality={80}
               />
             </motion.div>

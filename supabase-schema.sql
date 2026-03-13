@@ -8,9 +8,13 @@ CREATE TABLE IF NOT EXISTS hero (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   heading TEXT NOT NULL DEFAULT 'I build brands, campaigns, and digital experience',
   background_image_url TEXT NOT NULL DEFAULT '',
+  mobile_background_image_url TEXT NOT NULL DEFAULT '',
   name_label TEXT NOT NULL DEFAULT 'TALHA IRFAN',
   updated_at TIMESTAMPTZ DEFAULT now()
 );
+
+-- Ensure new columns exist in older databases
+ALTER TABLE hero ADD COLUMN IF NOT EXISTS mobile_background_image_url TEXT NOT NULL DEFAULT '';
 
 -- 2. About Section (single row)
 CREATE TABLE IF NOT EXISTS about (
@@ -211,12 +215,13 @@ FOR SELECT USING (bucket_id = 'portfolio-images');
 -- ============================================================
 
 -- Seed Hero
-INSERT INTO hero (heading, background_image_url, name_label)
+INSERT INTO hero (heading, background_image_url, mobile_background_image_url, name_label)
 SELECT * FROM (VALUES (
   'I build brands, campaigns, and digital experience',
   'https://images.unsplash.com/photo-1582150816999-5c92a8c15401?q=80&w=1170&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1582150816999-5c92a8c15401?q=80&w=1170&auto=format&fit=crop',
   'TALHA IRFAN'
-)) AS seed(heading, background_image_url, name_label)
+)) AS seed(heading, background_image_url, mobile_background_image_url, name_label)
 WHERE NOT EXISTS (SELECT 1 FROM hero);
 
 -- Seed About

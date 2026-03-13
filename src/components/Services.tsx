@@ -99,7 +99,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                   alt="Representative Profile"
                   fill
                   className="object-cover grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700"
-                  sizes="(max-width: 1024px) 100vw, 25vw"
+                  sizes="(max-width: 1024px) 100vw, 22vw"
                   quality={80}
                 />
               </motion.div>
@@ -226,7 +226,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                                       alt={`${service.title} detail ${imgIdx + 1}`}
                                       fill
                                       className="object-cover opacity-80 hover:opacity-100 transition-opacity duration-500"
-                                      sizes="(max-width: 768px) 100vw, 33vw"
+                                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 25vw"
                                       quality={80}
                                     />
                                   </motion.div>

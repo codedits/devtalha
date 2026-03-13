@@ -60,7 +60,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                 alt={projectTitle}
                 fill
                 className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 60vw"
+                sizes="(max-width: 1024px) 100vw, 58vw"
               />
             ) : null}
           </div>
@@ -73,7 +73,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                   alt={`${projectTitle} secondary visual`}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 1024px) 50vw, 28vw"
+                  sizes="(max-width: 1024px) 50vw, 29vw"
                 />
               ) : null}
             </div>
@@ -95,7 +95,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
                     alt={`${projectTitle} gallery image ${idx + 1}`}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 1024px) 50vw, 28vw"
+                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 19vw"
                   />
                 </div>
               ))}

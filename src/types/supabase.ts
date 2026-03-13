@@ -68,6 +68,7 @@ export type Database = {
           background_image_url: string
           heading: string
           id: string
+          mobile_background_image_url: string
           name_label: string
           updated_at: string | null
         }
@@ -75,6 +76,7 @@ export type Database = {
           background_image_url?: string
           heading?: string
           id?: string
+          mobile_background_image_url?: string
           name_label?: string
           updated_at?: string | null
         }
@@ -82,6 +84,7 @@ export type Database = {
           background_image_url?: string
           heading?: string
           id?: string
+          mobile_background_image_url?: string
           name_label?: string
           updated_at?: string | null
         }

@@ -11,7 +11,9 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
   const heading = data?.heading ?? 'I build brands, campaigns, and digital experience';
-  const bgImage = data?.background_image_url ?? 'https://images.unsplash.com/photo-1582150816999-5c92a8c15401?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+  const desktopBgImage = data?.background_image_url ?? 'https://images.unsplash.com/photo-1582150816999-5c92a8c15401?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+  const mobileBgImage = data?.mobile_background_image_url?.trim() || desktopBgImage;
+  const bgImage = isMobile ? mobileBgImage : desktopBgImage;
   const nameLabel = data?.name_label ?? 'TALHA IRFAN';
   const [isLoaded, setIsLoaded] = useState(false);
   const [isAnimationFinished, setIsAnimationFinished] = useState(false);
@@ -71,7 +73,7 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
             priority
             quality={80}
             className="object-cover"
-            sizes="100vw"
+            sizes="(max-width: 768px) calc(100vw - 1rem), calc(100vw - 1rem)"
             onLoad={() => setIsLoaded(true)}
           />
           {/* Animated gradient overlay */}

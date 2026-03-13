@@ -18,7 +18,7 @@ export type AdminMultiRowSection = (typeof MULTI_ROW_SECTIONS)[number];
 export type AdminSection = (typeof ADMIN_SECTIONS)[number];
 
 export const EDITABLE_FIELDS: Record<AdminSection, readonly string[]> = {
-  hero: ["heading", "background_image_url", "name_label"],
+  hero: ["heading", "background_image_url", "mobile_background_image_url", "name_label"],
   about: ["label", "heading", "description", "stats"],
   reachus: [
     "label",
