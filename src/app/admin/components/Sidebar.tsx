@@ -8,14 +8,15 @@ import {
 } from "lucide-react";
 
 import { SECTION_CONFIGS } from "@/lib/admin/config";
+import type { AdminSection } from "@/lib/admin/sections";
 import { cn } from "@/lib/utils";
 
 type SidebarProps = {
-  activeSection: string | null;
+  activeSection: AdminSection | null;
   sidebarOpen: boolean;
   onCloseSidebar: () => void;
   onOpenDashboard: () => void;
-  onNavigate: (section: string) => void;
+  onNavigate: (section: AdminSection) => void;
   onLogout: () => void;
 };
 

@@ -21,6 +21,12 @@ import {
 } from "@/types/content";
 import type { Tables } from "@/types/supabase";
 
+function clampNonNegativeInteger(value: unknown, fallback: number) {
+  const parsed = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.max(0, Math.trunc(parsed));
+}
+
 async function fetchSingle<K extends "hero" | "about" | "reachus" | "footer">(section: K) {
   const { data, error } = await supabase
     .from(section)
@@ -165,16 +171,21 @@ export async function getWorks() {
 
 export async function getWorksMeta() {
   const meta = (await getWorksMetaCached()) as Tables<"works_meta"> | null;
-  return (
-    meta ?? {
+  if (!meta) {
+    return {
       id: "",
       homepage_label: "[ FEATURED PROJECTS ]",
       homepage_heading: "Works.",
       featured_count: 4,
       archive_heading: "Archive.",
       updated_at: null,
-    }
-  ) satisfies WorksMetaSection;
+    } satisfies WorksMetaSection;
+  }
+
+  return {
+    ...meta,
+    featured_count: clampNonNegativeInteger(meta.featured_count, 4),
+  } satisfies WorksMetaSection;
 }
 
 export async function getWorkById(id: string) {

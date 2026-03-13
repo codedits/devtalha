@@ -1,9 +1,10 @@
 "use client";
 
 import { SECTION_CONFIGS } from "@/lib/admin/config";
+import type { AdminSection } from "@/lib/admin/sections";
 
 type DashboardOverviewProps = {
-  onNavigate: (section: string) => void;
+  onNavigate: (section: AdminSection) => void;
 };
 
 export function DashboardOverview({ onNavigate }: DashboardOverviewProps) {

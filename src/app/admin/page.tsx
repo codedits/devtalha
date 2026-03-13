@@ -14,9 +14,10 @@ import {
 } from "@/app/admin/components/sections";
 import { useAdminToast } from "@/hooks/useAdminToast";
 import { SECTION_CONFIGS } from "@/lib/admin/config";
+import type { AdminSection } from "@/lib/admin/sections";
 
 export default function AdminDashboard() {
-  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState<AdminSection | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
   const { toasts, addToast, dismissToast } = useAdminToast();
@@ -31,7 +32,7 @@ export default function AdminDashboard() {
     router.push("/admin/login");
   };
 
-  const handleNavigation = (section: string) => {
+  const handleNavigation = (section: AdminSection) => {
     setActiveSection(section);
     setSidebarOpen(false);
   };

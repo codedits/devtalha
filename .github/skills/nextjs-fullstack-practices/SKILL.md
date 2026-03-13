@@ -13,6 +13,15 @@ user-invocable: true
 - Migration-safe database changes with idempotent SQL patterns.
 - A debugging and verification checklist that catches logical regressions early.
 
+## Opinionated Defaults
+- Validation: Zod schemas for request parsing, payload sanitization, and response contracts.
+- Database access: Supabase query helper pattern in a central data layer, with typed wrappers and cache-tag aware fetchers.
+- Testing: Playwright for critical UI flows plus API contract checks for admin and content routes.
+- UI: Tailwind CSS with reusable component primitives and section-level config objects.
+
+Default rule:
+- Use these defaults unless the repository already has an established equivalent pattern.
+
 ## When To Use
 - New feature work in app router projects.
 - Admin panel plus content-driven frontend systems.
@@ -46,7 +55,7 @@ Quality checks:
 
 ### 3. Backend Route Standards
 1. Use strict allowlists for section or table names.
-2. Parse JSON safely and return clear 400 errors for malformed payloads.
+2. Parse JSON with Zod and return clear 400 errors for malformed payloads.
 3. Sanitize payloads with explicit editable field allowlists.
 4. Validate IDs and required fields before DB calls.
 5. Return consistent error messages and status codes.
@@ -94,6 +103,7 @@ Before marking done, confirm all:
 4. Singleton tables have one row only.
 5. Sort orders are deterministic and unique where expected.
 6. Frontend reflects admin changes without hard refresh issues.
+7. Playwright smoke tests pass for core admin and public content paths.
 
 ## Output Format For Each Task
 - Findings by severity with file references.

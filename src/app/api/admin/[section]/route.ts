@@ -2,65 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
 
 import { getSectionTags } from '@/lib/admin/cache';
+import {
+  EDITABLE_FIELDS,
+  REQUIRED_MULTI_ROW_FIELDS,
+  isAdminSection,
+  isMultiRowSection,
+  isSingleRowSection,
+  type AdminSection,
+} from '@/lib/admin/sections';
 import { createAdminClient } from '@/lib/supabase';
-
-const SINGLE_ROW_TABLES = [
-  'hero',
-  'about',
-  'reachus',
-  'footer',
-  'works_meta',
-  'services_meta',
-  'process_meta',
-] as const;
-const MULTI_ROW_TABLES = ['works', 'services', 'process_steps'] as const;
-const ALLOWED_TABLES = [...SINGLE_ROW_TABLES, ...MULTI_ROW_TABLES];
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-const EDITABLE_FIELDS: Record<(typeof ALLOWED_TABLES)[number], string[]> = {
-  hero: ['heading', 'background_image_url', 'name_label'],
-  about: ['label', 'heading', 'description', 'stats'],
-  reachus: [
-    'label',
-    'heading',
-    'email',
-    'office_title',
-    'office_line_1',
-    'office_line_2',
-    'office_line_3',
-    'inquiry_title',
-    'inquiry_text',
-    'socials',
-  ],
-  footer: ['newsletter_heading', 'newsletter_description', 'brand_name', 'email'],
-  works_meta: ['homepage_label', 'homepage_heading', 'featured_count', 'archive_heading'],
-  services_meta: ['label', 'profile_image_url', 'intro_text', 'cta_text', 'cta_url'],
-  process_meta: ['label'],
-  works: ['title', 'client', 'summary', 'project_url', 'image_url', 'hover_image_url', 'gallery_images', 'sort_order'],
-  services: ['title', 'description', 'tags', 'images', 'sort_order'],
-  process_steps: ['number', 'title', 'description', 'sort_order'],
-};
-
-const REQUIRED_FIELDS: Partial<Record<(typeof MULTI_ROW_TABLES)[number], string[]>> = {
-  works: ['title', 'client', 'image_url'],
-  services: ['title'],
-  process_steps: ['number', 'title'],
-};
 
 function isUnauthorized(req: NextRequest) {
   return req.cookies.get('admin_auth')?.value !== 'true';
-}
-
-function isSingleRowTable(section: string): section is (typeof SINGLE_ROW_TABLES)[number] {
-  return (SINGLE_ROW_TABLES as readonly string[]).includes(section);
-}
-
-function isMultiRowTable(section: string): section is (typeof MULTI_ROW_TABLES)[number] {
-  return (MULTI_ROW_TABLES as readonly string[]).includes(section);
-}
-
-function isAllowedTable(section: string): section is (typeof ALLOWED_TABLES)[number] {
-  return (ALLOWED_TABLES as readonly string[]).includes(section);
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -74,7 +28,13 @@ function toStringArray(value: unknown) {
     .filter(Boolean);
 }
 
-function sanitizePayload(section: (typeof ALLOWED_TABLES)[number], raw: Record<string, unknown>) {
+function toNonNegativeInteger(value: unknown) {
+  const parsed = typeof value === 'number' ? value : Number(value);
+  if (!Number.isFinite(parsed)) return 0;
+  return Math.max(0, Math.trunc(parsed));
+}
+
+function sanitizePayload(section: AdminSection, raw: Record<string, unknown>) {
   const editableFields = EDITABLE_FIELDS[section];
   const sanitized: Record<string, unknown> = {};
 
@@ -83,8 +43,7 @@ function sanitizePayload(section: (typeof ALLOWED_TABLES)[number], raw: Record<s
     if (value === undefined) continue;
 
     if (field === 'sort_order' || field === 'featured_count') {
-      const parsed = typeof value === 'number' ? value : Number(value);
-      sanitized[field] = Number.isFinite(parsed) ? parsed : 0;
+      sanitized[field] = toNonNegativeInteger(value);
       continue;
     }
 
@@ -158,13 +117,13 @@ export async function GET(
   }
 
   const { section } = await params;
-  if (!isAllowedTable(section)) {
+  if (!isAdminSection(section)) {
     return NextResponse.json({ error: 'Invalid section' }, { status: 400 });
   }
 
   const supabase = createAdminClient();
 
-  if (isSingleRowTable(section)) {
+  if (isSingleRowSection(section)) {
     const { data, error } = await supabase
       .from(section)
       .select('*')
@@ -190,7 +149,7 @@ export async function POST(
   }
 
   const { section } = await params;
-  if (!isMultiRowTable(section)) {
+  if (!isMultiRowSection(section)) {
     return NextResponse.json({ error: 'POST is only allowed for list sections' }, { status: 400 });
   }
 
@@ -206,7 +165,7 @@ export async function POST(
     delete insertPayload.id;
   }
 
-  for (const requiredField of REQUIRED_FIELDS[section] ?? []) {
+  for (const requiredField of REQUIRED_MULTI_ROW_FIELDS[section] ?? []) {
     const value = insertPayload[requiredField];
     if (typeof value !== 'string' || value.trim() === '') {
       return NextResponse.json({ error: `${requiredField} is required` }, { status: 400 });
@@ -233,7 +192,7 @@ export async function PUT(
   }
 
   const { section } = await params;
-  if (!isAllowedTable(section)) {
+  if (!isAdminSection(section)) {
     return NextResponse.json({ error: 'Invalid section' }, { status: 400 });
   }
 
@@ -244,7 +203,7 @@ export async function PUT(
 
   const supabase = createAdminClient();
 
-  if (isSingleRowTable(section)) {
+  if (isSingleRowSection(section)) {
     const updates = sanitizePayload(section, parsedBody.body);
     if (Object.keys(updates).length === 0) {
       return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });
@@ -308,7 +267,7 @@ export async function DELETE(
   }
 
   const { section } = await params;
-  if (!isMultiRowTable(section)) {
+  if (!isMultiRowSection(section)) {
     return NextResponse.json({ error: 'DELETE is only allowed for list sections' }, { status: 400 });
   }
 

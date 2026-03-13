@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { AdminSection } from "@/lib/admin/sections";
 
 export type FieldType =
   | "text"
@@ -33,7 +34,7 @@ export type SectionMode = "single" | "collection";
 
 export type SectionConfig = {
   title: string;
-  section: string;
+  section: AdminSection;
   mode: SectionMode;
   description: string;
   icon: ReactNode;

@@ -2,10 +2,11 @@
 
 import { LayoutDashboard } from "lucide-react";
 
+import type { AdminSection } from "@/lib/admin/sections";
 import type { SectionConfig } from "@/lib/admin/types";
 
 type TopBarProps = {
-  activeSection: string | null;
+  activeSection: AdminSection | null;
   config: SectionConfig | null;
   onOpenSidebar: () => void;
   onBack: () => void;
