@@ -36,7 +36,7 @@ export default function Navbar() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="fixed top-8 left-0 right-0 z-50 flex justify-between items-center px-6 md:px-10 pointer-events-none font-sans mix-blend-difference"
+        className="fixed top-8 left-0 right-0 z-[70] flex justify-between items-center px-6 md:px-10 pointer-events-none font-sans mix-blend-difference"
       >
         {/* Logo */}
         <div className="pointer-events-auto">
