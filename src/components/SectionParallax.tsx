@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, type ReactNode } from "react";
-import { useIsMobile } from "@/hooks/useIsMobile";
+import { useMotionPreferences } from "@/hooks/useMotionPreferences";
 
 type SectionParallaxProps = {
   children: ReactNode;
@@ -18,8 +18,7 @@ export function SectionParallax({
   className,
 }: SectionParallaxProps) {
   const containerRef = useRef<HTMLElement>(null);
-  const prefersReducedMotion = useReducedMotion();
-  const isMobile = useIsMobile();
+  const { allowParallax } = useMotionPreferences();
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -29,7 +28,7 @@ export function SectionParallax({
   const y = useTransform(
     scrollYProgress,
     [0, 1],
-    prefersReducedMotion || isMobile ? [0, 0] : [-strength, strength]
+    allowParallax ? [-strength, strength] : [0, 0]
   );
 
   return (

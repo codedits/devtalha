@@ -4,12 +4,18 @@ import type { AdminSection } from "@/lib/admin/sections";
 export type FieldType =
   | "text"
   | "textarea"
+  | "select"
   | "image"
   | "image-list"
   | "number"
   | "string-list"
   | "stats"
   | "socials";
+
+export type SelectOption = {
+  label: string;
+  value: string;
+};
 
 export type StatItem = {
   value: number;
@@ -28,6 +34,7 @@ export type FieldConfig = {
   type: FieldType;
   placeholder?: string;
   description?: string;
+  options?: SelectOption[];
 };
 
 export type SectionMode = "single" | "collection";

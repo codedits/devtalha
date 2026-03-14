@@ -1,15 +1,14 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import BlurText from "./BlurText";
 import type { HeroSection } from "@/types/content";
-import { useIsMobile } from "@/hooks/useIsMobile";
+import { useMotionPreferences } from "@/hooks/useMotionPreferences";
 
 export default function Hero({ data }: { data?: HeroSection | null }) {
-  const prefersReducedMotion = useReducedMotion();
-  const isMobile = useIsMobile();
+  const { allowParallax } = useMotionPreferences();
   const heading = data?.heading ?? 'I build brands, campaigns, and digital experience';
   const desktopBgImage = data?.background_image_url ?? 'https://images.unsplash.com/photo-1582150816999-5c92a8c15401?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
   const mobileBgImage = data?.mobile_background_image_url?.trim() || desktopBgImage;
@@ -46,17 +45,17 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
   const imageScale = useTransform(
     scrollYProgress,
     [0, 1],
-    prefersReducedMotion || isMobile ? [1, 1] : [1, 1.2]
+    allowParallax ? [1, 1.16] : [1, 1]
   );
   const imageOpacity = useTransform(
     scrollYProgress,
     [0, 0.8],
-    prefersReducedMotion || isMobile ? [1, 1] : [1, 0]
+    allowParallax ? [1, 0.08] : [1, 1]
   );
   const textY = useTransform(
     scrollYProgress,
     [0, 1],
-    prefersReducedMotion || isMobile ? [0, 0] : [0, 100]
+    allowParallax ? [0, 72] : [0, 0]
   );
 
   return (
@@ -124,7 +123,7 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
               className="hero-text w-full"
             >
               <h1 className="text-4xl md:text-5xl lg:text-7xl font-medium leading-[0.85] tracking-[-0.07em] text-white">
-                {isLoaded ? (
+                <div className={isLoaded ? "opacity-100" : "opacity-0 pointer-events-none"} style={{ transition: "opacity 0.3s ease" }}>
                   <BlurText
                     text={heading}
                     delay={200}
@@ -132,9 +131,7 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
                     direction="bottom"
                     className="inline-flex flex-wrap"
                   />
-                ) : (
-                  <span className="opacity-0">{heading}</span>
-                )}
+                </div>
               </h1>
             </div>
           </div>

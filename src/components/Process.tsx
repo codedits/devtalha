@@ -5,6 +5,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { motion, useInView, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import type { ProcessMetaSection, ProcessStepItem } from "@/types/content";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { BASE_REVEAL, PREMIUM_EASE, REVEAL_VIEWPORT } from "@/lib/motion";
 
 interface ProcessStep {
   id: string;
@@ -22,9 +23,9 @@ const cardVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      delay: i * 0.15,
-      duration: 0.8,
-      ease: [0.25, 0.46, 0.45, 0.94] as const
+      delay: i * 0.12,
+      duration: BASE_REVEAL.duration,
+      ease: PREMIUM_EASE,
     }
   })
 };
@@ -44,7 +45,7 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
     : [];
 
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const isInView = useInView(sectionRef, REVEAL_VIEWPORT);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"]
@@ -69,7 +70,7 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
           className="mb-12"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          transition={BASE_REVEAL}
         >
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/80 block">
             {label}
@@ -80,7 +81,7 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-white/15"
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.2, duration: 0.8 }}
+          transition={{ ...BASE_REVEAL, delay: 0.15 }}
         >
           {steps.map((step, idx) => (
             <motion.div 
@@ -100,7 +101,7 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
                 className="absolute top-0 left-0 w-full h-[2px] bg-foreground origin-left"
                 initial={{ scaleX: 0 }}
                 whileHover={allowHover ? { scaleX: 1 } : undefined}
-                transition={allowHover ? { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } : undefined}
+                transition={allowHover ? { duration: 0.4, ease: PREMIUM_EASE } : undefined}
               />
               
               {/* Card Top */}
@@ -118,7 +119,7 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
                     y: -5,
                     scale: 1.2
                   } : undefined}
-                  transition={allowHover ? { type: "spring", stiffness: 300 } : undefined}
+                  transition={allowHover ? { type: "spring", stiffness: 260, damping: 22 } : undefined}
                 >
                   <ArrowUpRight size={18} strokeWidth={1} />
                 </motion.span>
@@ -129,14 +130,14 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
                 <motion.h3 
                   className="text-3xl tracking-tight mb-5 font-medium"
                   whileHover={allowHover ? { x: 10 } : undefined}
-                  transition={allowHover ? { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } : undefined}
+                  transition={allowHover ? { duration: 0.3, ease: PREMIUM_EASE } : undefined}
                 >
                   <RollText>{step.title}</RollText>
                 </motion.h3>
                 <motion.p 
                   className="text-[15px] text-foreground/80 leading-[1.7] group-hover/roll:text-foreground transition-colors duration-500 font-medium"
                   initial={{ opacity: 0.7 }}
-                  whileHover={{ opacity: 1 }}
+                  whileHover={allowHover ? { opacity: 1 } : undefined}
                 >
                   {step.description}
                 </motion.p>

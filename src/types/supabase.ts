@@ -38,27 +38,36 @@ export type Database = {
       }
       footer: {
         Row: {
+          background_image_url: string
+          background_mode: string
           brand_name: string
           email: string
           id: string
           newsletter_description: string
           newsletter_heading: string
+          text_theme: string
           updated_at: string | null
         }
         Insert: {
+          background_image_url?: string
+          background_mode?: string
           brand_name?: string
           email?: string
           id?: string
           newsletter_description?: string
           newsletter_heading?: string
+          text_theme?: string
           updated_at?: string | null
         }
         Update: {
+          background_image_url?: string
+          background_mode?: string
           brand_name?: string
           email?: string
           id?: string
           newsletter_description?: string
           newsletter_heading?: string
+          text_theme?: string
           updated_at?: string | null
         }
         Relationships: []

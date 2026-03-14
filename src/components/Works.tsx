@@ -3,11 +3,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import React, { useState } from 'react';
-import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { LiquidButton } from "./ui/LiquidButton";
 import BlurText from "./BlurText";
 import type { WorksItem } from "@/types/content";
-import { useIsMobile } from "@/hooks/useIsMobile";
+import { useMotionPreferences } from "@/hooks/useMotionPreferences";
+import { BASE_REVEAL, PREMIUM_EASE, REVEAL_VIEWPORT } from "@/lib/motion";
 
 type WorkCardData = {
   id: string;
@@ -25,32 +26,24 @@ const cardVariants = {
     y: 0,
     scale: 1,
     transition: {
-      delay: i * 0.15,
-      duration: 0.8,
-      ease: [0.25, 0.46, 0.45, 0.94] as const
+      delay: i * 0.12,
+      duration: BASE_REVEAL.duration,
+      ease: PREMIUM_EASE,
     }
   })
 };
 
 const WorkCard: React.FC<{ work: WorkCardData; index: number }> = ({ work, index }) => {
-  const ref = React.useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [showHoverImage, setShowHoverImage] = useState(false);
-  const prefersReducedMotion = useReducedMotion();
-  const isMobile = useIsMobile();
-  const allowHover = !prefersReducedMotion && !isMobile;
-
-  const motionCardProps = {
-    variants: cardVariants,
-    initial: "hidden",
-    animate: isInView ? "visible" : "hidden",
-  };
+  const { allowHover } = useMotionPreferences();
 
   return (
     <motion.div
-      ref={ref}
       custom={index}
-      {...motionCardProps}
+      variants={cardVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={REVEAL_VIEWPORT}
     >
       <Link
         href={`/projects/${work.id}`}
@@ -65,7 +58,7 @@ const WorkCard: React.FC<{ work: WorkCardData; index: number }> = ({ work, index
         <motion.div
           className="absolute inset-0"
           whileHover={allowHover ? { scale: 1.02 } : undefined}
-          transition={allowHover ? { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } : undefined}
+          transition={allowHover ? { duration: 0.5, ease: PREMIUM_EASE } : undefined}
         >
           <Image
             src={work.imageUrl}
@@ -85,7 +78,7 @@ const WorkCard: React.FC<{ work: WorkCardData; index: number }> = ({ work, index
               initial={{ scale: 1.1, opacity: 0 }}
               animate={{ scale: 1.05, opacity: 1 }}
               exit={{ scale: 1.1, opacity: 0 }}
-              transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+              transition={{ duration: 0.45, ease: PREMIUM_EASE }}
             >
               <Image
                 src={work.hoverImageUrl}
@@ -109,7 +102,7 @@ const WorkCard: React.FC<{ work: WorkCardData; index: number }> = ({ work, index
             className="text-white/90 font-bold tracking-[0.2em] text-[10px] uppercase mb-2"
             initial={{ opacity: 1, y: 0 }}
             whileHover={allowHover ? { y: -5 } : undefined}
-            transition={allowHover ? { duration: 0.4, delay: 0.1 } : undefined}
+            transition={allowHover ? { duration: 0.3, delay: 0.05, ease: PREMIUM_EASE } : undefined}
           >
             {work.client}
           </motion.span>
@@ -117,7 +110,7 @@ const WorkCard: React.FC<{ work: WorkCardData; index: number }> = ({ work, index
             className="text-white text-2xl md:text-3xl font-medium"
             initial={{ opacity: 1, y: 0 }}
             whileHover={allowHover ? { y: -5 } : undefined}
-            transition={allowHover ? { duration: 0.4, delay: 0.15 } : undefined}
+            transition={allowHover ? { duration: 0.3, delay: 0.1, ease: PREMIUM_EASE } : undefined}
           >
             {work.title}
           </motion.h3>
@@ -127,7 +120,7 @@ const WorkCard: React.FC<{ work: WorkCardData; index: number }> = ({ work, index
             className="h-[1px] bg-white/40 mt-4"
             initial={{ width: 0 }}
             whileHover={allowHover ? { width: "100px" } : undefined}
-            transition={allowHover ? { duration: 0.5, delay: 0.2 } : undefined}
+            transition={allowHover ? { duration: 0.4, delay: 0.15, ease: PREMIUM_EASE } : undefined}
           />
         </motion.div>
       </Link>
@@ -172,7 +165,8 @@ export default function Works({
           <motion.span
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+            viewport={REVEAL_VIEWPORT}
+            transition={BASE_REVEAL}
             className="text-xs font-bold tracking-[0.2em] uppercase text-muted-foreground block mb-8"
           >
             {label}
@@ -192,8 +186,8 @@ export default function Works({
               className="mt-8 md:mt-12"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4, duration: 0.6 }}
+              viewport={REVEAL_VIEWPORT}
+              transition={{ ...BASE_REVEAL, delay: 0.25 }}
             >
               <Link href="/projects" className="inline-block">
                 <LiquidButton

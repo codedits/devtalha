@@ -38,7 +38,7 @@ export default function Navbar() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="fixed top-8 left-0 right-0 z-50 flex justify-between items-center px-6 md:px-10 pointer-events-none font-sans mix-blend-difference"
       >
-        {/* Logo Auvra Style */}
+        {/* Logo */}
         <div className="pointer-events-auto">
           <Link href="/" className="text-xl font-bold tracking-tighter text-white">
             TALHA®
@@ -70,7 +70,7 @@ export default function Navbar() {
         </button>
       </motion.header>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Overlay — z-[60] to sit above header z-50 */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -78,45 +78,39 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-40 md:hidden bg-black flex flex-col items-center justify-center p-6"
+            className="fixed inset-0 z-[60] md:hidden bg-black flex flex-col items-center justify-center p-6"
           >
             <nav className="flex flex-col items-center gap-8">
               {navLinks.map((link, idx) => (
-                <motion.a
+                <motion.div
                   key={link.label}
-                  href={link.href}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1 + 0.2 }}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="text-4xl font-medium tracking-tighter text-white hover:text-white/60 transition-colors"
                 >
-                  {link.label}
-                </motion.a>
+                  <Link
+                    href={link.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="text-4xl font-medium tracking-tighter text-white hover:text-white/60 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
               ))}
-              <motion.a
-                href="#contact"
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                onClick={() => setIsMenuOpen(false)}
-                className="mt-8 bg-white text-black px-10 py-4 text-[12px] font-bold uppercase tracking-[0.25em] hover:bg-gray-200 transition-colors"
               >
-                CONTACT US
-              </motion.a>
+                <Link
+                  href="/#contact"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="mt-8 inline-block bg-white text-black px-10 py-4 text-[12px] font-bold uppercase tracking-[0.25em] hover:bg-gray-200 transition-colors"
+                >
+                  CONTACT US
+                </Link>
+              </motion.div>
             </nav>
-
-            {/* Socials in mobile menu */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
-              className="absolute bottom-12 flex gap-8 text-[10px] font-bold tracking-widest text-[#555]"
-            >
-              <a href="#" className="hover:text-white">TWITTER</a>
-              <a href="#" className="hover:text-white">INSTAGRAM</a>
-              <a href="#" className="hover:text-white">LINKEDIN</a>
-            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

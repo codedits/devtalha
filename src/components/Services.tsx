@@ -7,6 +7,7 @@ import { motion, AnimatePresence, useInView, useScroll, useTransform, useReduced
 import { LiquidButton } from "./ui/LiquidButton";
 import type { ServicesItem, ServicesMetaSection } from "@/types/content";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { BASE_REVEAL, PREMIUM_EASE, REVEAL_VIEWPORT } from "@/lib/motion";
 
 interface Service {
   id: string;
@@ -43,7 +44,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
   const [openService, setOpenService] = useState<string>(servicesList[0]?.id ?? '');
 
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const isInView = useInView(sectionRef, REVEAL_VIEWPORT);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"]
@@ -75,7 +76,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
             className="lg:col-span-3 flex flex-col items-center text-center lg:items-start lg:text-left"
             initial={{ opacity: 0, x: -40 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ ...BASE_REVEAL, ease: PREMIUM_EASE }}
           >
             <motion.span 
               className="text-xs font-bold uppercase tracking-[0.2em] mb-12 text-foreground/70 block"
@@ -93,7 +94,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
               <motion.div
                 initial={{ opacity: 0, scale: 1.2 }}
                 animate={isInView ? { opacity: 0.9, scale: 1 } : {}}
-                transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                transition={{ duration: 1, ease: PREMIUM_EASE }}
                 className="w-full h-full"
               >
                 <Image
@@ -172,11 +173,11 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
  
                     <AnimatePresence>
                       {isOpen && (
-                        <motion.div 
+                        <motion.div
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+                          transition={{ duration: 0.45, ease: PREMIUM_EASE }}
                           className="overflow-hidden"
                         >
                           <div className="pb-8 pt-2">
@@ -220,7 +221,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                                 >
                                   <motion.div
                                     whileHover={allowHover ? { scale: 1.08 } : undefined}
-                                    transition={allowHover ? { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] } : undefined}
+                                    transition={allowHover ? { duration: 0.45, ease: PREMIUM_EASE } : undefined}
                                     className="w-full h-full"
                                   >
                                     <Image

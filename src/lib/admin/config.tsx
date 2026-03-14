@@ -195,8 +195,29 @@ export const SECTION_CONFIGS: SectionConfig[] = [
     section: "footer",
     mode: "single",
     icon: <PanelBottom size={18} />,
-    description: "Newsletter section and footer brand identity.",
+    description: "Newsletter section, visual mode, contrast theme, and brand identity.",
     fields: [
+      {
+        key: "background_mode",
+        label: "Background Mode",
+        type: "select",
+        description: "Choose black solid footer or background image mode.",
+        options: [
+          { label: "Solid Black", value: "solid" },
+          { label: "Background Image", value: "image" },
+        ],
+      },
+      {
+        key: "text_theme",
+        label: "Image Text Contrast",
+        type: "select",
+        description: "Only used in Background Image mode. Pick text theme for readability.",
+        options: [
+          { label: "Light Text", value: "light" },
+          { label: "Dark Text", value: "dark" },
+        ],
+      },
+      { key: "background_image_url", label: "Background Image", type: "image" },
       { key: "newsletter_heading", label: "Newsletter Heading", type: "text", placeholder: "Stay connected" },
       { key: "newsletter_description", label: "Newsletter Description", type: "textarea" },
       { key: "brand_name", label: "Brand Name", type: "text", placeholder: "TALHA" },

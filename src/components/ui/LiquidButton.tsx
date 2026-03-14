@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 interface LiquidButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   className?: string;
-  as?: any;
+  as?: React.ElementType;
   href?: string;
   target?: string;
   rel?: string;

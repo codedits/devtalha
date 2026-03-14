@@ -58,6 +58,11 @@ function sanitizePayload(section: AdminSection, raw: Record<string, unknown>) {
       continue;
     }
 
+    if (field === 'background_mode' || field === 'text_theme') {
+      sanitized[field] = typeof value === 'string' ? value.trim().toLowerCase() : String(value ?? '').trim().toLowerCase();
+      continue;
+    }
+
     if (field === 'stats') {
       sanitized[field] = Array.isArray(value)
         ? value.map((item) => {

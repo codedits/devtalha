@@ -178,10 +178,10 @@ export function CollectionSectionEditor({ config, addToast }: CollectionSectionE
     setSaving(true);
     try {
       const resolvedRecord = await resolvePendingUploads(record, config.fields);
-      const payloadRecord =
-        isNew && !String(resolvedRecord.id ?? "").trim()
-          ? (({ id: _id, ...rest }) => rest)(resolvedRecord)
-          : resolvedRecord;
+      const payloadRecord = { ...resolvedRecord };
+      if (isNew && !String(payloadRecord.id ?? "").trim()) {
+        delete payloadRecord.id;
+      }
 
       const res = await fetch(`/api/admin/${config.section}`, {
         method,

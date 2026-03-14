@@ -44,7 +44,7 @@ async function fetchSingle<K extends "hero" | "about" | "reachus" | "footer" | "
     .select("*")
     .order("updated_at", { ascending: false, nullsFirst: false })
     .limit(1)
-    .maybeSingle<any>();
+    .maybeSingle<Record<string, unknown>>();
   if (error) throw new Error(error.message);
   if (!data) throw new Error(`No rows found for ${section}`);
   return data;
@@ -101,24 +101,15 @@ const getWorksCached = unstable_cache(
   }
 );
 
-function getWorkByIdCached(id: string) {
-  return unstable_cache(
-    async () => {
-      const { data, error } = await supabase
-        .from("works")
-        .select("*")
-        .eq("id", id)
-        .single<Tables<"works">>();
+async function getWorkByIdCached(id: string): Promise<WorksItem | null> {
+  const { data, error } = await supabase
+    .from("works")
+    .select("*")
+    .eq("id", id)
+    .single<Tables<"works">>();
 
-      if (error) return null;
-      return data as WorksItem;
-    },
-    ["portfolio-query-work-by-id", id],
-    {
-      revalidate: PORTFOLIO_CACHE_REVALIDATE_SECONDS,
-      tags: getSectionTags("works"),
-    }
-  )();
+  if (error) return null;
+  return data as WorksItem;
 }
 
 const getServicesCached = unstable_cache(
@@ -229,6 +220,28 @@ export async function getAbout() {
 
 export async function getWorks() {
   return getWorksCached() as Promise<WorksItem[]>;
+}
+
+/** Use this in Client Components (useEffect, event handlers).
+ *  `getWorks` wraps unstable_cache which is server-only. */
+export async function getWorksUncached(): Promise<WorksItem[]> {
+  const { data, error } = await supabase
+    .from("works")
+    .select("*")
+    .order("sort_order", { ascending: true });
+  if (error) return [];
+  return (data ?? []) as WorksItem[];
+}
+
+export async function getWorkByIdUncached(id: string): Promise<WorksItem | null> {
+  const { data, error } = await supabase
+    .from("works")
+    .select("*")
+    .eq("id", id)
+    .single<Tables<"works">>();
+
+  if (error) return null;
+  return data as WorksItem;
 }
 
 export async function getWorksMeta() {

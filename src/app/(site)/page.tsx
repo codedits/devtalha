@@ -7,7 +7,6 @@ import Process from "@/components/Process";
 import Reachus from "@/components/Reachus";
 import { SectionParallax } from "@/components/SectionParallax";
 import {
-  HOMEPAGE_SECTION_DEFINITIONS,
   type HomepageSectionKey,
 } from "@/lib/admin/homepageSections";
 import {

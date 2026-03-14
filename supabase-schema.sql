@@ -146,12 +146,20 @@ ALTER TABLE reachus ADD COLUMN IF NOT EXISTS inquiry_text TEXT NOT NULL DEFAULT 
 -- 7. Footer (single row)
 CREATE TABLE IF NOT EXISTS footer (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  background_mode TEXT NOT NULL DEFAULT 'solid',
+  text_theme TEXT NOT NULL DEFAULT 'light',
+  background_image_url TEXT NOT NULL DEFAULT '',
   newsletter_heading TEXT NOT NULL DEFAULT 'Stay connected',
   newsletter_description TEXT NOT NULL DEFAULT 'Join our newsletter and stay updated on the latest trends in digital design',
   brand_name TEXT NOT NULL DEFAULT 'TALHA',
   email TEXT NOT NULL DEFAULT 'hello@talha.com',
   updated_at TIMESTAMPTZ DEFAULT now()
 );
+
+-- Ensure new columns exist in older databases
+ALTER TABLE footer ADD COLUMN IF NOT EXISTS background_mode TEXT NOT NULL DEFAULT 'solid';
+ALTER TABLE footer ADD COLUMN IF NOT EXISTS text_theme TEXT NOT NULL DEFAULT 'light';
+ALTER TABLE footer ADD COLUMN IF NOT EXISTS background_image_url TEXT NOT NULL DEFAULT '';
 
 -- ============================================================
 -- RLS Policies: Public read, authenticated write
@@ -321,11 +329,14 @@ SELECT * FROM (VALUES (
 WHERE NOT EXISTS (SELECT 1 FROM reachus);
 
 -- Seed Footer
-INSERT INTO footer (newsletter_heading, newsletter_description, brand_name, email)
+INSERT INTO footer (background_mode, text_theme, background_image_url, newsletter_heading, newsletter_description, brand_name, email)
 SELECT * FROM (VALUES (
+  'solid',
+  'light',
+  'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2000&auto=format&fit=crop',
   'Stay connected',
   'Join our newsletter and stay updated on the latest trends in digital design',
   'Talha',
   'hello@talha.com'
-)) AS seed(newsletter_heading, newsletter_description, brand_name, email)
+)) AS seed(background_mode, text_theme, background_image_url, newsletter_heading, newsletter_description, brand_name, email)
 WHERE NOT EXISTS (SELECT 1 FROM footer);

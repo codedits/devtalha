@@ -331,6 +331,23 @@ export function FieldEditor({ field, value, onChange }: FieldEditorProps) {
     );
   }
 
+  if (field.type === "select") {
+    const options = field.options ?? [];
+    return (
+      <select
+        value={textValue}
+        onChange={(event) => onChange(event.target.value)}
+        className={baseInput}
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    );
+  }
+
   return (
     <input
       type="text"

@@ -10,11 +10,12 @@ export function useAdminToast() {
   const timeoutIds = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map());
 
   useEffect(() => {
+    const activeTimeouts = timeoutIds.current;
     return () => {
-      timeoutIds.current.forEach((timeoutId) => {
+      activeTimeouts.forEach((timeoutId) => {
         clearTimeout(timeoutId);
       });
-      timeoutIds.current.clear();
+      activeTimeouts.clear();
     };
   }, []);
 

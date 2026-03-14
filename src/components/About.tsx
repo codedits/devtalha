@@ -4,10 +4,12 @@ import { motion, useSpring, useMotionValue, useInView, useScroll, useTransform }
 import { useRef, useEffect, useState } from "react";
 import BlurText from "./BlurText";
 import type { AboutSection, AboutStat } from "@/types/content";
+import { useMotionPreferences } from "@/hooks/useMotionPreferences";
+import { BASE_REVEAL, PREMIUM_EASE, REVEAL_VIEWPORT, staggerContainer } from "@/lib/motion";
 
 function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, REVEAL_VIEWPORT);
   const motionValue = useMotionValue(0);
   const springValue = useSpring(motionValue, { stiffness: 30, damping: 25 });
   const [display, setDisplay] = useState(0);
@@ -25,24 +27,19 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
 }
 
 // Animation variants
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15, delayChildren: 0.1 }
-  }
-};
+const containerVariants = staggerContainer(0.1, 0.12);
 
 const itemVariants = {
   hidden: { opacity: 0, y: 40 },
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] as const }
+    transition: { ...BASE_REVEAL, ease: PREMIUM_EASE }
   }
 };
 
 export default function About({ data }: { data?: AboutSection | null }) {
+  const { allowHover, allowParallax } = useMotionPreferences();
   const defaultStats = [
     { value: 15, suffix: "+", label: "Projects Delivered" },
     { value: 8, suffix: "+", label: "Core Technologies" },
@@ -60,7 +57,7 @@ export default function About({ data }: { data?: AboutSection | null }) {
     offset: ["start end", "end start"]
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["-5%", "5%"]);
+  const backgroundY = useTransform(scrollYProgress, [0, 1], allowParallax ? ["-5%", "5%"] : ["0%", "0%"]);
 
   return (
     <section className="py-32 relative overflow-hidden section-shell" id="about" ref={sectionRef}>
@@ -76,15 +73,15 @@ export default function About({ data }: { data?: AboutSection | null }) {
         <motion.div
           initial={{ opacity: 0, width: 0 }}
           whileInView={{ opacity: 1, width: "100%" }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+          viewport={REVEAL_VIEWPORT}
+          transition={{ duration: 0.9, ease: PREMIUM_EASE }}
           className="mb-16"
         >
           <motion.span
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3, duration: 0.6 }}
+            viewport={REVEAL_VIEWPORT}
+            transition={{ ...BASE_REVEAL, delay: 0.2 }}
             className="text-xs font-bold tracking-[0.2em] uppercase text-muted-foreground block"
           >
             {label}
@@ -97,7 +94,8 @@ export default function About({ data }: { data?: AboutSection | null }) {
             className="text-3xl md:text-[2.75rem] font-medium leading-[1.2] tracking-tight text-center md:text-left"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+            viewport={REVEAL_VIEWPORT}
+            transition={BASE_REVEAL}
           >
             <BlurText 
               text={heading}
@@ -112,7 +110,7 @@ export default function About({ data }: { data?: AboutSection | null }) {
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
+            viewport={REVEAL_VIEWPORT}
             className="flex flex-col justify-center"
           >
             {description ? (
@@ -141,22 +139,22 @@ export default function About({ data }: { data?: AboutSection | null }) {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={REVEAL_VIEWPORT}
         >
           {stats.map((stat, idx) => (
             <motion.div
               key={idx}
               variants={itemVariants}
-              whileHover={{ 
+              whileHover={allowHover ? { 
                 backgroundColor: "hsl(var(--card))",
                 transition: { duration: 0.3 }
-              }}
+              } : undefined}
               className="bg-background p-8 md:p-12 flex flex-col group cursor-default"
             >
               <motion.span 
                 className="text-4xl md:text-5xl font-semibold tracking-tight mb-3"
-                whileHover={{ scale: 1.05, x: 5 }}
-                transition={{ type: "spring", stiffness: 300 }}
+                whileHover={allowHover ? { scale: 1.05, x: 5 } : undefined}
+                transition={allowHover ? { type: "spring", stiffness: 260, damping: 22 } : undefined}
               >
                 <AnimatedCounter target={stat.value} suffix={stat.suffix} />
               </motion.span>
