@@ -1,7 +1,12 @@
 "use client";
 
 import { fromTextValue, toTextValue } from "@/lib/admin/converters";
-import { isPendingUploadValue, type PendingUploadValue } from "@/lib/admin/uploads";
+import {
+  deleteStoredImage,
+  isManagedPortfolioImageUrl,
+  isPendingUploadValue,
+  type PendingUploadValue,
+} from "@/lib/admin/uploads";
 import { Plus, Trash2 } from "lucide-react";
 import type { FieldConfig, SocialItem, StatItem } from "@/lib/admin/types";
 import { cn } from "@/lib/utils";
@@ -12,12 +17,19 @@ type FieldEditorProps = {
   field: FieldConfig;
   value: unknown;
   onChange: (next: unknown) => void;
+  addToast?: (type: "success" | "error", message: string) => void;
 };
 
-export function FieldEditor({ field, value, onChange }: FieldEditorProps) {
+export function FieldEditor({ field, value, onChange, addToast }: FieldEditorProps) {
   const textValue = toTextValue(value, field.type);
   const baseInput =
     "w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-200";
+
+  const clearPendingUpload = (currentValue: unknown) => {
+    if (isPendingUploadValue(currentValue)) {
+      URL.revokeObjectURL(currentValue.previewUrl);
+    }
+  };
 
   if (field.type === "stats") {
     const list = Array.isArray(value) ? (value as StatItem[]) : [];
@@ -216,33 +228,61 @@ export function FieldEditor({ field, value, onChange }: FieldEditorProps) {
               {(() => {
                 const pending = isPendingUploadValue(item) ? item : null;
                 const currentUrl = pending ? pending.previewUrl : String(item ?? "");
-                return (
-              <ImageUploader
-                currentUrl={currentUrl}
-                selectedFileName={pending?.file.name}
-                onSelectFile={(file, previewUrl) => {
-                  const previous = list[index];
-                  if (isPendingUploadValue(previous)) {
-                    URL.revokeObjectURL(previous.previewUrl);
-                  }
+                const inputValue = pending?.originalUrl ?? (typeof item === "string" ? item : "");
+                const storedUrl = pending?.originalUrl ?? (typeof item === "string" ? item : "");
 
-                  const pendingUpload: PendingUploadValue = {
-                    __type: "pending-upload",
-                    file,
-                    previewUrl,
-                    originalUrl: typeof previous === "string" ? previous : undefined,
-                  };
-                  updateItem(index, pendingUpload);
-                }}
-                onClear={() => {
-                  const previous = list[index];
-                  if (isPendingUploadValue(previous)) {
-                    URL.revokeObjectURL(previous.previewUrl);
-                    updateItem(index, previous.originalUrl ?? "");
-                  }
-                }}
-                buttonLabel={`Upload Image ${index + 1}`}
-              />
+                return (
+                  <>
+                    <input
+                      type="text"
+                      value={inputValue}
+                      onChange={(event) => {
+                        clearPendingUpload(list[index]);
+                        updateItem(index, event.target.value);
+                      }}
+                      placeholder="https://example.com/image.jpg"
+                      className={baseInput}
+                    />
+                    <p className="text-xs text-zinc-500">Paste an external image URL or upload a file.</p>
+                    <ImageUploader
+                      currentUrl={currentUrl}
+                      selectedFileName={pending?.file.name}
+                      canDeleteStoredImage={isManagedPortfolioImageUrl(storedUrl)}
+                      deleteSuccessMessage={`${field.label} deleted from storage`}
+                      notify={addToast}
+                      onSelectFile={(file, previewUrl) => {
+                        const previous = list[index];
+                        clearPendingUpload(previous);
+
+                        const pendingUpload: PendingUploadValue = {
+                          __type: "pending-upload",
+                          file,
+                          previewUrl,
+                          originalUrl: typeof previous === "string" ? previous : undefined,
+                        };
+                        updateItem(index, pendingUpload);
+                      }}
+                      onClear={() => {
+                        const previous = list[index];
+                        if (isPendingUploadValue(previous)) {
+                          clearPendingUpload(previous);
+                          updateItem(index, previous.originalUrl ?? "");
+                        }
+                      }}
+                      onDeleteStoredImage={async () => {
+                        await deleteStoredImage(storedUrl);
+
+                        const previous = list[index];
+                        if (isPendingUploadValue(previous)) {
+                          updateItem(index, { ...previous, originalUrl: undefined });
+                          return;
+                        }
+
+                        updateItem(index, "");
+                      }}
+                      buttonLabel={`Upload Image ${index + 1}`}
+                    />
+                  </>
                 );
               })()}
               <button
@@ -273,21 +313,30 @@ export function FieldEditor({ field, value, onChange }: FieldEditorProps) {
   if (field.type === "image") {
     const pending = isPendingUploadValue(value) ? value : null;
     const currentUrl = pending ? pending.previewUrl : textValue;
+    const inputValue = pending?.originalUrl ?? textValue;
+    const storedUrl = pending?.originalUrl ?? textValue;
 
     return (
       <div className="space-y-3">
-        {currentUrl ? (
-          <p className="rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-600 break-all">
-            {pending ? `Selected: ${pending.file.name}` : currentUrl}
-          </p>
-        ) : null}
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(event) => {
+            clearPendingUpload(value);
+            onChange(event.target.value);
+          }}
+          placeholder="https://example.com/image.jpg"
+          className={baseInput}
+        />
+        <p className="text-xs text-zinc-500">Paste an external image URL or upload a file.</p>
         <ImageUploader
           currentUrl={currentUrl}
           selectedFileName={pending?.file.name}
+          canDeleteStoredImage={isManagedPortfolioImageUrl(storedUrl)}
+          deleteSuccessMessage={`${field.label} deleted from storage`}
+          notify={addToast}
           onSelectFile={(file, previewUrl) => {
-            if (pending) {
-              URL.revokeObjectURL(pending.previewUrl);
-            }
+            clearPendingUpload(value);
 
             const pendingUpload: PendingUploadValue = {
               __type: "pending-upload",
@@ -299,9 +348,19 @@ export function FieldEditor({ field, value, onChange }: FieldEditorProps) {
           }}
           onClear={() => {
             if (pending) {
-              URL.revokeObjectURL(pending.previewUrl);
+              clearPendingUpload(pending);
               onChange(pending.originalUrl ?? "");
             }
+          }}
+          onDeleteStoredImage={async () => {
+            await deleteStoredImage(storedUrl);
+
+            if (pending) {
+              onChange({ ...pending, originalUrl: undefined });
+              return;
+            }
+
+            onChange("");
           }}
         />
       </div>

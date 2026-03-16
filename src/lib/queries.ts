@@ -102,14 +102,23 @@ const getWorksCached = unstable_cache(
 );
 
 async function getWorkByIdCached(id: string): Promise<WorksItem | null> {
-  const { data, error } = await supabase
-    .from("works")
-    .select("*")
-    .eq("id", id)
-    .single<Tables<"works">>();
+  return unstable_cache(
+    async () => {
+      const { data, error } = await supabase
+        .from("works")
+        .select("*")
+        .eq("id", id)
+        .single<Tables<"works">>();
 
-  if (error) return null;
-  return data as WorksItem;
+      if (error) return null;
+      return data as WorksItem;
+    },
+    ["portfolio-query-work-by-id", id],
+    {
+      revalidate: PORTFOLIO_CACHE_REVALIDATE_SECONDS,
+      tags: getSectionTags("works"),
+    }
+  )();
 }
 
 const getServicesCached = unstable_cache(

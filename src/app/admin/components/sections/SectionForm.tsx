@@ -7,9 +7,10 @@ type SectionFormProps = {
   fields: FieldConfig[];
   data: SectionRecord;
   onChange: (next: SectionRecord) => void;
+  addToast?: (type: "success" | "error", message: string) => void;
 };
 
-export function SectionForm({ fields, data, onChange }: SectionFormProps) {
+export function SectionForm({ fields, data, onChange, addToast }: SectionFormProps) {
   return (
     <div className="space-y-5">
       {fields.map((field) => (
@@ -21,6 +22,7 @@ export function SectionForm({ fields, data, onChange }: SectionFormProps) {
           <FieldEditor
             field={field}
             value={data[field.key]}
+            addToast={addToast}
             onChange={(nextValue) => onChange({ ...data, [field.key]: nextValue })}
           />
         </div>

@@ -87,7 +87,7 @@ export function SingleSectionEditor({ config, addToast }: SingleSectionEditorPro
   return (
     <div className="space-y-8">
       <div className="rounded-lg border border-zinc-200 bg-white p-6 md:p-8 shadow-sm">
-        <SectionForm fields={config.fields} data={data} onChange={setData} />
+        <SectionForm fields={config.fields} data={data} onChange={setData} addToast={addToast} />
       </div>
       {isDirty && (
         <div className="fixed bottom-6 right-6 z-30">

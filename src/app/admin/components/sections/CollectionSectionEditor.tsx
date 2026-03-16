@@ -351,7 +351,7 @@ export function CollectionSectionEditor({ config, addToast }: CollectionSectionE
               </button>
             </div>
 
-            <SectionForm fields={config.fields} data={editing} onChange={setEditing} />
+            <SectionForm fields={config.fields} data={editing} onChange={setEditing} addToast={addToast} />
 
             <div className="sticky bottom-0 mt-8 -mx-6 border-t border-zinc-200 bg-white px-6 py-4">
               <div className="flex items-center justify-between gap-3">

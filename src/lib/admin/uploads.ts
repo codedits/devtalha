@@ -1,5 +1,30 @@
 import type { FieldConfig, SectionRecord } from "@/lib/admin/types";
 
+const PORTFOLIO_IMAGE_BUCKET = "portfolio-images";
+
+export function getManagedStoragePathFromUrl(url: string) {
+  const trimmedUrl = url.trim();
+  if (!trimmedUrl) return null;
+
+  try {
+    const parsed = new URL(trimmedUrl);
+    const prefix = `/storage/v1/object/public/${PORTFOLIO_IMAGE_BUCKET}/`;
+
+    if (!parsed.pathname.startsWith(prefix)) {
+      return null;
+    }
+
+    const objectPath = decodeURIComponent(parsed.pathname.slice(prefix.length));
+    return objectPath.trim() ? objectPath : null;
+  } catch {
+    return null;
+  }
+}
+
+export function isManagedPortfolioImageUrl(url: string) {
+  return Boolean(getManagedStoragePathFromUrl(url));
+}
+
 export type PendingUploadValue = {
   __type: "pending-upload";
   file: File;
@@ -39,6 +64,20 @@ async function uploadFile(file: File) {
   }
 
   return payload.url;
+}
+
+export async function deleteStoredImage(url: string) {
+  const res = await fetch("/api/admin/upload", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url }),
+  });
+
+  const payload = (await res.json().catch(() => null)) as { error?: string } | null;
+
+  if (!res.ok) {
+    throw new Error(payload?.error ?? "Image delete failed");
+  }
 }
 
 export async function resolvePendingUploads(data: SectionRecord, fields: FieldConfig[]) {
