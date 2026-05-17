@@ -16,6 +16,7 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
   const nameLabel = data?.name_label ?? 'TALHA IRFAN';
   const [isDesktopLoaded, setIsDesktopLoaded] = useState(false);
   const [isMobileLoaded, setIsMobileLoaded] = useState(false);
+  const [mobileImageQuality, setMobileImageQuality] = useState(85);
   const isLoaded = hasMobileImage ? (isDesktopLoaded || isMobileLoaded) : isDesktopLoaded;
   const [isAnimationFinished, setIsAnimationFinished] = useState(false);
   const desktopImageRef = useRef<HTMLImageElement>(null);
@@ -26,6 +27,29 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
     if (desktopImageRef.current?.complete) setIsDesktopLoaded(true);
     if (mobileImageRef.current?.complete) setIsMobileLoaded(true);
   }, [hasMobileImage]);
+
+  useEffect(() => {
+    const updateMobileQuality = () => {
+      const viewportWidth = window.innerWidth;
+      const devicePixelRatio = window.devicePixelRatio || 1;
+
+      let quality = 90;
+
+      if (viewportWidth >= 640) quality = 92;
+      if (viewportWidth >= 768) quality = 94;
+      if (devicePixelRatio >= 2) quality += 2;
+      if (devicePixelRatio >= 3) quality += 2;
+
+      setMobileImageQuality(Math.min(95, quality));
+    };
+
+    updateMobileQuality();
+    window.addEventListener("resize", updateMobileQuality);
+
+    return () => {
+      window.removeEventListener("resize", updateMobileQuality);
+    };
+  }, []);
 
   useEffect(() => {
     if (isLoaded) {
@@ -60,7 +84,7 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
 
   return (
     <section className="h-[85vh] md:h-screen w-full px-2 pt-2 relative z-10">
-      <div ref={containerRef} className={`relative h-full w-full flex flex-col items-start justify-end rounded-[1.5rem] md:rounded-[2rem] overflow-hidden pb-10 md:pb-24 px-10 md:px-16 lg:px-20 border border-white/10 ${isLoaded ? 'is-visible' : ''}`}>
+      <div ref={containerRef} className={`relative h-full w-full flex flex-col items-start justify-end rounded-[1.5rem] md:rounded-none overflow-hidden pb-10 md:pb-24 px-10 md:px-16 lg:px-20 border border-white/10 ${isLoaded ? 'is-visible' : ''}`}>
         {/* Animated Background with Parallax */}
         <motion.div
           className={`absolute inset-0 z-0 ${isLoaded ? 'animate-image-entrance' : 'opacity-0'}`}
@@ -75,9 +99,9 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
                 fill
                 priority
                 fetchPriority="high"
-                quality={85}
+                quality={95}
                 className="object-cover"
-                sizes="(max-width: 768px) 0px, calc(100vw - 1rem)"
+                sizes="(max-width: 768px) 100vw, calc(100vw - 1rem)"
                 onLoad={() => setIsDesktopLoaded(true)}
               />
             </div>
@@ -91,9 +115,9 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
                   fill
                   priority
                   fetchPriority="high"
-                  quality={85}
+                  quality={mobileImageQuality}
                   className="object-cover"
-                  sizes="(max-width: 768px) calc(100vw - 1rem), 0px"
+                  sizes="100vw"
                   onLoad={() => setIsMobileLoaded(true)}
                 />
               </div>
@@ -122,7 +146,7 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
             <div
               className="hero-text w-full"
             >
-              <h1 className="text-4xl md:text-5xl lg:text-7xl font-medium leading-[0.85] tracking-[-0.07em] text-white">
+              <h1 className="text-4xl md:text-5xl lg:text-7xl font-medium leading-[0.78] md:leading-[0.82] tracking-[-0.07em] text-white">
                 <div className={isLoaded ? "opacity-100" : "opacity-0 pointer-events-none"} style={{ transition: "opacity 0.3s ease" }}>
                   <BlurText
                     text={heading}

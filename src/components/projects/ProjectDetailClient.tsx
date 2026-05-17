@@ -103,7 +103,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
 
       <section ref={containerRef} className="px-4 md:px-6 mb-16 md:mb-32">
         <motion.div
-          className="mx-auto max-w-[1600px] relative aspect-[4/5] md:aspect-[16/9] lg:aspect-[21/9] overflow-hidden rounded-xl md:rounded-[2rem] bg-muted/20"
+          className="mx-auto max-w-screen-2xl relative aspect-[4/5] md:aspect-[16/9] lg:aspect-[21/9] overflow-hidden rounded-none bg-muted/20"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7 }}
@@ -118,7 +118,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
               fill
               priority
               fetchPriority="high"
-              quality={80}
+              quality={95}
               sizes="(max-width: 768px) 100vw, (max-width: 1600px) 94vw, 1600px"
               className="object-cover"
             />
@@ -151,7 +151,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                 {project.summary}
               </p>
               {project.project_url && (
-                <LiquidButton as="a" href={project.project_url} target="_blank" rel="noreferrer" rounded="full" className="group w-full md:w-auto">
+                <LiquidButton as="a" href={project.project_url.startsWith('http') ? project.project_url : `https://${project.project_url}`} target="_blank" rel="noreferrer" rounded="full" className="group w-full md:w-auto">
                   Explore Live Site <ExternalLink size={14} className="ml-2 opacity-50 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </LiquidButton>
               )}
@@ -162,31 +162,28 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
 
       {imageSet.length > 1 ? (
         <section className="px-4 md:px-12 mb-16 md:mb-32">
-          <div className="mx-auto max-w-[1600px]">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 md:gap-8 lg:gap-10">
+          <div className="mx-auto max-w-screen-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 lg:gap-[24px]">
               {imageSet.slice(1).map((img, idx) => {
-                const isLong = idx % 5 === 0;
-                const isPortrait = idx % 5 === 1 || idx % 5 === 2;
+                // Strict 12-column monolithic pattern:
+                // Full width (12), Half (6), Half (6), Full width (12)...
+                const patternIndex = idx % 3;
+                let colSpan = "md:col-span-12";
+                let imageSizes = "(max-width: 768px) 100vw, 100vw";
+                let aspect = "aspect-[16/9] md:aspect-[21/9] lg:aspect-[16/8]";
+                let quality = 95;
 
-                let colSpan = "lg:col-span-4";
-                let imageSizes = "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw";
-
-                if (isLong) {
-                  colSpan = "lg:col-span-8 md:col-span-2";
-                  imageSizes = "(max-width: 768px) 100vw, (max-width: 1024px) 100vw, 66vw";
+                if (patternIndex === 1 || patternIndex === 2) {
+                  colSpan = "md:col-span-6";
+                  imageSizes = "(max-width: 768px) 100vw, 50vw";
+                  aspect = "aspect-[4/5] md:aspect-[4/4] lg:aspect-[4/5]";
+                  quality = 80;
                 }
-
-                if (isPortrait) {
-                  colSpan = "lg:col-span-6 md:col-span-1";
-                  imageSizes = "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 50vw";
-                }
-
-                const aspect = isLong ? "aspect-[16/9] md:aspect-[21/9] lg:aspect-[16/8]" : "aspect-[4/5] md:aspect-square lg:aspect-[4/5]";
 
                 return (
                   <motion.div
                     key={`${img}-${idx}`}
-                    className={`${colSpan} ${aspect} relative bg-muted/50 rounded-2xl md:rounded-[2rem] overflow-hidden group border border-foreground/5 shadow-2xl shadow-black/5`}
+                    className={`${colSpan} ${aspect} relative bg-muted/20 rounded-none overflow-hidden group`}
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-50px" }}
@@ -197,7 +194,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                       alt={`Project detail ${idx + 1}`}
                       fill
                       loading="lazy"
-                      quality={75}
+                      quality={quality}
                       className="object-cover transition-all duration-700 scale-100 group-hover:scale-[1.03]"
                       sizes={imageSizes}
                     />

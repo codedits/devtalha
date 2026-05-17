@@ -2,7 +2,7 @@
 
 import { motion, useSpring, useMotionValue, useInView, useScroll, useTransform } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
-import BlurText from "./BlurText";
+import BlockRevealText from "./BlockRevealText";
 import type { AboutSection, AboutStat } from "@/types/content";
 import { useMotionPreferences } from "@/hooks/useMotionPreferences";
 import { BASE_REVEAL, PREMIUM_EASE, REVEAL_VIEWPORT, staggerContainer } from "@/lib/motion";
@@ -91,18 +91,18 @@ export default function About({ data }: { data?: AboutSection | null }) {
         {/* Main text */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 mb-32">
           <motion.h2 
-            className="text-3xl md:text-[2.75rem] font-medium leading-[1.2] tracking-tight text-center md:text-left"
+            className="text-3xl md:text-[2.75rem] font-medium leading-[1.05] md:leading-[1.08] tracking-tight text-center md:text-left"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={REVEAL_VIEWPORT}
             transition={BASE_REVEAL}
           >
-            <BlurText 
+            <BlockRevealText
               text={heading}
-              delay={50}
-              animateBy="words"
-              direction="bottom"
-              className="inline-flex"
+              blockColor="bg-foreground"
+              duration={0.65}
+              staggerDelay={0.08}
+              scrub={false}
             />
           </motion.h2>
 

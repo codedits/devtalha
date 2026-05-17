@@ -5,6 +5,7 @@ import { Plus, Minus, ArrowRight } from 'lucide-react';
 import Image from "next/image";
 import { motion, AnimatePresence, useInView, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import { LiquidButton } from "./ui/LiquidButton";
+import BlockRevealText from "./BlockRevealText";
 import type { ServicesItem, ServicesMetaSection } from "@/types/content";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { BASE_REVEAL, PREMIUM_EASE, REVEAL_VIEWPORT } from "@/lib/motion";
@@ -79,13 +80,28 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
             transition={{ ...BASE_REVEAL, ease: PREMIUM_EASE }}
           >
             <motion.span 
-              className="text-xs font-bold uppercase tracking-[0.2em] mb-12 text-foreground/70 block"
+              className="text-xs font-bold uppercase tracking-[0.2em] mb-8 text-foreground/70 block"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
               transition={{ delay: 0.2 }}
             >
               {label}
             </motion.span>
+            
+            <motion.h2 
+              className="text-3xl md:text-[2.25rem] font-medium leading-[1.05] md:leading-[1.08] tracking-tight mb-8 text-center lg:text-left"
+              initial={{ opacity: 0 }}
+              animate={isInView ? { opacity: 1 } : {}}
+              transition={BASE_REVEAL}
+            >
+              <BlockRevealText
+                text="Creative solutions for ambitious brands"
+                blockColor="bg-foreground"
+                duration={0.65}
+                staggerDelay={0.08}
+                scrub={false}
+              />
+            </motion.h2>
             
             <motion.div 
               className="w-full aspect-[4/5] relative overflow-hidden mb-6 bg-card"
@@ -103,7 +119,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                   fill
                   className="object-cover grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700"
                   sizes="(max-width: 1024px) 100vw, 22vw"
-                  quality={80}
+                  quality={95}
                 />
               </motion.div>
             </motion.div>

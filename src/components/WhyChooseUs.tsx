@@ -56,6 +56,7 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
               className="absolute inset-0 w-full h-full object-cover grayscale contrast-125 opacity-80"
+              quality={95}
             />
             {/* Dark Gradient Overlay for text legibility */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80" />
@@ -81,10 +82,10 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
             <div className="flex flex-col xl:flex-row xl:items-center gap-4 mb-8">
               {/* Avatars */}
               <div className="flex -space-x-3 shrink-0">
-                <Image src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="User 1" width={44} height={44} sizes="44px" className="w-11 h-11 rounded-full border-2 border-white object-cover shadow-sm" />
-                <Image src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" alt="User 2" width={44} height={44} sizes="44px" className="w-11 h-11 rounded-full border-2 border-white object-cover shadow-sm" />
-                <Image src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="User 3" width={44} height={44} sizes="44px" className="w-11 h-11 rounded-full border-2 border-white object-cover shadow-sm" />
-                <Image src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="User 4" width={44} height={44} sizes="44px" className="w-11 h-11 rounded-full border-2 border-white object-cover shadow-sm" />
+                <Image src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="User 1" width={44} height={44} sizes="44px" quality={75} className="w-11 h-11 rounded-full border-2 border-white object-cover shadow-sm" />
+                <Image src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" alt="User 2" width={44} height={44} sizes="44px" quality={75} className="w-11 h-11 rounded-full border-2 border-white object-cover shadow-sm" />
+                <Image src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="User 3" width={44} height={44} sizes="44px" quality={75} className="w-11 h-11 rounded-full border-2 border-white object-cover shadow-sm" />
+                <Image src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="User 4" width={44} height={44} sizes="44px" quality={75} className="w-11 h-11 rounded-full border-2 border-white object-cover shadow-sm" />
               </div>
 
               {/* Rating */}

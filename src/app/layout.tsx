@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import SmoothScroll from "@/components/SmoothScroll";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -28,7 +29,7 @@ export default async function RootLayout({
 }>) {
 
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="preconnect" href="https://images.unsplash.com" />
@@ -38,11 +39,13 @@ export default async function RootLayout({
       <body
         className={`${plusJakartaSans.variable} ${spaceGrotesk.variable} antialiased bg-background text-foreground overflow-x-hidden`}
       >
-        <PageTransition>
-          <div className="min-h-screen w-full">
-            {children}
-          </div>
-        </PageTransition>
+        <SmoothScroll>
+          <PageTransition>
+            <div className="min-h-screen w-full">
+              {children}
+            </div>
+          </PageTransition>
+        </SmoothScroll>
       </body>
     </html>
   );

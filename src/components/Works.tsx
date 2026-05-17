@@ -171,7 +171,7 @@ export default function Works({
           >
             {label}
           </motion.span>
-          <h2 className="text-7xl md:text-8xl lg:text-[10rem] font-medium leading-[0.85] tracking-tighter">
+          <h2 className="text-7xl md:text-8xl lg:text-[10rem] font-medium leading-[0.78] md:leading-[0.82] tracking-tighter">
             <BlurText
               text={heading}
               delay={100}
