@@ -114,7 +114,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                 src={servicesList.find(s => s.id === hoveredService)!.images[0]}
                 alt="Preview"
                 fill
-                quality={75}
+                quality={80}
                 className="object-cover"
               />
             ) : (
@@ -179,7 +179,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                   fill
                   className="object-cover group-hover/profile:scale-[1.02] transition-all duration-700 ease-out"
                   sizes="(max-width: 1024px) 100vw, 25vw"
-                  quality={95}
+                  quality={90}
                 />
               </motion.div>
             </motion.div>

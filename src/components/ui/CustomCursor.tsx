@@ -17,6 +17,10 @@ export const CustomCursor = () => {
   const springY = useSpring(cursorY, { stiffness: 450, damping: 28 });
 
   useEffect(() => {
+    // Only attach cursor tracking events on desktop screens
+    const isMobileDevice = window.matchMedia("(max-width: 767px)").matches;
+    if (isMobileDevice) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);

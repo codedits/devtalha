@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    unoptimized: true,
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
@@ -19,7 +20,7 @@ const nextConfig: NextConfig = {
         hostname: 'framerusercontent.com',
       }
     ],
-    qualities: [75, 80, 95],
+    qualities: [70, 80, 90],
   },
 };
 

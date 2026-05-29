@@ -1,20 +1,7 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import PageTransition from "@/components/PageTransition";
-
-const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-display",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Talha Irfan — Web Developer",
@@ -31,12 +18,15 @@ export default async function RootLayout({
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet" />
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="preconnect" href="https://framerusercontent.com" />
         <link rel="preconnect" href="https://fregldukggdkbemysbho.supabase.co" />
       </head>
       <body
-        className={`${plusJakartaSans.variable} ${spaceGrotesk.variable} antialiased bg-background text-foreground overflow-x-hidden`}
+        className="antialiased bg-background text-foreground overflow-x-hidden"
       >
         <SmoothScroll>
           <PageTransition>

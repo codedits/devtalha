@@ -17,7 +17,6 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
   const nameLabel = data?.name_label ?? 'TALHA IRFAN';
   const [isDesktopLoaded, setIsDesktopLoaded] = useState(false);
   const [isMobileLoaded, setIsMobileLoaded] = useState(false);
-  const [mobileImageQuality, setMobileImageQuality] = useState(85);
   const isLoaded = hasMobileImage ? (isDesktopLoaded || isMobileLoaded) : isDesktopLoaded;
   const [isAnimationFinished, setIsAnimationFinished] = useState(false);
   const desktopImageRef = useRef<HTMLImageElement>(null);
@@ -28,29 +27,6 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
     if (desktopImageRef.current?.complete) setIsDesktopLoaded(true);
     if (mobileImageRef.current?.complete) setIsMobileLoaded(true);
   }, [hasMobileImage]);
-
-  useEffect(() => {
-    const updateMobileQuality = () => {
-      const viewportWidth = window.innerWidth;
-      const devicePixelRatio = window.devicePixelRatio || 1;
-
-      let quality = 90;
-
-      if (viewportWidth >= 640) quality = 92;
-      if (viewportWidth >= 768) quality = 94;
-      if (devicePixelRatio >= 2) quality += 2;
-      if (devicePixelRatio >= 3) quality += 2;
-
-      setMobileImageQuality(Math.min(95, quality));
-    };
-
-    updateMobileQuality();
-    window.addEventListener("resize", updateMobileQuality);
-
-    return () => {
-      window.removeEventListener("resize", updateMobileQuality);
-    };
-  }, []);
 
   useEffect(() => {
     if (isLoaded) {
@@ -100,7 +76,7 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
                 fill
                 priority
                 fetchPriority="high"
-                quality={95}
+                quality={80}
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, calc(100vw - 1rem)"
                 onLoad={() => setIsDesktopLoaded(true)}
@@ -116,7 +92,7 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
                   fill
                   priority
                   fetchPriority="high"
-                  quality={mobileImageQuality}
+                  quality={80}
                   className="object-cover"
                   sizes="100vw"
                   onLoad={() => setIsMobileLoaded(true)}

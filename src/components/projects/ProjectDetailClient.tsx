@@ -361,7 +361,7 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
               fill
               priority
               fetchPriority="high"
-              quality={90}
+              quality={80}
               sizes="(max-width: 768px) 100vw, 1024px"
               className="object-cover"
             />
@@ -561,7 +561,7 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
                     alt={`Project showcase detail ${idx + 1}`}
                     fill
                     loading="lazy"
-                    quality={85}
+                    quality={80}
                     className="object-cover transition-all duration-700 scale-100 group-hover:scale-[1.02]"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
@@ -645,7 +645,7 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
                   src={imageSet[activeImageIndex]}
                   alt="Lightbox view"
                   fill
-                  quality={90}
+                  quality={80}
                   priority
                   className="object-contain select-none pointer-events-none"
                 />

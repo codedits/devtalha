@@ -1,11 +1,13 @@
-import Hero from "@/components/Hero";
-import About from "@/components/About";
-import WhyChooseUs from "@/components/WhyChooseUs";
-import Works from "@/components/Works";
-import Services from "@/components/Services";
-import Process from "@/components/Process";
-import Reachus from "@/components/Reachus";
+import dynamic from "next/dynamic";
 import { SectionParallax } from "@/components/SectionParallax";
+
+const Hero = dynamic(() => import("@/components/Hero"));
+const About = dynamic(() => import("@/components/About"));
+const WhyChooseUs = dynamic(() => import("@/components/WhyChooseUs"));
+const Works = dynamic(() => import("@/components/Works"));
+const Services = dynamic(() => import("@/components/Services"));
+const Process = dynamic(() => import("@/components/Process"));
+const Reachus = dynamic(() => import("@/components/Reachus"));
 import {
   type HomepageSectionKey,
 } from "@/lib/admin/homepageSections";
