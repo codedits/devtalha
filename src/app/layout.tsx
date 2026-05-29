@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
+import PageTransition from "@/components/PageTransition";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -19,8 +20,6 @@ export const metadata: Metadata = {
   title: "Talha Irfan — Web Developer",
   description: "Premium portfolio — Web development, modern frameworks, and AI-accelerated workflows.",
 };
-
-import PageTransition from "@/components/PageTransition";
 
 export default async function RootLayout({
   children,
@@ -50,3 +49,4 @@ export default async function RootLayout({
     </html>
   );
 }
+

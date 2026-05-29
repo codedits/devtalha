@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { CustomCursor } from "@/components/ui/CustomCursor";
+import Preloader from "@/components/ui/Preloader";
 import { getFooter } from "@/lib/queries";
 
 export default async function SiteLayout({
@@ -12,6 +13,7 @@ export default async function SiteLayout({
 
   return (
     <div className="custom-cursor-page">
+      <Preloader />
       <CustomCursor />
       <Navbar />
       <main className="min-h-screen w-full flex flex-col">
@@ -21,3 +23,4 @@ export default async function SiteLayout({
     </div>
   );
 }
+

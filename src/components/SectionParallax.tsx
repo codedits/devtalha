@@ -31,6 +31,18 @@ export function SectionParallax({
     allowParallax ? [-strength, strength] : [0, 0]
   );
 
+  if (strength === 0) {
+    return (
+      <section
+        ref={containerRef}
+        className={`relative w-full ${className ?? ""}`}
+        style={zIndex === undefined ? undefined : { zIndex }}
+      >
+        {children}
+      </section>
+    );
+  }
+
   return (
     <section
       ref={containerRef}

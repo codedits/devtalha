@@ -87,7 +87,7 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
                 <Image src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="User 3" width={44} height={44} sizes="44px" quality={75} className="w-11 h-11 rounded-full border-2 border-white object-cover shadow-sm" />
                 <Image src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="User 4" width={44} height={44} sizes="44px" quality={75} className="w-11 h-11 rounded-full border-2 border-white object-cover shadow-sm" />
               </div>
-
+ 
               {/* Rating */}
               <div className="flex flex-col justify-center">
                 <div className="flex gap-1 mb-1">
@@ -98,8 +98,8 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
                 <span className="text-sm font-medium text-black">Trusted by Founders</span>
               </div>
             </div>
-
-            <p className="text-black text-base sm:text-lg leading-snug font-medium">
+ 
+            <p className="text-black/85 text-xs sm:text-sm md:text-base leading-relaxed font-medium">
               {data.testimonial_text}
             </p>
           </div>
@@ -110,10 +110,10 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
             style={{ animationDelay: '0.4s' }}
           >
             <div>
-              <h3 className="text-6xl sm:text-7xl lg:text-[5rem] font-medium tracking-tighter text-black leading-none mb-3">
+              <h3 className="text-3xl sm:text-4xl lg:text-3xl xl:text-4xl font-semibold tracking-tight text-black leading-none mb-3 break-words">
                 {data.revenue_stat}
               </h3>
-              <p className="text-sm sm:text-base text-black font-medium">
+              <p className="text-xs sm:text-sm text-black/80 font-medium">
                 {data.revenue_label}
               </p>
             </div>
@@ -147,10 +147,10 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
             style={{ animationDelay: '0.5s' }}
           >
             <div className="relative z-10">
-              <h3 className="text-6xl sm:text-7xl lg:text-[5rem] font-medium tracking-tighter text-black leading-none mb-6">
+              <h3 className="text-3xl sm:text-4xl lg:text-3xl xl:text-4xl font-semibold tracking-tight text-black leading-none mb-6 break-words">
                 {data.scale_stat}
               </h3>
-              <p className="text-black text-base sm:text-lg leading-snug font-medium pr-4 sm:pr-8">
+              <p className="text-black/85 text-xs sm:text-sm md:text-base leading-relaxed font-medium pr-2">
                 {data.scale_description}
               </p>
             </div>

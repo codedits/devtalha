@@ -45,6 +45,12 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
     notFound();
   }
 
-  return <ProjectDetailClient project={project} />;
+  const works = await getWorks();
+  const currentIndex = works.findIndex((w) => w.id === id);
+  const nextProject = currentIndex !== -1 && works.length > 1
+    ? works[(currentIndex + 1) % works.length]
+    : null;
+
+  return <ProjectDetailClient project={project} nextProject={nextProject} />;
 }
 

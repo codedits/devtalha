@@ -2,6 +2,12 @@
 
 import { useEffect, useRef } from "react";
 import Lenis from "lenis";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
@@ -12,11 +18,16 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const mobileQuery = window.matchMedia("(max-width: 767px)");
 
-    let rafId = 0;
-
     const destroyLenis = () => {
-      window.cancelAnimationFrame(rafId);
-      lenisRef.current?.destroy();
+      const lenis = lenisRef.current;
+      if (!lenis) return;
+
+      // Remove the GSAP Ticker callback
+      if ((lenis as any)._tickerCallback) {
+        gsap.ticker.remove((lenis as any)._tickerCallback);
+      }
+      
+      lenis.destroy();
       lenisRef.current = null;
     };
 
@@ -32,12 +43,21 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
 
       lenisRef.current = lenis;
 
-      const raf = (time: number) => {
-        lenis.raf(time);
-        rafId = window.requestAnimationFrame(raf);
+      // Synchronize ScrollTrigger updates with Lenis scroll movements
+      lenis.on("scroll", ScrollTrigger.update);
+
+      // Synchronize Lenis frames with the GSAP Ticker rendering thread
+      const tickerCallback = (time: number) => {
+        lenis.raf(time * 1000);
       };
 
-      rafId = window.requestAnimationFrame(raf);
+      gsap.ticker.add(tickerCallback);
+      
+      // Store reference on lenis object for cleanup
+      (lenis as any)._tickerCallback = tickerCallback;
+
+      // Set lag smoothing to 0 to prevent GSAP jumps on heavy loads
+      gsap.ticker.lagSmoothing(0);
     };
 
     const syncLenisState = () => {

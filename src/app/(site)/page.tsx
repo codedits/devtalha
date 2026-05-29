@@ -75,7 +75,7 @@ export default async function Home() {
     hero: 80,
     about: 100,
     why: 0,
-    works: 60,
+    works: 0,
     services: 45,
     process: 45,
     reachus: 30,

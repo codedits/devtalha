@@ -8,6 +8,7 @@ import type { HeroSection } from "@/types/content";
 import { useMotionPreferences } from "@/hooks/useMotionPreferences";
 
 export default function Hero({ data }: { data?: HeroSection | null }) {
+
   const { allowParallax } = useMotionPreferences();
   const heading = data?.heading ?? 'I build brands, campaigns, and digital experience';
   const desktopBgImage = data?.background_image_url ?? 'https://images.unsplash.com/photo-1582150816999-5c92a8c15401?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';

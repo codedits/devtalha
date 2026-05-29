@@ -1,11 +1,13 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { X, Menu } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { RollText } from "./ui/RollText";
+import { useMagnetic } from "@/hooks/useMagnetic";
 
 const navLinks = [
   { label: "HOME", href: "/" },
@@ -15,8 +17,23 @@ const navLinks = [
   { label: "CONTACT", href: "/#contact" },
 ];
 
+function MagneticWrapper({ children, className }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useMagnetic(ref, 0.3);
+
+  return (
+    <div ref={ref} className={className}>
+      {children}
+    </div>
+  );
+}
+
 export default function Navbar() {
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Hide the nav only on project details pages (/projects/[id])
+  const isProjectDetailPage = pathname ? /^\/projects\/.+/.test(pathname) : false;
 
   // Prevent scrolling when menu is open
   useEffect(() => {
@@ -30,6 +47,8 @@ export default function Navbar() {
     };
   }, [isMenuOpen]);
 
+  if (isProjectDetailPage) return null;
+
   return (
     <>
       <motion.header
@@ -39,23 +58,24 @@ export default function Navbar() {
         className="fixed top-8 left-0 right-0 z-[70] flex justify-between items-center px-6 md:px-10 pointer-events-none font-sans mix-blend-difference"
       >
         {/* Logo */}
-        <div className="pointer-events-auto">
+        <MagneticWrapper className="pointer-events-auto">
           <Link href="/" className="text-xl font-bold tracking-tighter text-white">
             TALHA®
           </Link>
-        </div>
+        </MagneticWrapper>
 
         {/* Desktop Nav */}
         <nav className="pointer-events-auto flex items-center text-white h-12 md:h-[52px] hidden md:flex font-sans">
           <div className="flex items-center gap-8">
             {navLinks.map((link) => (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="text-[14px] font-bold uppercase tracking-normal transition-opacity whitespace-nowrap"
-              >
-                <RollText>{link.label}</RollText>
-              </Link>
+              <MagneticWrapper key={link.label}>
+                <Link
+                  href={link.href}
+                  className="text-[14px] font-bold uppercase tracking-normal transition-opacity whitespace-nowrap"
+                >
+                  <RollText>{link.label}</RollText>
+                </Link>
+              </MagneticWrapper>
             ))}
           </div>
         </nav>
