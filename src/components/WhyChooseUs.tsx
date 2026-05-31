@@ -2,13 +2,95 @@
 
 import { Star } from 'lucide-react';
 import Image from 'next/image';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { useInView } from 'framer-motion';
 import type { WhyChooseUsSection } from '@/types/content';
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLElement>(null);
   const isInView = useInView(containerRef, { once: true, margin: "-10% 0px" });
+
+  const card1Ref = useRef<HTMLDivElement>(null);
+  const card2Ref = useRef<HTMLDivElement>(null);
+  const card3Ref = useRef<HTMLDivElement>(null);
+  const card4Ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+
+      // Desktop layout (4 columns) - Left two shift left, right two shift right
+      mm.add("(min-width: 1024px)", () => {
+        gsap.set([card1Ref.current, card2Ref.current], { x: -280, opacity: 0 });
+        gsap.set([card3Ref.current, card4Ref.current], { x: 280, opacity: 0 });
+
+        gsap.to([card1Ref.current, card2Ref.current, card3Ref.current, card4Ref.current], {
+          x: 0,
+          opacity: 1,
+          duration: 1.4,
+          ease: "power4.out",
+          stagger: {
+            amount: 0.3,
+            from: "edges"
+          },
+          scrollTrigger: {
+            trigger: container,
+            start: "top 78%",
+            toggleActions: "play none none reverse",
+          }
+        });
+      });
+
+      // Tablet layout (2 columns) - Columns shift outwards (left column left, right column right)
+      mm.add("(min-width: 640px) and (max-width: 1023px)", () => {
+        gsap.set([card1Ref.current, card3Ref.current], { x: -160, opacity: 0 });
+        gsap.set([card2Ref.current, card4Ref.current], { x: 160, opacity: 0 });
+
+        gsap.to([card1Ref.current, card2Ref.current, card3Ref.current, card4Ref.current], {
+          x: 0,
+          opacity: 1,
+          duration: 1.2,
+          ease: "power3.out",
+          stagger: 0.1,
+          scrollTrigger: {
+            trigger: container,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          }
+        });
+      });
+
+      // Mobile layout (1 column) - Alternating side slide-in
+      mm.add("(max-width: 639px)", () => {
+        gsap.set([card1Ref.current, card3Ref.current], { x: -60, opacity: 0 });
+        gsap.set([card2Ref.current, card4Ref.current], { x: 60, opacity: 0 });
+
+        gsap.to([card1Ref.current, card2Ref.current, card3Ref.current, card4Ref.current], {
+          x: 0,
+          opacity: 1,
+          duration: 1.0,
+          ease: "power3.out",
+          stagger: 0.15,
+          scrollTrigger: {
+            trigger: container,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          }
+        });
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   // Chart data to mimic the upward trending bar chart
   const chartBars = [
@@ -46,8 +128,8 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
 
           {/* Card 1: Main Image / Brand */}
           <div 
-            className="reveal-up relative group min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] bg-[#1a1a1a] overflow-hidden flex flex-col justify-between p-6 sm:p-8 rounded-2xl"
-            style={{ animationDelay: '0.2s' }}
+            ref={card1Ref}
+            className="relative group min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] bg-[#1a1a1a] overflow-hidden flex flex-col justify-between p-6 sm:p-8 rounded-2xl opacity-0"
           >
             {/* Background Image */}
             <Image
@@ -76,8 +158,8 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
 
           {/* Card 2: Testimonial */}
           <div 
-            className="reveal-up border border-zinc-200 dark:border-zinc-800 bg-card p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col justify-between rounded-2xl transition-colors duration-500"
-            style={{ animationDelay: '0.3s' }}
+            ref={card2Ref}
+            className="border border-zinc-200 dark:border-zinc-800 bg-card p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col justify-between rounded-2xl transition-colors duration-500 opacity-0"
           >
             <div className="flex flex-col xl:flex-row xl:items-center gap-4 mb-8">
               {/* Avatars */}
@@ -106,8 +188,8 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
 
           {/* Card 3: Stats / Chart */}
           <div 
-            className="reveal-up border border-zinc-200 dark:border-zinc-800 bg-muted p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col relative rounded-2xl transition-colors duration-500"
-            style={{ animationDelay: '0.4s' }}
+            ref={card3Ref}
+            className="border border-zinc-200 dark:border-zinc-800 bg-muted p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col relative rounded-2xl transition-colors duration-500 opacity-0"
           >
             <div>
               <h3 className="text-3xl sm:text-4xl lg:text-3xl xl:text-4xl font-semibold tracking-tight text-foreground leading-none mb-3 break-words">
@@ -143,8 +225,8 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
 
           {/* Card 4: Info / Scale */}
           <div 
-            className="reveal-up border border-zinc-200 dark:border-zinc-800 bg-card p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col relative overflow-hidden rounded-2xl transition-colors duration-500"
-            style={{ animationDelay: '0.5s' }}
+            ref={card4Ref}
+            className="border border-zinc-200 dark:border-zinc-800 bg-card p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col relative overflow-hidden rounded-2xl transition-colors duration-500 opacity-0"
           >
             <div className="relative z-10">
               <h3 className="text-3xl sm:text-4xl lg:text-3xl xl:text-4xl font-semibold tracking-tight text-foreground leading-none mb-6 break-words">

@@ -28,35 +28,52 @@ type WorkCardData = {
 
 const WorkCard: React.FC<{ work: WorkCardData; index: number }> = ({ work, index }) => {
   return (
-    <div className="w-full h-full relative overflow-hidden flex flex-col justify-end pb-6 md:pb-28 px-6 md:px-20 lg:px-24 group">
-      <div className="absolute inset-0 z-0">
+    <Link
+      href={`/projects/${work.id}`}
+      className="w-full h-full flex flex-col md:flex-row group cursor-pointer"
+      data-cursor="view"
+      aria-label={`Open ${work.title} project details`}
+    >
+      {/* Left/Top: Image Container */}
+      <div className="relative w-full h-[50%] md:h-full md:w-[55%] overflow-hidden bg-muted">
         <Image
           src={work.imageUrl}
           alt={work.title}
           fill
           priority={index < 2}
-          className="object-cover transition-transform duration-1000 ease-out scale-100 md:group-hover:scale-[1.02]"
-          sizes="100vw"
-          quality={80}
+          className="object-cover transition-transform duration-1000 ease-out scale-100 group-hover:scale-[1.03]"
+          sizes="(max-width: 768px) 100vw, 40vw"
+          quality={85}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-black/60 z-[1]" />
+        {/* Soft overlay on hover */}
+        <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       </div>
 
-      <Link
-        href={`/projects/${work.id}`}
-        className="relative z-10 block text-left group cursor-pointer max-w-4xl text-white"
-        data-cursor="view"
-        aria-label={`Open ${work.title} project details`}
-      >
-        <span className="text-white/60 font-mono text-[9px] sm:text-xs font-bold uppercase tracking-[0.25em] mb-2 md:mb-4 block">
-          {work.client}
-        </span>
-        <h3 className="text-white text-2xl sm:text-4xl md:text-7xl lg:text-[7rem] font-medium leading-[0.82] sm:leading-[0.8] md:leading-[0.76] lg:leading-[0.72] tracking-tighter mb-4 md:mb-8 group-hover:text-white/80 transition-colors">
-          {work.title}
-        </h3>
-        <div className="h-[1px] bg-white/30 w-16 group-hover:w-32 transition-all duration-500 ease-out" />
-      </Link>
-    </div>
+      {/* Right/Bottom: Info Panel */}
+      <div className="bg-card w-full h-[50%] md:h-full md:w-[45%] p-6 sm:p-8 md:p-10 flex flex-col justify-between border-t md:border-t-0 md:border-l border-border/40 text-left">
+        {/* Top Details */}
+        <div className="space-y-2 md:space-y-4">
+          <span className="text-muted-foreground font-mono text-[9px] sm:text-xs font-bold uppercase tracking-[0.2em] block">
+            {work.client}
+          </span>
+          <h3 className="text-foreground text-xl sm:text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight leading-tight group-hover:text-muted-foreground transition-colors duration-300">
+            {work.title}
+          </h3>
+        </div>
+
+        {/* Bottom CTA Arrow */}
+        <div className="flex justify-between items-center mt-4">
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground/60 group-hover:text-foreground transition-colors">
+            View Project Case
+          </span>
+          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-border/60 flex items-center justify-center text-foreground group-hover:border-foreground group-hover:bg-foreground group-hover:text-background transition-all duration-300">
+            <span className="text-sm font-bold uppercase tracking-wider font-mono">
+              →
+            </span>
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 };
 
@@ -259,7 +276,7 @@ export default function Works({
               key={work.id}
               className="w-screen h-screen flex-shrink-0 flex items-center justify-center px-4 md:px-0"
             >
-              <div className="w-[71.11vh] max-w-[90vw] aspect-[16/9] md:w-full md:h-full md:max-w-none md:aspect-none md:rounded-none relative rounded-2xl overflow-hidden h-[70vh] md:h-full flex-shrink-0">
+              <div className="w-[85vw] sm:w-[75vw] md:w-[70vw] lg:w-[60vw] h-[65vh] max-h-[500px] relative rounded-3xl overflow-hidden flex-shrink-0 bg-card border border-border shadow-2xl flex flex-col">
                 <WorkCard work={work} index={index} />
               </div>
             </div>

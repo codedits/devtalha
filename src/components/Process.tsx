@@ -78,7 +78,7 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
         </motion.div>
         
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border border-white/15"
+          className="grid grid-cols-2 lg:grid-cols-4 border border-white/15"
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ ...BASE_REVEAL, delay: 0.15 }}
@@ -90,7 +90,13 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
               variants={cardVariants}
               initial="hidden"
               animate={isInView ? "visible" : "hidden"}
-              className={`flex flex-col justify-between p-8 md:p-10 min-h-[300px] lg:min-h-[450px] bg-background group/roll cursor-default border-b lg:border-b-0 ${idx !== 3 ? 'lg:border-r' : ''} border-white/15 relative overflow-hidden ${
+              className={`flex flex-col justify-between p-5 sm:p-8 md:p-10 min-h-[220px] sm:min-h-[300px] lg:min-h-[450px] bg-background group/roll cursor-default border-white/15 relative overflow-hidden ${
+                idx % 2 === 0 ? "border-r" : "border-r-0"
+              } ${
+                idx < 2 ? "border-b" : "border-b-0"
+              } ${
+                idx !== 3 ? "lg:border-r" : "lg:border-r-0"
+              } lg:border-b-0 ${
                 allowHover ? "hover:bg-card transition-colors duration-300" : ""
               }`}
             >
@@ -126,14 +132,14 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
               {/* Card Bottom */}
               <div className="mt-auto">
                 <motion.h3 
-                  className="text-3xl tracking-tight mb-5 font-medium"
+                  className="text-lg sm:text-2xl lg:text-3xl tracking-tight mb-2 sm:mb-5 font-medium"
                   whileHover={allowHover ? { x: 10 } : undefined}
                   transition={allowHover ? { duration: 0.3, ease: PREMIUM_EASE } : undefined}
                 >
                   <RollText>{step.title}</RollText>
                 </motion.h3>
                 <motion.p 
-                  className="text-[15px] text-foreground/80 leading-[1.7] group-hover/roll:text-foreground transition-colors duration-500 font-medium"
+                  className="text-[12px] sm:text-[14px] md:text-[15px] text-foreground/80 leading-relaxed sm:leading-[1.7] group-hover/roll:text-foreground transition-colors duration-500 font-medium"
                   initial={{ opacity: 0.7 }}
                   whileHover={allowHover ? { opacity: 1 } : undefined}
                 >

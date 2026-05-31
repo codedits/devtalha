@@ -10,6 +10,12 @@ import type { ServicesItem, ServicesMetaSection } from "@/types/content";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { BASE_REVEAL, PREMIUM_EASE, REVEAL_VIEWPORT } from "@/lib/motion";
 import { RollText } from "./ui/RollText";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 interface Service {
   id: string;
@@ -48,6 +54,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   const sectionRef = useRef<HTMLElement>(null);
+  const leftColRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, REVEAL_VIEWPORT);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -59,6 +66,103 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
     [0, 1],
     prefersReducedMotion || isMobile ? ["0%", "0%"] : ["8%", "-8%"]
   );
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+      const serviceItems = gsap.utils.toArray(".gsap-services-item");
+
+      // Desktop layout (1024px and above) - split and contract inwards
+      mm.add("(min-width: 1024px)", () => {
+        gsap.set(leftColRef.current, { x: -180, opacity: 0 });
+        gsap.set(serviceItems, { x: 180, opacity: 0 });
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top 75%",
+            toggleActions: "play none none reverse",
+          }
+        });
+
+        tl.to(leftColRef.current, {
+          x: 0,
+          opacity: 1,
+          duration: 1.2,
+          ease: "power3.out"
+        })
+        .to(serviceItems, {
+          x: 0,
+          opacity: 1,
+          duration: 1.0,
+          ease: "power3.out",
+          stagger: 0.12
+        }, "-=0.8");
+      });
+
+      // Tablet layout (768px - 1023px) - columns contract slightly
+      mm.add("(min-width: 768px) and (max-width: 1023px)", () => {
+        gsap.set(leftColRef.current, { x: -100, opacity: 0 });
+        gsap.set(serviceItems, { x: 100, opacity: 0 });
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          }
+        });
+
+        tl.to(leftColRef.current, {
+          x: 0,
+          opacity: 1,
+          duration: 1.0,
+          ease: "power2.out"
+        })
+        .to(serviceItems, {
+          x: 0,
+          opacity: 1,
+          duration: 0.8,
+          ease: "power2.out",
+          stagger: 0.1
+        }, "-=0.6");
+      });
+
+      // Mobile layout (<768px) - Left column from left, list items from right
+      mm.add("(max-width: 767px)", () => {
+        gsap.set(leftColRef.current, { x: -60, opacity: 0 });
+        gsap.set(serviceItems, { x: 60, opacity: 0 });
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top 82%",
+            toggleActions: "play none none reverse",
+          }
+        });
+
+        tl.to(leftColRef.current, {
+          x: 0,
+          opacity: 1,
+          duration: 0.9,
+          ease: "power2.out"
+        })
+        .to(serviceItems, {
+          x: 0,
+          opacity: 1,
+          duration: 0.8,
+          ease: "power2.out",
+          stagger: 0.1
+        }, "-=0.6");
+      });
+
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!allowHover || !sectionRef.current) return;
@@ -133,11 +237,9 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
 
           {/* Left Column */}
-          <motion.div
-            className="lg:col-span-4 flex flex-col items-center text-center lg:items-start lg:text-left"
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ ...BASE_REVEAL, ease: PREMIUM_EASE }}
+          <div
+            ref={leftColRef}
+            className="gsap-services-left lg:col-span-4 flex flex-col items-center text-center lg:items-start lg:text-left opacity-0"
           >
             <motion.span
               className="text-xs font-bold uppercase tracking-[0.2em] mb-8 text-foreground/60 block"
@@ -197,27 +299,19 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                 <ArrowRight size={14} strokeWidth={2.5} className="ml-1.5" />
               </LiquidButton>
             </motion.div>
-          </motion.div>
+          </div>
 
           {/* Right Column (Accordion) */}
           <div className="lg:col-span-8 lg:mt-16">
-            <motion.div
-              className="border-t border-white/10"
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.3, duration: 0.8 }}
-            >
+            <div className="border-t border-white/10">
               {servicesList.map((service, idx) => {
                 const isOpen = openService === service.id;
                 const formattedIdx = String(idx + 1).padStart(2, '0');
 
                 return (
-                  <motion.div
+                  <div
                     key={service.id}
-                    className="border-b border-white/10"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ delay: 0.2 + idx * 0.1, duration: 0.6 }}
+                    className="gsap-services-item border-b border-white/10 opacity-0"
                     onMouseEnter={() => setHoveredService(service.id)}
                     onMouseLeave={() => setHoveredService(null)}
                   >
@@ -260,7 +354,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                           transition={{ duration: 0.45, ease: PREMIUM_EASE }}
                           className="overflow-hidden"
                         >
-                          <div className="pb-8 pt-2 pl-12 md:pl-16">
+                          <div className="pb-8 pt-2 pl-4 sm:pl-12 md:pl-16">
                             <motion.p
                               className="text-sm md:text-base text-foreground/80 max-w-2xl leading-relaxed mb-6 font-medium"
                               initial={{ opacity: 0, y: 15 }}
@@ -322,13 +416,13 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                         </motion.div>
                       )}
                     </AnimatePresence>
-                  </motion.div>
+                  </div>
                 );
               })}
               {servicesList.length === 0 ? (
                 <div className="py-10 text-sm text-muted-foreground">No services added yet.</div>
               ) : null}
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

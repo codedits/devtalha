@@ -126,7 +126,7 @@ export default function Footer({ data }: { data?: FooterSection | null }) {
           </div>
 
           {/* Middle Section: Massive Typography */}
-          <div className="w-full relative flex justify-between items-end mb-12 md:mb-16 select-none ">
+          <div className="w-full relative flex justify-between items-end mb-12 md:mb-16 select-none overflow-hidden">
 
             <motion.h1
               initial={{ y: "100%" }}

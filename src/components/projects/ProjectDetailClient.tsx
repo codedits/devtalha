@@ -339,7 +339,7 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
       </nav>
 
       {/* 1. IMMERSIVE HERO SECTION */}
-      <section ref={heroRef} className="relative h-screen w-full flex flex-col justify-end items-start overflow-hidden px-6 md:px-12 pb-16 md:pb-24">
+      <section ref={heroRef} className="relative min-h-screen lg:h-screen w-full flex flex-col justify-end items-start lg:overflow-hidden px-6 md:px-12 pb-16 md:pb-24 pt-24 lg:pt-0">
         {/* Parallax Background Cover Image */}
         <motion.div 
           style={{ y: heroImageY, scale: heroImageScale, opacity: heroImageOpacity }}
@@ -382,7 +382,7 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
           </div>
 
           {/* Translucent Glassmorphic Info Bar */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl p-6 md:p-8 w-full mt-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6 md:p-8 w-full mt-4">
             <div className="space-y-1">
               <h4 className="text-[8px] font-bold uppercase tracking-[0.25em] text-white/40">Client</h4>
               <p className="text-sm text-white font-medium truncate">{project.client}</p>
