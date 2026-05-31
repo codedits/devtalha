@@ -22,7 +22,7 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
   return (
     <section 
       ref={containerRef}
-      className={`bg-white text-black font-sans selection:bg-black selection:text-white overflow-hidden ${isInView ? 'is-visible' : ''}`} 
+      className={`bg-background text-foreground font-sans transition-colors duration-500 selection:bg-foreground selection:text-background overflow-hidden ${isInView ? 'is-visible' : ''}`} 
       id="why-choose-us"
     >
       <div className="container mx-auto px-6 md:px-8 max-w-7xl py-16 sm:py-24 lg:py-32">
@@ -35,7 +35,7 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
             </span>
           </div>
           <div className="md:w-3/4 lg:w-[80%]">
-            <h2 className="reveal-up text-[1.5rem] sm:text-4xl md:text-4xl lg:text-[5.5rem] font-medium tracking-tight leading-[1.05] text-black max-w-[50rem] whitespace-pre-line" style={{ animationDelay: '0.1s' }}>
+            <h2 className="reveal-up text-[1.5rem] sm:text-4xl md:text-4xl lg:text-[5.5rem] font-medium tracking-tight leading-[1.0] sm:leading-[0.9] lg:leading-[0.82] text-foreground max-w-[50rem] whitespace-pre-line" style={{ animationDelay: '0.1s' }}>
               {data.heading}
             </h2>
           </div>
@@ -76,62 +76,62 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
 
           {/* Card 2: Testimonial */}
           <div 
-            className="reveal-up border border-zinc-200 bg-white p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col justify-between rounded-2xl"
+            className="reveal-up border border-zinc-200 dark:border-zinc-800 bg-card p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col justify-between rounded-2xl transition-colors duration-500"
             style={{ animationDelay: '0.3s' }}
           >
             <div className="flex flex-col xl:flex-row xl:items-center gap-4 mb-8">
               {/* Avatars */}
               <div className="flex -space-x-3 shrink-0">
-                <Image src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="User 1" width={44} height={44} sizes="44px" quality={80} className="w-11 h-11 rounded-full border-2 border-white object-cover shadow-sm" />
-                <Image src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" alt="User 2" width={44} height={44} sizes="44px" quality={80} className="w-11 h-11 rounded-full border-2 border-white object-cover shadow-sm" />
-                <Image src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="User 3" width={44} height={44} sizes="44px" quality={80} className="w-11 h-11 rounded-full border-2 border-white object-cover shadow-sm" />
-                <Image src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="User 4" width={44} height={44} sizes="44px" quality={80} className="w-11 h-11 rounded-full border-2 border-white object-cover shadow-sm" />
+                <Image src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop" alt="User 1" width={44} height={44} sizes="44px" quality={80} className="w-11 h-11 rounded-full border-2 border-card object-cover shadow-sm" />
+                <Image src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop" alt="User 2" width={44} height={44} sizes="44px" quality={80} className="w-11 h-11 rounded-full border-2 border-card object-cover shadow-sm" />
+                <Image src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="User 3" width={44} height={44} sizes="44px" quality={80} className="w-11 h-11 rounded-full border-2 border-card object-cover shadow-sm" />
+                <Image src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="User 4" width={44} height={44} sizes="44px" quality={80} className="w-11 h-11 rounded-full border-2 border-card object-cover shadow-sm" />
               </div>
  
               {/* Rating */}
               <div className="flex flex-col justify-center">
                 <div className="flex gap-1 mb-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-black text-black" />
+                    <Star key={i} className="w-4 h-4 fill-foreground text-foreground" />
                   ))}
                 </div>
-                <span className="text-sm font-medium text-black">Trusted by Founders</span>
+                <span className="text-sm font-medium text-foreground">Trusted by Founders</span>
               </div>
             </div>
  
-            <p className="text-black/85 text-xs sm:text-sm md:text-base leading-relaxed font-medium">
+            <p className="text-foreground/85 text-xs sm:text-sm md:text-base leading-relaxed font-medium">
               {data.testimonial_text}
             </p>
           </div>
 
           {/* Card 3: Stats / Chart */}
           <div 
-            className="reveal-up border border-zinc-200 bg-[#f7f7f7] p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col relative rounded-2xl"
+            className="reveal-up border border-zinc-200 dark:border-zinc-800 bg-muted p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col relative rounded-2xl transition-colors duration-500"
             style={{ animationDelay: '0.4s' }}
           >
             <div>
-              <h3 className="text-3xl sm:text-4xl lg:text-3xl xl:text-4xl font-semibold tracking-tight text-black leading-none mb-3 break-words">
+              <h3 className="text-3xl sm:text-4xl lg:text-3xl xl:text-4xl font-semibold tracking-tight text-foreground leading-none mb-3 break-words">
                 {data.revenue_stat}
               </h3>
-              <p className="text-xs sm:text-sm text-black/80 font-medium">
+              <p className="text-xs sm:text-sm text-foreground/80 font-medium">
                 {data.revenue_label}
               </p>
             </div>
 
             {/* Chart Area */}
             <div className="mt-auto pt-12 flex flex-col w-full">
-              <div className="h-32 sm:h-40 w-full flex items-end justify-between border-b border-zinc-300 pb-2">
+              <div className="h-32 sm:h-40 w-full flex items-end justify-between border-b border-zinc-300 dark:border-zinc-800 pb-2">
                 {chartBars.map((height, index) => (
                   <div
                     key={index}
                     style={{ height: `${height}%`, animationDelay: `${0.5 + index * 0.02}s` }}
-                    className="w-[1px] sm:w-[2px] bg-black rounded-t-sm bar-initial bar-animate"
+                    className="w-[1px] sm:w-[2px] bg-foreground rounded-t-sm bar-initial bar-animate"
                   />
                 ))}
               </div>
 
               {/* Chart Labels */}
-              <div className="flex justify-between w-full text-[10px] sm:text-xs text-zinc-500 font-medium mt-3">
+              <div className="flex justify-between w-full text-[10px] sm:text-xs text-muted-foreground font-medium mt-3">
                 <span>2021</span>
                 <span>2022</span>
                 <span>2023</span>
@@ -143,20 +143,20 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
 
           {/* Card 4: Info / Scale */}
           <div 
-            className="reveal-up border border-zinc-200 bg-white p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col relative overflow-hidden rounded-2xl"
+            className="reveal-up border border-zinc-200 dark:border-zinc-800 bg-card p-6 sm:p-8 min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] flex flex-col relative overflow-hidden rounded-2xl transition-colors duration-500"
             style={{ animationDelay: '0.5s' }}
           >
             <div className="relative z-10">
-              <h3 className="text-3xl sm:text-4xl lg:text-3xl xl:text-4xl font-semibold tracking-tight text-black leading-none mb-6 break-words">
+              <h3 className="text-3xl sm:text-4xl lg:text-3xl xl:text-4xl font-semibold tracking-tight text-foreground leading-none mb-6 break-words">
                 {data.scale_stat}
               </h3>
-              <p className="text-black/85 text-xs sm:text-sm md:text-base leading-relaxed font-medium pr-2">
+              <p className="text-foreground/85 text-xs sm:text-sm md:text-base leading-relaxed font-medium pr-2">
                 {data.scale_description}
               </p>
             </div>
 
             {/* Decorative Abstract Arcs */}
-            <div className="absolute -bottom-8 -right-8 w-48 h-48 opacity-80 text-black pointer-events-none">
+            <div className="absolute -bottom-8 -right-8 w-48 h-48 opacity-80 text-foreground pointer-events-none">
               <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="0.75" className="w-full h-full">
                 <path d="M 10 90 A 80 80 0 0 1 90 10" />
                 <path d="M 30 110 A 90 90 0 0 1 110 30" />

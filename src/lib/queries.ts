@@ -38,7 +38,7 @@ function clampNonNegativeInteger(value: unknown, fallback: number) {
   return Math.max(0, Math.trunc(parsed));
 }
 
-async function fetchSingle<K extends "hero" | "about" | "reachus" | "footer" | "why_choose_us">(section: K) {
+async function fetchSingle<K extends "hero" | "about" | "reachus" | "footer" | "why_choose_us" | "settings">(section: K) {
   const { data, error } = await supabase
     .from(section)
     .select("*")
@@ -190,6 +190,15 @@ const getWhyChooseUsCached = unstable_cache(
   {
     revalidate: PORTFOLIO_CACHE_REVALIDATE_SECONDS,
     tags: getSectionTags("why_choose_us"),
+  }
+);
+
+const getSettingsCached = unstable_cache(
+  async () => fetchSingle("settings"),
+  ["portfolio-query-settings"],
+  {
+    revalidate: PORTFOLIO_CACHE_REVALIDATE_SECONDS,
+    tags: getSectionTags("settings"),
   }
 );
 
@@ -346,6 +355,16 @@ export async function getReachus() {
 
 export async function getFooter() {
   return getFooterCached() as Promise<FooterSection>;
+}
+
+export async function getSettings() {
+  try {
+    const settings = await getSettingsCached();
+    return settings as { default_theme: "light" | "dark" };
+  } catch (e) {
+    // Fallback if settings table does not exist yet or seed data is missing
+    return { default_theme: "light" as const };
+  }
 }
 
 export async function getHomepageSectionOrder() {

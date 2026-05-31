@@ -224,4 +224,23 @@ export const SECTION_CONFIGS: SectionConfig[] = [
       { key: "email", label: "Email", type: "text", placeholder: "hello@example.com" },
     ],
   },
+  {
+    title: "Settings",
+    section: "settings",
+    mode: "single",
+    icon: <Settings size={18} />,
+    description: "Global site settings such as default theme mode.",
+    fields: [
+      {
+        key: "default_theme",
+        label: "Default Theme Mode",
+        type: "select",
+        description: "Choose the default theme mode loaded when users first visit the site.",
+        options: [
+          { label: "Light Theme", value: "light" },
+          { label: "Dark Theme", value: "dark" },
+        ],
+      },
+    ],
+  },
 ];

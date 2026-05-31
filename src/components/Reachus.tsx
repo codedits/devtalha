@@ -77,12 +77,10 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
             >
               {label}
             </motion.span>
-            <h2 className="text-5xl md:text-8xl lg:text-[110px] leading-[0.82] md:leading-[0.86] tracking-tighter font-medium mb-12">
+            <h2 className="text-5xl md:text-8xl lg:text-[110px] leading-[0.8] md:leading-[0.76] lg:leading-[0.72] tracking-tighter font-medium mb-12">
               <BlockRevealText
                 text={heading}
                 blockColor="bg-foreground"
-                duration={0.5}
-                staggerDelay={0.09}
                 scrub={false}
               />
             </h2>

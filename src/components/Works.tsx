@@ -51,7 +51,7 @@ const WorkCard: React.FC<{ work: WorkCardData; index: number }> = ({ work, index
         <span className="text-white/60 font-mono text-[9px] sm:text-xs font-bold uppercase tracking-[0.25em] mb-2 md:mb-4 block">
           {work.client}
         </span>
-        <h3 className="text-white text-2xl sm:text-4xl md:text-7xl lg:text-[7rem] font-medium leading-[0.82] tracking-tighter mb-4 md:mb-8 group-hover:text-white/80 transition-colors">
+        <h3 className="text-white text-2xl sm:text-4xl md:text-7xl lg:text-[7rem] font-medium leading-[0.82] sm:leading-[0.8] md:leading-[0.76] lg:leading-[0.72] tracking-tighter mb-4 md:mb-8 group-hover:text-white/80 transition-colors">
           {work.title}
         </h3>
         <div className="h-[1px] bg-white/30 w-16 group-hover:w-32 transition-all duration-500 ease-out" />
@@ -167,7 +167,7 @@ export default function Works({
                 >
                   {label}
                 </motion.span>
-                <h2 className="text-5xl md:text-8xl lg:text-[10rem] font-medium leading-[0.8] tracking-tighter mb-4 md:mb-12">
+                <h2 className="text-5xl md:text-8xl lg:text-[10rem] font-medium leading-[0.78] md:leading-[0.74] lg:leading-[0.7] tracking-tighter mb-4 md:mb-12">
                   <BlurText
                     text={heading}
                     delay={80}

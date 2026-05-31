@@ -33,8 +33,8 @@ export default function Footer({ data }: { data?: FooterSection | null }) {
     : "w-full sm:w-auto text-white px-4 py-[18px] text-[11px] font-bold uppercase tracking-[0.2em] hover:text-white/60 transition-colors";
 
   return (
-    <footer className="w-full px-4 pb-4 cv-auto mt-20 relative z-10 section-dark ">
-      <div className="relative w-full bg-[#000000] rounded-[2rem] md:rounded-[3rem] overflow-hidden pt-24 pb-12">
+    <footer className="w-full cv-auto mt-20 relative z-10 section-dark">
+      <div className="relative w-full bg-[#000000] overflow-hidden pt-24 pb-12">
         {hasBackgroundImage ? (
           <>
             <Image

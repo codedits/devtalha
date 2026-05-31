@@ -1,15 +1,22 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import gsap from "gsap";
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const GREETINGS = [
+  "Hello",
+  "Bonjour",
+  "Ciao",
+  "Olà",
+  "こんにちは",
+  "你好",
+  "السلام علیکم"
+];
 
 export default function Preloader() {
   const [isComplete, setIsComplete] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const counterRef = useRef<HTMLDivElement>(null);
-  const progressTextRef = useRef<HTMLSpanElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const subRef = useRef<HTMLDivElement>(null);
+  const [index, setIndex] = useState(0);
+  const [status, setStatus] = useState<"active" | "exiting">("active");
 
   useEffect(() => {
     // Check if the user has already loaded the site in this session
@@ -22,101 +29,105 @@ export default function Preloader() {
     // Lock page scroll
     document.body.style.overflow = "hidden";
 
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        onComplete: () => {
-          setIsComplete(true);
-          sessionStorage.setItem("portfolio-visited", "true");
-          // Restore page scroll
-          document.body.style.overflow = "unset";
-        },
+    // Cycle through greetings at a comfortable, readable speed (380ms)
+    const interval = setInterval(() => {
+      setIndex((prevIndex) => {
+        if (prevIndex < GREETINGS.length - 1) {
+          return prevIndex + 1;
+        } else {
+          // Reached TALHA, stop cycling
+          clearInterval(interval);
+          return prevIndex;
+        }
       });
-
-      // Animate text entrances
-      tl.fromTo(
-        [titleRef.current, subRef.current],
-        { opacity: 0, y: 15 },
-        { opacity: 1, y: 0, duration: 0.6, stagger: 0.15, ease: "power2.out" }
-      );
-
-      // Animate counter progress value
-      const counterVal = { value: 0 };
-      tl.to(
-        counterVal,
-        {
-          value: 100,
-          duration: 2.0,
-          ease: "power2.out",
-          onUpdate: () => {
-            if (progressTextRef.current) {
-              progressTextRef.current.innerText = String(
-                Math.floor(counterVal.value)
-              ).padStart(2, "0");
-            }
-          },
-        },
-        "-=0.4"
-      );
-
-      // Wipe out details right before page wipe
-      tl.to(
-        [titleRef.current, subRef.current, counterRef.current],
-        { opacity: 0, y: -20, duration: 0.45, ease: "power2.in", stagger: 0.08 },
-        "+=0.1"
-      );
-
-      // Slide up the full screen preloader curtain
-      tl.to(
-        containerRef.current,
-        {
-          yPercent: -100,
-          duration: 0.9,
-          ease: "power4.inOut",
-        },
-        "-=0.15"
-      );
-    });
+    }, 380);
 
     return () => {
-      ctx.revert();
+      clearInterval(interval);
       document.body.style.overflow = "unset";
     };
   }, []);
 
+  // When we reach the final word (TALHA), pause and trigger exit
+  useEffect(() => {
+    if (index === GREETINGS.length - 1) {
+      const timer = setTimeout(() => {
+        setStatus("exiting");
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("preloader-complete"));
+        }
+      }, 1000); // Keep TALHA visible for 1.0s
+
+      return () => clearTimeout(timer);
+    }
+  }, [index]);
+
   if (isComplete) return null;
 
+  // SVG curved path variants for the curtain exit (U-curve liquid trail)
+  const curveVariants = {
+    initial: {
+      d: "M0 0 L100 0 L100 100 Q50 100 0 100 Z"
+    },
+    animate: {
+      d: "M0 0 L100 0 L100 100 Q50 100 0 100 Z"
+    },
+    exit: {
+      d: [
+        "M0 0 L100 0 L100 100 Q50 100 0 100 Z",
+        "M0 0 L100 0 L100 0 Q50 30 0 0 Z",
+        "M0 0 L100 0 L100 0 Q50 0 0 0 Z"
+      ],
+      transition: {
+        duration: 0.85,
+        times: [0, 0.5, 1],
+        ease: [0.76, 0, 0.24, 1] as any
+      }
+    }
+  };
+
   return (
-    <div
-      ref={containerRef}
-      className="fixed inset-0 w-screen h-screen bg-[#070707] text-[#f7f7f7] z-[99999] flex flex-col justify-between p-8 md:p-16 select-none font-sans"
-    >
-      {/* Top Bar */}
-      <div className="flex justify-between items-start text-xs font-bold tracking-[0.25em] text-white/50 uppercase">
-        <div ref={titleRef} className="overflow-hidden">
-          <span>TALHA IRFAN</span>
-        </div>
-        <div ref={subRef} className="overflow-hidden text-right">
-          <span>CREATIVE DEVELOPER</span>
-        </div>
-      </div>
-
-      {/* Center Counter */}
-      <div
-        ref={counterRef}
-        className="my-auto flex flex-col items-center justify-center"
+    <div id="preloader-root" className="fixed inset-0 w-full h-full z-[99999] overflow-hidden select-none pointer-events-none touch-none flex items-center justify-center">
+      {/* Background SVG Curtain */}
+      <svg 
+        className="absolute inset-0 w-full h-full fill-[#070707] z-10 pointer-events-auto"
+        viewBox="0 0 100 100" 
+        preserveAspectRatio="none"
       >
-        <span
-          className="text-8xl md:text-[13rem] font-medium tracking-tight font-display text-white leading-none selection:bg-none"
-          style={{ fontVariantNumeric: "all-initials" }}
-        >
-          <span ref={progressTextRef}>00</span>
-        </span>
-      </div>
+        <motion.path
+          variants={curveVariants}
+          initial="initial"
+          animate={status === "exiting" ? "exit" : "animate"}
+          onAnimationComplete={() => {
+            if (status === "exiting") {
+              setIsComplete(true);
+              sessionStorage.setItem("portfolio-visited", "true");
+              document.body.style.overflow = "unset";
+            }
+          }}
+        />
+      </svg>
 
-      {/* Bottom Bar */}
-      <div className="flex justify-between items-end text-[10px] font-bold tracking-[0.25em] text-white/40 uppercase">
-        <span>© 2026</span>
-        <span>DESIGNED TO INSPIRE</span>
+      {/* Center Text (Slower, elegant fade cross-transition) */}
+      <div className="z-20 pointer-events-auto flex items-center justify-center">
+        <AnimatePresence mode="wait">
+          {status === "active" && (
+            <motion.h1
+              key={index}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                duration: 0.18,
+                ease: "easeInOut"
+              }}
+              className="text-2xl md:text-4xl font-medium tracking-tight font-sans text-white leading-none text-center flex items-center gap-2.5"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-white/40 shrink-0" />
+              {GREETINGS[index]}
+            </motion.h1>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

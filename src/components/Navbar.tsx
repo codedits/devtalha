@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 
 import { RollText } from "./ui/RollText";
 import { useMagnetic } from "@/hooks/useMagnetic";
+import { useTheme } from "@/components/ui/ThemeProvider";
 
 const navLinks = [
   { label: "HOME", href: "/" },
@@ -31,6 +32,7 @@ function MagneticWrapper({ children, className }: { children: React.ReactNode; c
 export default function Navbar() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   // Hide the nav only on project details pages (/projects/[id])
   const isProjectDetailPage = pathname ? /^\/projects\/.+/.test(pathname) : false;
@@ -77,17 +79,36 @@ export default function Navbar() {
                 </Link>
               </MagneticWrapper>
             ))}
+            {/* Theme Toggle */}
+            <MagneticWrapper>
+              <button
+                onClick={toggleTheme}
+                className="text-[14px] font-bold uppercase tracking-normal transition-opacity whitespace-nowrap cursor-pointer"
+                aria-label="Toggle Theme"
+              >
+                <RollText>{theme === "light" ? "DARK" : "LIGHT"}</RollText>
+              </button>
+            </MagneticWrapper>
           </div>
         </nav>
 
-        {/* Mobile nav toggle */}
-        <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="md:hidden pointer-events-auto text-white px-5 py-2 text-[10px] font-bold tracking-widest flex items-center gap-2"
-        >
-          {isMenuOpen ? <X size={14} /> : <Menu size={14} />}
-          {isMenuOpen ? "CLOSE" : "MENU"}
-        </button>
+        {/* Mobile nav toggle and theme toggle */}
+        <div className="flex items-center gap-4 md:hidden pointer-events-auto">
+          <button
+            onClick={toggleTheme}
+            className="text-white px-3 py-2 text-[10px] font-bold tracking-widest flex items-center gap-2 cursor-pointer"
+            aria-label="Toggle Theme"
+          >
+            {theme === "light" ? "DARK" : "LIGHT"}
+          </button>
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="text-white px-5 py-2 text-[10px] font-bold tracking-widest flex items-center gap-2 cursor-pointer"
+          >
+            {isMenuOpen ? <X size={14} /> : <Menu size={14} />}
+            {isMenuOpen ? "CLOSE" : "MENU"}
+          </button>
+        </div>
       </motion.header>
 
       {/* Mobile Menu Overlay — z-[60] to sit above header z-50 */}

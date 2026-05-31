@@ -90,7 +90,7 @@ export default async function ProjectsPage() {
         <span className="text-[10px] font-bold tracking-[0.25em] text-muted-foreground/80 block mb-4 uppercase">
           [ ARCHIVE ]
         </span>
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tighter leading-none text-foreground">
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-medium tracking-tighter leading-[0.84] md:leading-[0.8] lg:leading-[0.76] text-foreground">
           {heading}
         </h1>
       </section>

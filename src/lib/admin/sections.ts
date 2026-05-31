@@ -7,6 +7,7 @@ export const SINGLE_ROW_SECTIONS = [
   "services_meta",
   "process_meta",
   "why_choose_us",
+  "settings",
 ] as const;
 
 export const MULTI_ROW_SECTIONS = ["works", "services", "process_steps", "section_order"] as const;
@@ -56,6 +57,7 @@ export const EDITABLE_FIELDS: Record<AdminSection, readonly string[]> = {
     "scale_stat",
     "scale_description",
   ],
+  settings: ["default_theme"],
   works: ["title", "client", "summary", "project_url", "image_url", "hover_image_url", "gallery_images", "sort_order"],
   services: ["title", "description", "tags", "images", "sort_order"],
   process_steps: ["number", "title", "description", "sort_order"],

@@ -90,11 +90,9 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
               variants={cardVariants}
               initial="hidden"
               animate={isInView ? "visible" : "hidden"}
-              whileHover={allowHover ? {
-                backgroundColor: "hsl(var(--card))",
-                transition: { duration: 0.3 }
-              } : undefined}
-              className={`flex flex-col justify-between p-8 md:p-10 min-h-[300px] lg:min-h-[450px] bg-background group/roll cursor-default border-b lg:border-b-0 ${idx !== 3 ? 'lg:border-r' : ''} border-white/15 relative overflow-hidden`}
+              className={`flex flex-col justify-between p-8 md:p-10 min-h-[300px] lg:min-h-[450px] bg-background group/roll cursor-default border-b lg:border-b-0 ${idx !== 3 ? 'lg:border-r' : ''} border-white/15 relative overflow-hidden ${
+                allowHover ? "hover:bg-card transition-colors duration-300" : ""
+              }`}
             >
               {/* Hover line accent */}
               <motion.div

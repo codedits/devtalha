@@ -90,21 +90,13 @@ export default function About({ data }: { data?: AboutSection | null }) {
 
         {/* Main text */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 mb-32">
-          <motion.h2 
-            className="text-3xl md:text-[2.75rem] font-medium leading-[1.05] md:leading-[1.08] tracking-tight text-center md:text-left"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={REVEAL_VIEWPORT}
-            transition={BASE_REVEAL}
-          >
+          <h2 className="text-3xl md:text-[2.75rem] font-medium leading-[0.95] md:leading-[0.9] tracking-tight text-center md:text-left">
             <BlockRevealText
               text={heading}
               blockColor="bg-foreground"
-              duration={0.65}
-              staggerDelay={0.08}
               scrub={false}
             />
-          </motion.h2>
+          </h2>
 
           <motion.div
             variants={containerVariants}
@@ -145,11 +137,9 @@ export default function About({ data }: { data?: AboutSection | null }) {
             <motion.div
               key={idx}
               variants={itemVariants}
-              whileHover={allowHover ? { 
-                backgroundColor: "hsl(var(--card))",
-                transition: { duration: 0.3 }
-              } : undefined}
-              className="bg-background p-8 md:p-12 flex flex-col group cursor-default"
+              className={`bg-background p-8 md:p-12 flex flex-col group cursor-default ${
+                allowHover ? "hover:bg-card transition-colors duration-300" : ""
+              }`}
             >
               <motion.span 
                 className="text-4xl md:text-5xl font-semibold tracking-tight mb-3"

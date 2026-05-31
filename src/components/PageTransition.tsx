@@ -13,7 +13,7 @@ export default function PageTransition({ children }: { children: React.ReactNode
   }, []);
 
   return (
-    <div className="w-full h-full">
+    <div className="relative w-full h-full">
       <AnimatePresence initial={false} mode="wait">
         {hasMounted ? (
           <motion.div
@@ -38,7 +38,7 @@ export default function PageTransition({ children }: { children: React.ReactNode
         ) : null}
       </AnimatePresence>
 
-      <div className="w-full h-full">{children}</div>
+      <div className="relative w-full h-full">{children}</div>
     </div>
   );
 }

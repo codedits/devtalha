@@ -148,20 +148,13 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
               {label}
             </motion.span>
 
-            <motion.h2
-              className="text-3xl md:text-[2.25rem] font-semibold leading-[1.08] tracking-tight mb-8 text-center lg:text-left text-foreground"
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : {}}
-              transition={BASE_REVEAL}
-            >
+            <h2 className="text-3xl md:text-[2.25rem] font-semibold leading-[0.95] md:leading-[0.92] tracking-tight mb-8 text-center lg:text-left text-foreground">
               <BlockRevealText
                 text="Creative solutions for ambitious brands"
                 blockColor="bg-foreground"
-                duration={0.65}
-                staggerDelay={0.08}
                 scrub={false}
               />
-            </motion.h2>
+            </h2>
 
             <motion.div
               className="w-full aspect-[4/5] relative overflow-hidden mb-6 bg-card rounded-2xl border border-white/5 shadow-lg group/profile"
@@ -311,7 +304,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                                   <motion.div
                                     whileHover={allowHover ? { scale: 1.05 } : undefined}
                                     transition={allowHover ? { duration: 0.4, ease: PREMIUM_EASE } : undefined}
-                                    className="w-full h-full"
+                                    className="relative w-full h-full"
                                   >
                                     <Image
                                       src={img}

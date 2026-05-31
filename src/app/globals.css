@@ -120,7 +120,7 @@ html, body {
 @layer base {
   body {
     min-height: 100vh;
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans transition-colors duration-500;
   }
 
   /* Hide cursor on desktop for custom cursor experience */
@@ -135,6 +135,7 @@ html, body {
 
   html {
     @apply scroll-smooth;
+    scrollbar-gutter: stable;
   }
 
   main {
@@ -257,4 +258,9 @@ html, body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--foreground);
+}
+
+/* Hide preloader immediately on SSR layout load if user already visited */
+.visited #preloader-root {
+  display: none !important;
 }

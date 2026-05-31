@@ -21,8 +21,8 @@ export default function BlockRevealText({
   text,
   className = "",
   blockColor = "bg-amber-400",
-  duration = 0.65,
-  staggerDelay = 0.18,
+  duration = 0.35,
+  staggerDelay = 0.08,
   scrub = 1.5,
 }: BlockRevealTextProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -89,70 +89,81 @@ export default function BlockRevealText({
 
     const ctx = gsap.context(() => {
       const lineContainers = wrapper.querySelectorAll<HTMLElement>(".reveal-line-wrapper");
+      if (lineContainers.length === 0) return;
 
-      lineContainers.forEach((lineContainer, index) => {
-        const block = lineContainer.querySelector<HTMLElement>(".reveal-block");
-        const textElement = lineContainer.querySelector<HTMLElement>(".reveal-text");
+      const isScrubbed = scrub !== false;
+      const scrubValue = typeof scrub === "number" ? scrub : 1.5;
 
-        if (!block || !textElement) return;
+      if (isScrubbed) {
+        const timeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: wrapper,
+            start: "top 95%",
+            end: "bottom 60%",
+            scrub: scrubValue,
+          },
+        });
 
-        const isScrubbed = scrub !== false;
-        const scrubValue = typeof scrub === "number" ? scrub : 1.5;
+        lineContainers.forEach((lineContainer, index) => {
+          const block = lineContainer.querySelector<HTMLElement>(".reveal-block");
+          const textElement = lineContainer.querySelector<HTMLElement>(".reveal-text");
 
-        if (isScrubbed) {
-          const timeline = gsap.timeline({
-            scrollTrigger: {
-              trigger: lineContainer,
-              start: "top 95%",
-              end: "top 50%",
-              scrub: scrubValue,
-            },
-          });
+          if (!block || !textElement) return;
+
+          const startOffset = index * staggerDelay;
 
           timeline
-            .set(block, { transformOrigin: "left center", scaleX: 0 })
-            .set(textElement, { opacity: 0 })
+            .set(block, { transformOrigin: "left center", scaleX: 0 }, startOffset)
+            .set(textElement, { opacity: 0 }, startOffset)
             .to(block, {
               scaleX: 1,
               ease: "power3.inOut",
-            })
-            .set(textElement, { opacity: 1 })
-            .set(block, { transformOrigin: "right center" })
+            }, startOffset)
+            .set(textElement, { opacity: 1 }, startOffset + 0.3)
+            .set(block, { transformOrigin: "right center" }, startOffset + 0.3)
             .to(block, {
               scaleX: 0,
               ease: "power3.inOut",
-            });
-        } else {
-          const timeline = gsap.timeline({
-            scrollTrigger: {
-              trigger: lineContainer,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-            delay: index * staggerDelay,
-          });
+            }, startOffset + 0.35);
+        });
+      } else {
+        const timeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: wrapper,
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+        });
+
+        lineContainers.forEach((lineContainer, index) => {
+          const block = lineContainer.querySelector<HTMLElement>(".reveal-block");
+          const textElement = lineContainer.querySelector<HTMLElement>(".reveal-text");
+
+          if (!block || !textElement) return;
+
+          const startOffset = index * staggerDelay;
 
           timeline
-            .set(block, { transformOrigin: "left center", scaleX: 0 })
-            .set(textElement, { opacity: 0 })
+            .set(block, { transformOrigin: "left center", scaleX: 0 }, startOffset)
+            .set(textElement, { opacity: 0 }, startOffset)
             .to(block, {
               scaleX: 1,
               duration,
-              ease: "expo.inOut",
-            })
-            .set(textElement, { opacity: 1 })
-            .set(block, { transformOrigin: "right center" })
+              ease: "power4.inOut",
+            }, startOffset)
+            .set(textElement, { opacity: 1 }, startOffset + duration)
+            .set(block, { transformOrigin: "right center" }, startOffset + duration)
             .to(
               block,
               {
                 scaleX: 0,
                 duration,
-                ease: "expo.inOut",
+                ease: "power4.inOut",
               },
-              "+=0.08"
+              startOffset + duration + 0.05
             );
-        }
-      });
+        });
+      }
     }, wrapper);
 
     return () => {
@@ -184,14 +195,14 @@ export default function BlockRevealText({
         {lines.map((lineText, index) => (
           <span
             key={`${lineText}-${index}`}
-            className="reveal-line-wrapper relative block w-full overflow-hidden py-0.5 clear-both"
+            className="reveal-line-wrapper relative block w-full py-0.5 clear-both"
           >
             <span className="reveal-text block select-text opacity-0">
               {lineText}
             </span>
 
             <span
-              className={`reveal-block absolute inset-0 z-10 h-full w-full ${blockClassName}`}
+              className={`reveal-block absolute -top-[8%] -bottom-[8%] left-0 right-0 z-10 ${blockClassName}`}
               style={{
                 ...blockStyle,
                 transform: "scaleX(0)",
