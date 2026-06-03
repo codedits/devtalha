@@ -7,6 +7,7 @@ const WhyChooseUs = dynamic(() => import("@/components/WhyChooseUs"));
 const Works = dynamic(() => import("@/components/Works"));
 const Services = dynamic(() => import("@/components/Services"));
 const Process = dynamic(() => import("@/components/Process"));
+const Supasection = dynamic(() => import("@/components/Supasection"));
 const Reachus = dynamic(() => import("@/components/Reachus"));
 import {
   type HomepageSectionKey,
@@ -70,6 +71,7 @@ export default async function Home() {
     ),
     services: <Services data={services} meta={servicesMeta} />,
     process: <Process data={processSteps} meta={processMeta} />,
+    supasection: <Supasection />,
     reachus: <Reachus data={reachus} />,
   } as const;
 
@@ -80,6 +82,7 @@ export default async function Home() {
     works: 0,
     services: 45,
     process: 45,
+    supasection: 0,
     reachus: 30,
   } as const;
 
@@ -90,6 +93,7 @@ export default async function Home() {
     works: undefined,
     services: "cv-auto",
     process: "cv-auto",
+    supasection: undefined,
     reachus: "cv-auto",
   } as const;
 
@@ -108,3 +112,4 @@ export default async function Home() {
     </div>
   );
 }
+

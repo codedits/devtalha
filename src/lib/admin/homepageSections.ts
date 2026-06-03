@@ -5,6 +5,7 @@ export const HOMEPAGE_SECTION_KEYS = [
   "works",
   "services",
   "process",
+  "supasection",
   "reachus",
 ] as const;
 
@@ -22,6 +23,7 @@ export const HOMEPAGE_SECTION_DEFINITIONS: HomepageSectionDefinition[] = [
   { key: "works", title: "Works" },
   { key: "services", title: "Services" },
   { key: "process", title: "Process" },
+  { key: "supasection", title: "Supa Section" },
   { key: "reachus", title: "Reach Us" },
 ];
 

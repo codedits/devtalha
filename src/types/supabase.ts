@@ -295,6 +295,7 @@ export type Database = {
           summary: string
           title: string
           updated_at: string | null
+          scope: Json
         }
         Insert: {
           client: string
@@ -308,6 +309,7 @@ export type Database = {
           summary?: string
           title: string
           updated_at?: string | null
+          scope?: Json
         }
         Update: {
           client?: string
@@ -321,6 +323,7 @@ export type Database = {
           summary?: string
           title?: string
           updated_at?: string | null
+          scope?: Json
         }
         Relationships: []
       }

@@ -14,7 +14,7 @@ if (typeof window !== "undefined") {
 
 export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
   const containerRef = useRef<HTMLElement>(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-10% 0px" });
+  const isInView = useInView(containerRef, { once: true, margin: "-35% 0px" });
 
   const card1Ref = useRef<HTMLDivElement>(null);
   const card2Ref = useRef<HTMLDivElement>(null);
@@ -44,7 +44,7 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
           },
           scrollTrigger: {
             trigger: container,
-            start: "top 78%",
+            start: "top 55%",
             toggleActions: "play none none reverse",
           }
         });
@@ -63,7 +63,7 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
           stagger: 0.1,
           scrollTrigger: {
             trigger: container,
-            start: "top 80%",
+            start: "top 55%",
             toggleActions: "play none none reverse",
           }
         });
@@ -82,7 +82,7 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
           stagger: 0.15,
           scrollTrigger: {
             trigger: container,
-            start: "top 85%",
+            start: "top 55%",
             toggleActions: "play none none reverse",
           }
         });

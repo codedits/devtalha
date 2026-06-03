@@ -4,8 +4,8 @@ export const PREMIUM_EASE = [0.22, 1, 0.36, 1] as const;
 
 export const REVEAL_VIEWPORT = {
   once: true,
-  margin: "-10% 0px -15% 0px",
-  amount: 0.22,
+  margin: "-35% 0px -35% 0px",
+  amount: 0.05,
 } as const;
 
 export const FAST_REVEAL: Transition = {

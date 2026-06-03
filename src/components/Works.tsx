@@ -11,6 +11,7 @@ import { useMotionPreferences } from "@/hooks/useMotionPreferences";
 import { BASE_REVEAL, PREMIUM_EASE, REVEAL_VIEWPORT } from "@/lib/motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SvgFollowScroll from "./SvgFollowScroll";
 
 const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 

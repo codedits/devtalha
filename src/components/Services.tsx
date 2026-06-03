@@ -83,7 +83,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: section,
-            start: "top 75%",
+            start: "top 55%",
             toggleActions: "play none none reverse",
           }
         });
@@ -111,7 +111,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: section,
-            start: "top 80%",
+            start: "top 55%",
             toggleActions: "play none none reverse",
           }
         });
@@ -139,7 +139,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: section,
-            start: "top 82%",
+            start: "top 55%",
             toggleActions: "play none none reverse",
           }
         });
