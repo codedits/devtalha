@@ -1,7 +1,16 @@
 import type { Json, Tables } from "@/types/supabase";
 
 export type HeroSection = Tables<"hero">;
-export type WorksItem = Tables<"works">;
+
+export type ScopeItem = {
+  title: string;
+  description: string;
+};
+
+export type WorksItem = Omit<Tables<"works">, "scope"> & {
+  scope: ScopeItem[];
+};
+
 export type ServicesItem = Tables<"services">;
 export type ProcessStepItem = Tables<"process_steps">;
 export type FooterSection = Tables<"footer">;
@@ -87,3 +96,19 @@ export function parseReachSocials(value: Json): ReachSocial[] {
 
   return parsed;
 }
+
+export function parseProjectScope(value: Json): ScopeItem[] {
+  if (!Array.isArray(value)) return [];
+
+  const parsed: ScopeItem[] = [];
+  for (const item of value) {
+    if (!isRecord(item)) continue;
+
+    parsed.push({
+      title: typeof item["title"] === "string" ? item["title"] : "",
+      description: typeof item["description"] === "string" ? item["description"] : "",
+    });
+  }
+
+  return parsed;
+}

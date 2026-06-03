@@ -28,10 +28,10 @@ export async function generateMetadata({ params }: ProjectDetailPageProps): Prom
 
   return {
     title: `${project.title} | Talha Irfan`,
-    description: project.summary || `Case study for ${project.title}`,
+    description: project.summary || `Project showcase for ${project.title}`,
     openGraph: {
       title: project.title,
-      description: project.summary || `Case study for ${project.title}`,
+      description: project.summary || `Project showcase for ${project.title}`,
       images: project.image_url ? [{ url: project.image_url }] : undefined,
     },
   };

@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 import {
   parseAboutStats,
   parseReachSocials,
+  parseProjectScope,
   type AboutSection,
   type FooterSection,
   type HeroSection,
@@ -110,8 +111,11 @@ async function getWorkByIdCached(id: string): Promise<WorksItem | null> {
         .eq("id", id)
         .single<Tables<"works">>();
 
-      if (error) return null;
-      return data as WorksItem;
+      if (error || !data) return null;
+      return {
+        ...data,
+        scope: parseProjectScope(data.scope),
+      } as WorksItem;
     },
     ["portfolio-query-work-by-id", id],
     {
@@ -237,7 +241,11 @@ export async function getAbout() {
 }
 
 export async function getWorks() {
-  return getWorksCached() as Promise<WorksItem[]>;
+  const works = (await getWorksCached()) as Tables<"works">[];
+  return works.map((w) => ({
+    ...w,
+    scope: parseProjectScope(w.scope),
+  })) satisfies WorksItem[];
 }
 
 /** Use this in Client Components (useEffect, event handlers).
@@ -247,8 +255,11 @@ export async function getWorksUncached(): Promise<WorksItem[]> {
     .from("works")
     .select("*")
     .order("sort_order", { ascending: true });
-  if (error) return [];
-  return (data ?? []) as WorksItem[];
+  if (error || !data) return [];
+  return data.map((w) => ({
+    ...w,
+    scope: parseProjectScope(w.scope),
+  })) as WorksItem[];
 }
 
 export async function getWorkByIdUncached(id: string): Promise<WorksItem | null> {
@@ -258,8 +269,11 @@ export async function getWorkByIdUncached(id: string): Promise<WorksItem | null>
     .eq("id", id)
     .single<Tables<"works">>();
 
-  if (error) return null;
-  return data as WorksItem;
+  if (error || !data) return null;
+  return {
+    ...data,
+    scope: parseProjectScope(data.scope),
+  } as WorksItem;
 }
 
 export async function getWorksMeta() {
@@ -268,7 +282,7 @@ export async function getWorksMeta() {
     return {
       id: "",
       homepage_label: "[ FEATURED PROJECTS ]",
-      homepage_heading: "Works.",
+      homepage_heading: "Projects.",
       featured_count: 4,
       archive_heading: "Archive.",
       updated_at: null,

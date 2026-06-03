@@ -10,7 +10,8 @@ export type FieldType =
   | "number"
   | "string-list"
   | "stats"
-  | "socials";
+  | "socials"
+  | "scope";
 
 export type SelectOption = {
   label: string;
@@ -27,6 +28,12 @@ export type SocialItem = {
   name: string;
   href: string;
 };
+
+export type ScopeItem = {
+  title: string;
+  description: string;
+};
+
 
 export type FieldConfig = {
   key: string;

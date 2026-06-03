@@ -7,6 +7,8 @@ import { Eye, Upload, X } from "lucide-react";
 import { useState, type ChangeEvent } from "react";
 
 import { cn } from "@/lib/utils";
+import { ConfirmModal } from "@/app/admin/components/ConfirmModal";
+
 
 type ImageUploaderProps = {
   currentUrl: string;
@@ -33,6 +35,7 @@ export function ImageUploader({
 }: ImageUploaderProps) {
   const hasPendingFile = Boolean(selectedFileName?.trim());
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const handleSelect = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -42,11 +45,14 @@ export function ImageUploader({
     event.target.value = "";
   };
 
-  const handleDeleteStoredImage = async () => {
+  const handleDeleteStoredImage = () => {
     if (!onDeleteStoredImage || !canDeleteStoredImage || isDeleting) return;
+    setShowConfirm(true);
+  };
 
-    const confirmed = window.confirm("Delete this image from the storage bucket? This action cannot be undone.");
-    if (!confirmed) return;
+  const handleConfirmDelete = async () => {
+    setShowConfirm(false);
+    if (!onDeleteStoredImage || !canDeleteStoredImage || isDeleting) return;
 
     setIsDeleting(true);
     try {
@@ -58,6 +64,7 @@ export function ImageUploader({
       setIsDeleting(false);
     }
   };
+
 
   return (
     <div className="space-y-3">
@@ -114,6 +121,16 @@ export function ImageUploader({
       ) : (
         <p className="text-xs text-zinc-500">Use this to upload a local file instead of an external URL.</p>
       )}
+
+      <ConfirmModal
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Image"
+        message="Are you sure you want to delete this image from the storage bucket? This action cannot be undone."
+        confirmText="Delete Image"
+        imagesToPurge={currentUrl ? [currentUrl] : []}
+      />
     </div>
   );
 }

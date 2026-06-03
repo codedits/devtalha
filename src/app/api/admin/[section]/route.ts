@@ -12,7 +12,9 @@ import {
 } from '@/lib/admin/sections';
 import { isHomepageSectionKey } from '@/lib/admin/homepageSections';
 import { createAdminClient } from '@/lib/supabase';
+import { getRecordStorageImages, getManagedStoragePathFromUrl } from '@/lib/admin/uploads';
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 
 function isUnauthorized(req: NextRequest) {
   return req.cookies.get('admin_auth')?.value !== 'true';
@@ -86,6 +88,19 @@ function sanitizePayload(section: AdminSection, raw: Record<string, unknown>) {
             return {
               name: typeof next.name === 'string' ? next.name : '',
               href: typeof next.href === 'string' ? next.href : '#',
+            };
+          })
+        : [];
+      continue;
+    }
+
+    if (field === 'scope') {
+      sanitized[field] = Array.isArray(value)
+        ? value.map((item) => {
+            const next = isRecord(item) ? item : {};
+            return {
+              title: typeof next.title === 'string' ? next.title : '',
+              description: typeof next.description === 'string' ? next.description : '',
             };
           })
         : [];
@@ -310,6 +325,40 @@ export async function DELETE(
   }
 
   const supabase = createAdminClient();
+
+  // 1. Fetch the existing record to find associated storage images
+  const { data: record, error: fetchError } = await supabase
+    .from(section)
+    .select('*')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (fetchError) {
+    return NextResponse.json({ error: fetchError.message }, { status: 500 });
+  }
+
+  // 2. If the record exists, scan and clean up its storage images
+  if (record) {
+    const imageUrls = getRecordStorageImages(record);
+    const objectPaths = imageUrls
+      .map(getManagedStoragePathFromUrl)
+      .filter(Boolean) as string[];
+
+    if (objectPaths.length > 0) {
+      const { error: storageError } = await supabase.storage
+        .from('portfolio-images')
+        .remove(objectPaths);
+
+      if (storageError) {
+        console.error(
+          `Failed to remove storage images for section ${section}, id ${id}:`,
+          storageError.message
+        );
+      }
+    }
+  }
+
+  // 3. Delete the database row
   const { error } = await supabase.from(section).delete().eq('id', id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 

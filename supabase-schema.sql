@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS works (
   image_url TEXT NOT NULL,
   hover_image_url TEXT NOT NULL DEFAULT '',
   gallery_images TEXT[] NOT NULL DEFAULT '{}',
+  scope JSONB NOT NULL DEFAULT '[]'::jsonb,
   sort_order INT NOT NULL DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
@@ -50,6 +51,7 @@ CREATE TABLE IF NOT EXISTS works (
 ALTER TABLE works ADD COLUMN IF NOT EXISTS summary TEXT NOT NULL DEFAULT '';
 ALTER TABLE works ADD COLUMN IF NOT EXISTS project_url TEXT NOT NULL DEFAULT '';
 ALTER TABLE works ADD COLUMN IF NOT EXISTS gallery_images TEXT[] NOT NULL DEFAULT '{}';
+ALTER TABLE works ADD COLUMN IF NOT EXISTS scope JSONB NOT NULL DEFAULT '[]'::jsonb;
 
 -- 4. Services (multiple rows)
 CREATE TABLE IF NOT EXISTS services (

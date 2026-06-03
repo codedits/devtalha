@@ -89,6 +89,12 @@ export const SECTION_CONFIGS: SectionConfig[] = [
       { key: "image_url", label: "Main Image", type: "image" },
       { key: "hover_image_url", label: "Hover Image", type: "image" },
       { key: "gallery_images", label: "Detail Gallery Images", type: "image-list" },
+      {
+        key: "scope",
+        label: "Project Scope",
+        type: "scope",
+        description: "Add scope sections with custom titles and descriptions.",
+      },
       { key: "sort_order", label: "Sort Order", type: "number" },
     ],
     createDefaults: {
@@ -99,6 +105,7 @@ export const SECTION_CONFIGS: SectionConfig[] = [
       image_url: "",
       hover_image_url: "",
       gallery_images: [],
+      scope: [],
       sort_order: 0,
     },
   },

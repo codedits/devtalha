@@ -64,7 +64,7 @@ export default async function ProjectsPage() {
     hoverImageUrl: w.hover_image_url,
   }));
 
-  const heading = worksMeta?.archive_heading || "Selected Works.";
+  const heading = worksMeta?.archive_heading || "Selected Projects.";
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 font-sans selection:bg-foreground selection:text-background">

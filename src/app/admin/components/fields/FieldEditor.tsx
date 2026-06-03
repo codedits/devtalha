@@ -8,7 +8,7 @@ import {
   type PendingUploadValue,
 } from "@/lib/admin/uploads";
 import { Plus, Trash2 } from "lucide-react";
-import type { FieldConfig, SocialItem, StatItem } from "@/lib/admin/types";
+import type { FieldConfig, SocialItem, StatItem, ScopeItem } from "@/lib/admin/types";
 import { cn } from "@/lib/utils";
 
 import { ImageUploader } from "@/app/admin/components/fields/ImageUploader";
@@ -152,6 +152,66 @@ export function FieldEditor({ field, value, onChange, addToast }: FieldEditorPro
         >
           <Plus size={14} />
           Add Social Link
+        </button>
+      </div>
+    );
+  }
+
+  if (field.type === "scope") {
+    const list = Array.isArray(value) ? (value as ScopeItem[]) : [];
+
+    const addItem = () => {
+      onChange([...list, { title: "", description: "" }]);
+    };
+
+    const updateItem = (index: number, next: ScopeItem) => {
+      onChange(list.map((item, i) => (i === index ? next : item)));
+    };
+
+    const removeItem = (index: number) => {
+      onChange(list.filter((_, i) => i !== index));
+    };
+
+    return (
+      <div className="space-y-3">
+        {list.map((item, index) => (
+          <div key={`${field.key}-${index}`} className="rounded-md border border-zinc-200 bg-zinc-50 p-3">
+            <div className="space-y-2">
+              <input
+                type="text"
+                value={item.title ?? ""}
+                onChange={(event) => updateItem(index, { ...item, title: event.target.value })}
+                placeholder="Scope Title (e.g. Design, API Architecture)"
+                className={baseInput}
+              />
+              <textarea
+                value={item.description ?? ""}
+                onChange={(event) => updateItem(index, { ...item, description: event.target.value })}
+                placeholder="Scope Description..."
+                rows={3}
+                className={cn(baseInput, "resize-y")}
+              />
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => removeItem(index)}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-red-200 bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700 hover:bg-red-100"
+                  aria-label="Remove scope"
+                >
+                  <Trash2 size={12} />
+                  Remove Scope
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={addItem}
+          className="inline-flex items-center gap-1.5 rounded-md border border-zinc-300 bg-white px-3 py-2 text-xs font-semibold text-zinc-700 hover:bg-zinc-50"
+        >
+          <Plus size={14} />
+          Add Scope Item
         </button>
       </div>
     );

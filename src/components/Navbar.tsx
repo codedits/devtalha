@@ -12,7 +12,7 @@ import { useTheme } from "@/components/ui/ThemeProvider";
 
 const navLinks = [
   { label: "HOME", href: "/" },
-  { label: "WORKS", href: "/#work" },
+  { label: "PROJECTS", href: "/#work" },
   { label: "SERVICES", href: "/#services" },
   { label: "PROCESS", href: "/#process" },
   { label: "CONTACT", href: "/#contact" },

@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import SmoothScroll from "@/components/SmoothScroll";
-import PageTransition from "@/components/PageTransition";
 import { getSettings } from "@/lib/queries";
 import { ThemeProvider } from "@/components/ui/ThemeProvider";
 
@@ -53,13 +51,9 @@ export default async function RootLayout({
         className="relative antialiased bg-background text-foreground overflow-x-hidden"
       >
         <ThemeProvider defaultTheme={defaultTheme}>
-          <SmoothScroll>
-            <PageTransition>
-              <div className="relative min-h-screen w-full">
-                {children}
-              </div>
-            </PageTransition>
-          </SmoothScroll>
+          <div className="relative min-h-screen w-full">
+            {children}
+          </div>
         </ThemeProvider>
       </body>
     </html>

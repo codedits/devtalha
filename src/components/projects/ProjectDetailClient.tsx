@@ -246,20 +246,21 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
   ];
 
   const [activeAccordion, setActiveAccordion] = useState<number | null>(0);
-  const scopeItems = [
+  const dbScope = Array.isArray(project.scope) ? project.scope : [];
+  const scopeItems = dbScope.length > 0 ? dbScope.map((item: any) => ({
+    title: item.title,
+    desc: item.description,
+  })) : [
     {
       title: "Interactive Experience Design",
-      icon: Monitor,
       desc: "Designed the interactive flow from visual mockups to live animations. Built responsive layout structures and custom parallax engines that work seamlessly across high-refresh screens and mobile touch displays."
     },
     {
       title: "Data Architecture & API Hooks",
-      icon: Database,
       desc: "Optimized queries utilizing Next.js caching layers and Supabase client structures. Seeding dynamic data pipelines allowed for sub-millisecond page rendering and fast incremental static regeneration."
     },
     {
       title: "Performance & Code Profiling",
-      icon: Cpu,
       desc: "Removed layout shifts and streamlined script executions. Bundles were optimized down by 45% using code splitting, dynamic imports, and lazy loading strategies to hit 100% Core Web Vital compliance."
     }
   ];
@@ -312,7 +313,7 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
               </a>
             ) : (
               <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground/45">
-                Case Study
+                Project Detail
               </span>
             )}
 
@@ -367,7 +368,7 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
             <div className="flex items-center gap-2">
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/70">
-                [ CASE STUDY // {project.client} ]
+                [ PROJECT // {project.client} ]
               </span>
             </div>
 
@@ -415,7 +416,7 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
                 </a>
               ) : (
                 <span className="text-xs font-semibold text-white/40 text-center uppercase tracking-widest">
-                  Case Study Only
+                  Project Showcase
                 </span>
               )}
             </div>
@@ -443,18 +444,25 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
 
           {/* Description narrative */}
           <div className="md:col-span-8 space-y-8">
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.7 }}
-              className="text-2xl md:text-3xl font-medium tracking-tight leading-relaxed text-foreground"
-            >
-              <span className="float-left text-5xl md:text-7xl font-bold font-mono mr-4 mt-1 leading-[0.75] text-indigo-500">
-                T
-              </span>
-              {project.summary || "Co-creating a design-first digital ecosystem that establishes a new benchmark for speed, clarity, and interactive narrative."}
-            </motion.h2>
+            {(() => {
+              const summaryText = project.summary || "Co-creating a design-first digital ecosystem that establishes a new benchmark for speed, clarity, and interactive narrative.";
+              const firstLetter = summaryText.trim().charAt(0);
+              const remainingText = summaryText.trim().slice(1);
+              return (
+                <motion.h2 
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.7 }}
+                  className="text-2xl md:text-3xl font-medium tracking-tight leading-relaxed text-foreground"
+                >
+                  <span className="float-left text-5xl md:text-7xl font-bold font-mono mr-4 mt-1 leading-[0.75] text-indigo-500">
+                    {firstLetter}
+                  </span>
+                  {remainingText}
+                </motion.h2>
+              );
+            })()}
             
             <motion.p 
               initial={{ opacity: 0 }}
@@ -471,9 +479,9 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
 
       {/* 3. BENTO GRID STATS & TECH STACK */}
       <section className="py-20 md:py-28 px-6 max-w-7xl mx-auto border-b border-border/30">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Metrics Panel (Spans 2 columns) */}
-          <div className="md:col-span-2 bg-card/25 backdrop-blur-md border border-border/30 rounded-3xl p-8 md:p-10 flex flex-col justify-between min-h-[350px] relative overflow-hidden group hover:border-foreground/15 transition-all duration-500">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Metrics Panel */}
+          <div className="bg-card/25 backdrop-blur-md border border-border/30 rounded-3xl p-8 md:p-10 flex flex-col justify-between min-h-[350px] relative overflow-hidden group hover:border-foreground/15 transition-all duration-500">
             <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/[0.03] rounded-full blur-[110px] pointer-events-none group-hover:bg-indigo-500/[0.05] transition-all duration-700" />
             <div>
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground block mb-2">
@@ -532,8 +540,25 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
 
           <div className="md:col-span-8 space-y-4">
             {scopeItems.map((item, idx) => {
-              const Icon = item.icon;
               const isOpen = activeAccordion === idx;
+              
+              // Resolve icon dynamically based on title keywords or index
+              let Icon = Layers;
+              const titleLower = (item.title ?? "").toLowerCase();
+              if (titleLower.includes("design") || titleLower.includes("experience") || titleLower.includes("ui") || titleLower.includes("ux")) {
+                Icon = Monitor;
+              } else if (titleLower.includes("data") || titleLower.includes("database") || titleLower.includes("backend") || titleLower.includes("api") || titleLower.includes("hook")) {
+                Icon = Database;
+              } else if (titleLower.includes("performance") || titleLower.includes("code") || titleLower.includes("profiling") || titleLower.includes("speed") || titleLower.includes("optimization")) {
+                Icon = Cpu;
+              } else if (idx === 0) {
+                Icon = Monitor;
+              } else if (idx === 1) {
+                Icon = Database;
+              } else if (idx === 2) {
+                Icon = Cpu;
+              }
+
               return (
                 <div
                   key={idx}
@@ -658,7 +683,7 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
             >
               <Link href={`/projects/${nextProject.id}`}>
                 <LiquidButton size="default" className="flex items-center gap-2" rounded="full">
-                  <span>Enter Project Case</span>
+                  <span>View Project</span>
                   <ChevronRight size={14} />
                 </LiquidButton>
               </Link>

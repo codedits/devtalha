@@ -124,3 +124,21 @@ export async function resolvePendingUploads(data: SectionRecord, fields: FieldCo
 
   return next;
 }
+
+export function getRecordStorageImages(record: unknown): string[] {
+  const urls: string[] = [];
+  const scan = (val: unknown) => {
+    if (typeof val === "string") {
+      if (isManagedPortfolioImageUrl(val)) {
+        urls.push(val);
+      }
+    } else if (Array.isArray(val)) {
+      val.forEach(scan);
+    } else if (val && typeof val === "object") {
+      Object.values(val).forEach(scan);
+    }
+  };
+  scan(record);
+  return urls;
+}
+

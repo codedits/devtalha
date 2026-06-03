@@ -58,7 +58,7 @@ export const EDITABLE_FIELDS: Record<AdminSection, readonly string[]> = {
     "scale_description",
   ],
   settings: ["default_theme"],
-  works: ["title", "client", "summary", "project_url", "image_url", "hover_image_url", "gallery_images", "sort_order"],
+  works: ["title", "client", "summary", "project_url", "image_url", "hover_image_url", "gallery_images", "scope", "sort_order"],
   services: ["title", "description", "tags", "images", "sort_order"],
   process_steps: ["number", "title", "description", "sort_order"],
   section_order: ["section_key", "title", "sort_order"],

@@ -64,7 +64,7 @@ const WorkCard: React.FC<{ work: WorkCardData; index: number }> = ({ work, index
         {/* Bottom CTA Arrow */}
         <div className="flex justify-between items-center mt-4">
           <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground/60 group-hover:text-foreground transition-colors">
-            View Project Case
+            View Project
           </span>
           <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-border/60 flex items-center justify-center text-foreground group-hover:border-foreground group-hover:bg-foreground group-hover:text-background transition-all duration-300">
             <span className="text-sm font-bold uppercase tracking-wider font-mono">
@@ -91,7 +91,7 @@ export default function Works({
   featuredCount,
   sectionId = "work",
   label = "[ SELECTED PROJECTS ]",
-  heading = "Works.",
+  heading = "Projects.",
   showViewAll = false,
 }: WorksProps) {
   const works: WorkCardData[] = data && data.length > 0
@@ -287,7 +287,7 @@ export default function Works({
             <div className="w-screen h-screen flex-shrink-0 flex flex-col items-center justify-center bg-background py-20 md:py-8 px-6 text-center select-none">
               <div className="max-w-xl flex flex-col items-center">
                 <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-muted-foreground mb-6 block">
-                  MORE CASE STUDIES
+                  MORE PROJECTS
                 </span>
                 <h3 className="text-3xl md:text-5xl font-medium tracking-tight leading-[1.1] mb-10 text-foreground">
                   Discover all my creative experiments

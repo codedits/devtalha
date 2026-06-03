@@ -31,8 +31,10 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { SectionForm } from "@/app/admin/components/sections/SectionForm";
-import { resolvePendingUploads } from "@/lib/admin/uploads";
+import { ConfirmModal } from "@/app/admin/components/ConfirmModal";
+import { resolvePendingUploads, getRecordStorageImages } from "@/lib/admin/uploads";
 import type { SectionConfig, SectionRecord } from "@/lib/admin/types";
+
 
 type SortableRowProps = {
   row: SectionRecord;
@@ -124,6 +126,27 @@ export function CollectionSectionEditor({ config, addToast }: CollectionSectionE
   const [originalEditing, setOriginalEditing] = useState<SectionRecord | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deletingRow, setDeletingRow] = useState<SectionRecord | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (editing) {
+      const scrollY = window.scrollY;
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = "100%";
+      return () => {
+        document.body.style.overflow = "";
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.width = "";
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [editing]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -204,9 +227,18 @@ export function CollectionSectionEditor({ config, addToast }: CollectionSectionE
     }
   };
 
-  const removeRow = async (id: string) => {
-    const previousRows = rows;
-    setRows((current) => current.filter((row) => String(row.id) !== id));
+  const removeRow = (id: string) => {
+    const target = rows.find((row) => String(row.id) === id);
+    if (target) {
+      setDeletingRow(target);
+    }
+  };
+
+  const confirmRemoveRow = async () => {
+    if (!deletingRow) return;
+    const id = String(deletingRow.id);
+
+    setIsDeleting(true);
     try {
       const res = await fetch(`/api/admin/${config.section}`, {
         method: "DELETE",
@@ -215,12 +247,17 @@ export function CollectionSectionEditor({ config, addToast }: CollectionSectionE
       });
       const payload = await res.json();
       if (!res.ok) throw new Error(payload.error ?? "Delete failed");
+
+      setRows((current) => current.filter((row) => String(row.id) !== id));
       addToast("success", "Item deleted");
+      setDeletingRow(null);
     } catch (error) {
-      setRows(previousRows);
       addToast("error", error instanceof Error ? error.message : "Delete failed");
+    } finally {
+      setIsDeleting(false);
     }
   };
+
 
   const openEditor = (record: SectionRecord) => {
     setEditing(record);
@@ -327,11 +364,13 @@ export function CollectionSectionEditor({ config, addToast }: CollectionSectionE
             setEditing(null);
             setOriginalEditing(null);
           }}
+          onWheel={(e) => e.stopPropagation()}
         >
           <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm" />
           <div
             onClick={(event) => event.stopPropagation()}
-            className="relative max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-xl border border-zinc-200 bg-white p-6 shadow-xl"
+            onWheel={(e) => e.stopPropagation()}
+            className="admin-modal-scroll relative max-h-[90vh] w-full max-w-3xl overflow-y-auto overscroll-contain rounded-xl border border-zinc-200 bg-white p-6 shadow-xl"
           >
             <div className="mb-6 flex items-center justify-between border-b border-zinc-200 pb-4">
               <div>
@@ -380,6 +419,21 @@ export function CollectionSectionEditor({ config, addToast }: CollectionSectionE
           </div>
         </div>
       )}
+
+      {deletingRow && (
+        <ConfirmModal
+          isOpen={true}
+          onClose={() => setDeletingRow(null)}
+          onConfirm={confirmRemoveRow}
+          isLoading={isDeleting}
+          title={`Delete ${config.title.replace(/s$/, "")}`}
+          message={`Are you sure you want to delete "${
+            deletingRow.title ?? deletingRow.number ?? deletingRow.label ?? "this item"
+          }"?`}
+          imagesToPurge={getRecordStorageImages(deletingRow)}
+        />
+      )}
     </div>
+
   );
 }
