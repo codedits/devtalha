@@ -22,16 +22,16 @@ export default function Supasection() {
   });
 
   // Fade out and scale down header text earlier as we scroll (using smoothProgress)
-  const headerOpacity = useTransform(smoothProgress, [0, 0.18], [1, 0]);
-  const headerScale = useTransform(smoothProgress, [0, 0.18], [1, 0.95]);
+  const headerOpacity = useTransform(smoothProgress, [0.12, 0.30], [1, 0]);
+  const headerScale = useTransform(smoothProgress, [0.12, 0.30], [1, 0.95]);
 
-  // Image scaling from 0 to 1 after drawing completes (progress 0.45 to 0.85) (using smoothProgress)
-  const imageScale = useTransform(smoothProgress, [0.45, 0.85], [0, 1], { clamp: true });
+  // Image scaling from 0 to 1 after drawing completes (progress 0.55 to 0.90) (using smoothProgress)
+  const imageScale = useTransform(smoothProgress, [0.55, 0.90], [0, 1], { clamp: true });
 
   return (
     <section
       ref={containerRef}
-      className="relative mx-auto h-[350vh] w-full bg-background text-foreground transition-colors duration-500"
+      className="relative mx-auto h-[400vh] w-full bg-background text-foreground transition-colors duration-500"
     >
       {/* Sticky Viewport Wrapper - Pinned/Locked container */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col items-center justify-center">
@@ -66,7 +66,7 @@ export default function Supasection() {
             alt="Abstract brand concept render"
             fill
             className="object-cover"
-            sizes="100vw"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
             quality={90}
             priority
           />

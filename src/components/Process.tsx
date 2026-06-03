@@ -58,7 +58,7 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
   );
 
   return (
-    <section id="process" className="section-dark bg-background text-foreground pt-12 md:pt-16 pb-24 md:pb-32 relative overflow-hidden section-shell" ref={sectionRef}>
+    <section id="process" className="dark:section-dark bg-background text-foreground pt-12 md:pt-16 pb-24 md:pb-32 relative overflow-hidden section-shell" ref={sectionRef}>
       {/* Animated background gradient */}
       <motion.div 
         className="absolute top-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-white/[0.02] blur-3xl pointer-events-none"
@@ -72,13 +72,13 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={BASE_REVEAL}
         >
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/80 block">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-foreground block">
             {label}
           </span>
         </motion.div>
         
         <motion.div 
-          className="grid grid-cols-2 lg:grid-cols-4 border border-white/15"
+          className="grid grid-cols-2 lg:grid-cols-4 border border-zinc-200 dark:border-white/15"
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ ...BASE_REVEAL, delay: 0.15 }}
@@ -90,7 +90,7 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
               variants={cardVariants}
               initial="hidden"
               animate={isInView ? "visible" : "hidden"}
-              className={`flex flex-col justify-between p-5 sm:p-8 md:p-10 min-h-[220px] sm:min-h-[300px] lg:min-h-[450px] bg-background group/roll cursor-default border-white/15 relative overflow-hidden ${
+              className={`flex flex-col justify-between p-5 sm:p-8 md:p-10 min-h-[220px] sm:min-h-[300px] lg:min-h-[450px] bg-background group/roll cursor-default border-zinc-200 dark:border-white/15 relative overflow-hidden ${
                 idx % 2 === 0 ? "border-r" : "border-r-0"
               } ${
                 idx < 2 ? "border-b" : "border-b-0"
@@ -111,13 +111,13 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
               {/* Card Top */}
               <div className="flex justify-between items-start">
                 <motion.span 
-                  className="text-xs font-bold tracking-[0.2em] text-foreground/80 group-hover/roll:text-foreground transition-colors duration-500"
+                  className="text-xs font-bold tracking-[0.2em] text-foreground group-hover/roll:text-foreground transition-colors duration-500"
                   whileHover={allowHover ? { x: 5 } : undefined}
                 >
                   <RollText>{step.number}</RollText>
                 </motion.span>
                 <motion.span 
-                  className="text-foreground/60 group-hover/roll:text-foreground transition-all duration-500"
+                  className="text-foreground group-hover/roll:text-foreground transition-all duration-500"
                   whileHover={allowHover ? {
                     x: 5,
                     y: -5,
@@ -139,8 +139,8 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
                   <RollText>{step.title}</RollText>
                 </motion.h3>
                 <motion.p 
-                  className="text-[12px] sm:text-[14px] md:text-[15px] text-foreground/80 leading-relaxed sm:leading-[1.7] group-hover/roll:text-foreground transition-colors duration-500 font-medium"
-                  initial={{ opacity: 0.7 }}
+                  className="text-[12px] sm:text-[14px] md:text-[15px] text-foreground leading-relaxed sm:leading-[1.7] group-hover/roll:text-foreground transition-colors duration-500 font-medium"
+                  initial={{ opacity: 1 }}
                   whileHover={allowHover ? { opacity: 1 } : undefined}
                 >
                   {step.description}

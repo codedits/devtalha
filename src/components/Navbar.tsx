@@ -62,7 +62,50 @@ export default function Navbar() {
         {/* Logo */}
         <MagneticWrapper className="pointer-events-auto">
           <Link href="/" className="text-xl font-bold tracking-tighter text-white">
-            TALHA®
+            <motion.span
+              initial="initial"
+              whileHover="hover"
+              className="flex items-center"
+            >
+              {"TALHA".split("").map((char, i) => (
+                <motion.span
+                  key={i}
+                  variants={{
+                    initial: { y: 0, scale: 1, rotate: 0 },
+                    hover: {
+                      y: [0, -8, 2, 0],
+                      scale: [1, 1.15, 0.95, 1],
+                      rotate: [0, -12, 8, 0],
+                      transition: {
+                        duration: 0.6,
+                        ease: "easeOut",
+                        delay: i * 0.045,
+                      }
+                    }
+                  }}
+                  className="inline-block origin-bottom"
+                >
+                  {char}
+                </motion.span>
+              ))}
+              <motion.span
+                variants={{
+                  initial: { scale: 1, rotate: 0, y: -4 },
+                  hover: {
+                    scale: [1, 1.3, 1],
+                    rotate: [0, 360],
+                    transition: {
+                      duration: 0.8,
+                      ease: "easeInOut",
+                      delay: 0.2,
+                    }
+                  }
+                }}
+                className="inline-block origin-center ml-0.5 text-xs font-semibold"
+              >
+                ®
+              </motion.span>
+            </motion.span>
           </Link>
         </MagneticWrapper>
 

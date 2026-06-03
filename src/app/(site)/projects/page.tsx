@@ -68,7 +68,7 @@ export default async function ProjectsPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 font-sans selection:bg-foreground selection:text-background">
-      
+
       {/* Top Header Navigation */}
       <header className="border-b border-foreground/10 pt-28 pb-6 mb-12">
         <div className="mx-auto max-w-7xl flex items-center justify-between px-6 md:px-8">

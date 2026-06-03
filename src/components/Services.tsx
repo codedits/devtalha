@@ -176,7 +176,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
   return (
     <section
       id="services"
-      className="section-dark bg-background text-foreground pt-24 md:pt-32 pb-16 md:pb-24 relative overflow-hidden section-shell"
+      className="dark:section-dark bg-background text-foreground pt-24 md:pt-32 pb-16 md:pb-24 relative overflow-hidden section-shell"
       ref={sectionRef}
       onMouseMove={handleMouseMove}
     >
@@ -207,7 +207,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.75, y: 15 }}
             transition={{ type: "spring", stiffness: 350, damping: 25 }}
-            className="absolute pointer-events-none z-30 w-72 h-44 overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-card"
+            className="absolute pointer-events-none z-30 w-72 h-44 overflow-hidden rounded-2xl border border-zinc-200 dark:border-white/10 shadow-2xl bg-card"
             style={{
               left: mousePos.x + 25,
               top: mousePos.y - 90,
@@ -219,6 +219,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                 alt="Preview"
                 fill
                 quality={80}
+                sizes="288px"
                 className="object-cover"
               />
             ) : (
@@ -226,7 +227,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                 Design Studio
               </div>
             )}
-            <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur px-2.5 py-1 rounded-full border border-white/5 text-[9px] font-bold uppercase tracking-wider text-white">
+            <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur px-2.5 py-1 rounded-full border border-zinc-200/20 dark:border-white/5 text-[9px] font-bold uppercase tracking-wider text-white">
               View Scope
             </div>
           </motion.div>
@@ -242,7 +243,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
             className="gsap-services-left lg:col-span-4 flex flex-col items-center text-center lg:items-start lg:text-left opacity-0"
           >
             <motion.span
-              className="text-xs font-bold uppercase tracking-[0.2em] mb-8 text-foreground/60 block"
+              className="text-xs font-bold uppercase tracking-[0.2em] mb-8 text-foreground block"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
               transition={{ delay: 0.2 }}
@@ -259,12 +260,12 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
             </h2>
 
             <motion.div
-              className="w-full aspect-[4/5] relative overflow-hidden mb-6 bg-card rounded-2xl border border-white/5 shadow-lg group/profile"
+              className="w-full aspect-[4/5] relative overflow-hidden mb-6 bg-card rounded-2xl border border-zinc-200 dark:border-white/5 shadow-lg group/profile"
               style={{ y: imageY }}
             >
               <motion.div
                 initial={{ opacity: 0, scale: 1.15 }}
-                animate={isInView ? { opacity: 0.9, scale: 1 } : {}}
+                animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 1, ease: PREMIUM_EASE }}
                 className="w-full h-full"
               >
@@ -280,7 +281,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
             </motion.div>
 
             <motion.p
-              className="text-xs md:text-sm text-foreground/80 leading-[1.6] max-w-[300px] mb-8 font-medium"
+              className="text-xs md:text-sm text-foreground leading-[1.6] max-w-[300px] mb-8 font-medium"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.4, duration: 0.6 }}
@@ -303,7 +304,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
 
           {/* Right Column (Accordion) */}
           <div className="lg:col-span-8 lg:mt-16">
-            <div className="border-t border-white/10">
+            <div className="border-t border-black/10 dark:border-white/10">
               {servicesList.map((service, idx) => {
                 const isOpen = openService === service.id;
                 const formattedIdx = String(idx + 1).padStart(2, '0');
@@ -311,7 +312,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                 return (
                   <div
                     key={service.id}
-                    className="gsap-services-item border-b border-white/10 opacity-0"
+                    className="gsap-services-item border-b border-black/10 dark:border-white/10 opacity-0"
                     onMouseEnter={() => setHoveredService(service.id)}
                     onMouseLeave={() => setHoveredService(null)}
                   >
@@ -320,13 +321,13 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                       className="w-full py-6 md:py-8 flex justify-between items-center group/service text-left cursor-pointer"
                     >
                       <div className="flex items-center gap-6 md:gap-10">
-                        <span className="font-mono text-xs text-muted-foreground/60 group-hover/service:text-foreground/90 transition-colors">
+                        <span className="font-mono text-xs text-foreground group-hover/service:text-foreground transition-colors">
                           {formattedIdx}
                         </span>
                         <motion.span
-                          className="block text-2xl md:text-4xl tracking-tight font-medium transition-colors duration-300 text-foreground/90 group-hover/service:text-foreground"
+                          className="block text-2xl md:text-4xl tracking-tight font-medium transition-colors duration-300 text-foreground group-hover/service:text-foreground"
                           animate={{
-                            opacity: isOpen ? 1 : 0.8,
+                            opacity: 1,
                           }}
                         >
                           {service.title}
@@ -335,7 +336,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
 
                       {/* Plus/Minus Indicator with neat transitions */}
                       <motion.div
-                        className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-foreground/80 group-hover/service:border-white/30 group-hover/service:text-foreground transition-all duration-300"
+                        className="w-10 h-10 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-foreground/80 group-hover/service:border-foreground/30 group-hover/service:text-foreground transition-all duration-300"
                         animate={{
                           rotate: isOpen ? 45 : 0,
                           backgroundColor: isOpen ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0)"
@@ -356,7 +357,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                         >
                           <div className="pb-8 pt-2 pl-4 sm:pl-12 md:pl-16">
                             <motion.p
-                              className="text-sm md:text-base text-foreground/80 max-w-2xl leading-relaxed mb-6 font-medium"
+                              className="text-sm md:text-base text-foreground max-w-2xl leading-relaxed mb-6 font-medium"
                               initial={{ opacity: 0, y: 15 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.1, duration: 0.4 }}
@@ -374,7 +375,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                               {service.tags.map((tag, tagIdx) => (
                                 <motion.span
                                   key={tag}
-                                  className="border border-white/10 hover:border-white/35 px-4 py-1.5 rounded-full text-[10px] font-semibold tracking-wide text-foreground/75 hover:text-foreground hover:bg-white/5 transition-all duration-300 cursor-default flex items-center gap-1.5"
+                                  className="border border-zinc-200 dark:border-white/10 hover:border-foreground/30 px-4 py-1.5 rounded-full text-[10px] font-semibold tracking-wide text-foreground/75 hover:text-foreground hover:bg-foreground/5 transition-all duration-300 cursor-default flex items-center gap-1.5"
                                   initial={{ opacity: 0, y: 10 }}
                                   animate={{ opacity: 1, y: 0 }}
                                   transition={{ delay: 0.15 + tagIdx * 0.04 }}
@@ -390,7 +391,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                               {service.images.map((img, imgIdx) => (
                                 <motion.div
                                   key={imgIdx}
-                                  className="aspect-[4/3] relative overflow-hidden bg-card rounded-xl border border-white/5"
+                                  className="aspect-[4/3] relative overflow-hidden bg-card rounded-xl border border-zinc-200 dark:border-white/5"
                                   initial={{ opacity: 0, scale: 0.95 }}
                                   animate={{ opacity: 1, scale: 1 }}
                                   transition={{ delay: 0.2 + imgIdx * 0.08, duration: 0.4 }}
@@ -404,7 +405,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                                       src={img}
                                       alt={`${service.title} detail ${imgIdx + 1}`}
                                       fill
-                                      className="object-cover opacity-85 hover:opacity-100 transition-opacity duration-300"
+                                      className="object-cover transition-transform duration-300"
                                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 20vw"
                                       quality={80}
                                     />

@@ -25,7 +25,7 @@ const LinePath = ({
   className: string;
   scrollYProgress: any;
 }) => {
-  const pathLength = useTransform(scrollYProgress, [0, 0.45], [0.0, 1.0], {
+  const pathLength = useTransform(scrollYProgress, [0.12, 0.55], [0.0, 1.0], {
     clamp: true
   });
 

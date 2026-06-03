@@ -130,15 +130,21 @@ export default function Works({
         }
       });
 
+      // Complete the horizontal translation and progress bar at 90% scroll progress, leaving 10% scroll delay
       tl.to(track, {
         x: () => -getScrollAmount(),
         ease: "none",
+        duration: 0.9,
       }, 0);
 
       tl.to(".scroll-progress-line", {
         scaleX: 1,
         ease: "none",
+        duration: 0.9,
       }, 0);
+
+      // Extend timeline duration to 1.0 to create the pause at the end
+      tl.set({}, {}, 1.0);
     }, containerRef);
 
     ScrollTrigger.refresh();
@@ -157,7 +163,7 @@ export default function Works({
       ref={containerRef}
       className="relative w-full bg-background"
       style={{
-        height: visibleWorks.length === 0 ? "auto" : `${(visibleWorks.length + 1 + (showViewAll ? 1 : 0)) * 100}vh`
+        height: visibleWorks.length === 0 ? "auto" : `${(visibleWorks.length + 1.3 + (showViewAll ? 1 : 0)) * 100}vh`
       }}
       id={sectionId}
     >
