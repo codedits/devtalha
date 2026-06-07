@@ -90,11 +90,11 @@ export default function Footer({ data }: { data?: FooterSection | null }) {
                   Explore
                 </h4>
                 <ul className="flex flex-col gap-5">
-                  <li><a href="#" className={linkClass}>Home</a></li>
-                  <li><a href="#work" className={linkClass}>Projects</a></li>
-                  <li><a href="#services" className={linkClass}>Services</a></li>
-                  <li><a href="#process" className={linkClass}>Process</a></li>
-                  <li><a href="#contact" className={linkClass}>Contact</a></li>
+                  <li><a href="/" className={linkClass}>Home</a></li>
+                  <li><a href="/#work" className={linkClass}>Projects</a></li>
+                  <li><a href="/#services" className={linkClass}>Services</a></li>
+                  <li><a href="/#process" className={linkClass}>Process</a></li>
+                  <li><a href="/#contact" className={linkClass}>Contact</a></li>
                 </ul>
               </div>
 

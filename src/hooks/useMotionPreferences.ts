@@ -8,7 +8,8 @@ export function useMotionPreferences() {
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
   const allowHover = !prefersReducedMotion && !isMobile;
-  const allowParallax = !prefersReducedMotion && !isMobile;
+  // Parallax (scroll-linked motion) works great on mobile — just reduce intensity
+  const allowParallax = !prefersReducedMotion;
 
   return {
     prefersReducedMotion,

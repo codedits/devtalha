@@ -64,7 +64,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
   const imageY = useTransform(
     scrollYProgress,
     [0, 1],
-    prefersReducedMotion || isMobile ? ["0%", "0%"] : ["8%", "-8%"]
+    prefersReducedMotion ? ["0%", "0%"] : isMobile ? ["4%", "-4%"] : ["8%", "-8%"]
   );
 
   useEffect(() => {
@@ -316,9 +316,10 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                     onMouseEnter={() => setHoveredService(service.id)}
                     onMouseLeave={() => setHoveredService(null)}
                   >
-                    <button
+                    <motion.button
                       onClick={() => setOpenService(isOpen ? '' : service.id)}
                       className="w-full py-6 md:py-8 flex justify-between items-center group/service text-left cursor-pointer"
+                      whileTap={{ scale: 0.98 }}
                     >
                       <div className="flex items-center gap-6 md:gap-10">
                         <span className="font-mono text-xs text-foreground group-hover/service:text-foreground transition-colors">
@@ -344,7 +345,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                       >
                         <Plus size={16} strokeWidth={1.5} />
                       </motion.div>
-                    </button>
+                    </motion.button>
 
                     <AnimatePresence>
                       {isOpen && (

@@ -15,7 +15,7 @@ export default async function SiteLayout({
   return (
     <SmoothScroll>
       <PageTransition>
-        <div className="custom-cursor-page">
+        <div className="w-full">
           <ClientSideEffects />
           <Navbar />
           <main className="min-h-screen w-full flex flex-col">

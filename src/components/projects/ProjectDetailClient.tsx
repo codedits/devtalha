@@ -327,18 +327,7 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
         )}
       </AnimatePresence>
 
-      {/* Floating Index Link */}
-      <nav className="absolute top-10 left-0 w-full z-50 pointer-events-none px-6 md:px-12">
-        <div className="mx-auto max-w-7xl">
-          <Link
-            href="/projects"
-            className="pointer-events-auto group inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-foreground/50 hover:text-foreground transition-colors"
-          >
-            <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1" />
-            <RollText>Back to selection</RollText>
-          </Link>
-        </div>
-      </nav>
+
 
       {/* 1. IMMERSIVE HERO SECTION */}
       <section ref={heroRef} className="relative min-h-screen lg:h-screen w-full flex flex-col justify-end items-start lg:overflow-hidden px-6 md:px-12 pb-16 md:pb-24 pt-24 lg:pt-0">

@@ -31,7 +31,7 @@ export default function Supasection() {
   return (
     <section
       ref={containerRef}
-      className="relative mx-auto h-[400vh] w-full bg-background text-foreground transition-colors duration-500"
+      className="relative mx-auto h-[280vh] md:h-[400vh] w-full bg-background text-foreground transition-colors duration-500"
     >
       {/* Sticky Viewport Wrapper - Pinned/Locked container */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col items-center justify-center">

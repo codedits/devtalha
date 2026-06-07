@@ -31,12 +31,12 @@ const WorkCard: React.FC<{ work: WorkCardData; index: number }> = ({ work, index
   return (
     <Link
       href={`/projects/${work.id}`}
-      className="w-full h-full flex flex-col md:flex-row group cursor-pointer"
+      className="w-full h-full group cursor-pointer relative"
       data-cursor="view"
       aria-label={`Open ${work.title} project details`}
     >
-      {/* Left/Top: Image Container */}
-      <div className="relative w-full h-[50%] md:h-full md:w-[55%] overflow-hidden bg-muted">
+      {/* Image Container */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden bg-muted">
         <Image
           src={work.imageUrl}
           alt={work.title}
@@ -50,25 +50,25 @@ const WorkCard: React.FC<{ work: WorkCardData; index: number }> = ({ work, index
         <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       </div>
 
-      {/* Right/Bottom: Info Panel */}
-      <div className="bg-card w-full h-[50%] md:h-full md:w-[45%] p-6 sm:p-8 md:p-10 flex flex-col justify-between border-t md:border-t-0 md:border-l border-border/40 text-left">
-        {/* Top Details */}
-        <div className="space-y-2 md:space-y-4">
-          <span className="text-muted-foreground font-mono text-[9px] sm:text-xs font-bold uppercase tracking-[0.2em] block">
+      {/* Info Panel Overlay */}
+      <div className="absolute bottom-0 left-0 w-full p-6 sm:p-8 md:p-10 bg-gradient-to-t from-black/95 via-black/50 to-transparent flex flex-col justify-end text-left z-10">
+        {/* Details */}
+        <div className="space-y-1 md:space-y-3">
+          <span className="text-white/70 font-mono text-[9px] sm:text-xs font-bold uppercase tracking-[0.2em] block">
             {work.client}
           </span>
-          <h3 className="text-foreground text-xl sm:text-2xl md:text-3xl lg:text-4xl font-medium tracking-tight leading-tight group-hover:text-muted-foreground transition-colors duration-300">
+          <h3 className="text-white text-lg sm:text-xl md:text-3xl lg:text-4xl font-medium tracking-tight leading-tight group-hover:text-white/85 transition-colors duration-300">
             {work.title}
           </h3>
         </div>
 
         {/* Bottom CTA Arrow */}
-        <div className="flex justify-between items-center mt-4">
-          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground/60 group-hover:text-foreground transition-colors">
+        <div className="flex justify-between items-center mt-3 md:mt-6">
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/50 group-hover:text-white transition-colors">
             View Project
           </span>
-          <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-border/60 flex items-center justify-center text-foreground group-hover:border-foreground group-hover:bg-foreground group-hover:text-background transition-all duration-300">
-            <span className="text-sm font-bold uppercase tracking-wider font-mono">
+          <div className="w-8 h-8 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center text-white group-hover:border-white group-hover:bg-white group-hover:text-black transition-all duration-300">
+            <span className="text-xs md:text-sm font-bold uppercase tracking-wider font-mono">
               →
             </span>
           </div>
@@ -113,7 +113,9 @@ export default function Works({
   useIsomorphicLayoutEffect(() => {
     if (visibleWorks.length === 0) return;
 
-    const ctx = gsap.context(() => {
+    const mm = gsap.matchMedia(containerRef);
+
+    mm.add("(min-width: 768px)", () => {
       const track = trackRef.current;
       const container = containerRef.current;
       if (!track || !container) return;
@@ -145,7 +147,7 @@ export default function Works({
 
       // Extend timeline duration to 1.0 to create the pause at the end
       tl.set({}, {}, 1.0);
-    }, containerRef);
+    });
 
     ScrollTrigger.refresh();
     const refreshTimer = setTimeout(() => {
@@ -153,7 +155,7 @@ export default function Works({
     }, 600);
 
     return () => {
-      ctx.revert();
+      mm.revert();
       clearTimeout(refreshTimer);
     };
   }, [visibleWorks]);
@@ -161,23 +163,23 @@ export default function Works({
   return (
     <section
       ref={containerRef}
-      className="relative w-full bg-background"
+      className="relative w-full bg-background h-auto md:h-[var(--desktop-height)]"
       style={{
-        height: visibleWorks.length === 0 ? "auto" : `${(visibleWorks.length + 1.3 + (showViewAll ? 1 : 0)) * 100}vh`
-      }}
+        "--desktop-height": visibleWorks.length === 0 ? "auto" : `${(visibleWorks.length + 1.3 + (showViewAll ? 1 : 0)) * 100}vh`
+      } as React.CSSProperties}
       id={sectionId}
     >
       {/* Viewport content block - Pinned sticky container */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden relative">
+      <div className="relative w-full h-auto md:sticky md:top-0 md:h-screen md:overflow-hidden">
 
         {/* Horizontal Track Wrapper */}
         <div
           ref={trackRef}
-          className="flex flex-row w-max items-stretch relative will-change-transform"
+          className="flex flex-col md:flex-row w-full md:w-max items-stretch relative md:will-change-transform"
           style={{ transform: "translate3d(0,0,0)" }}
         >
           {/* SLIDE 1: Section Intro */}
-          <div className="w-screen h-screen flex-shrink-0 flex flex-col justify-center bg-background px-6 md:px-20 lg:px-24 py-16 md:py-12 select-none">
+          <div className="w-full md:w-screen h-auto md:h-screen flex-shrink-0 flex flex-col justify-center bg-background px-6 md:px-20 lg:px-24 py-16 md:py-12 select-none">
             <div className="max-w-7xl w-full mx-auto grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-16 items-center">
 
               {/* Left Column: Giant Heading */}
@@ -281,9 +283,9 @@ export default function Works({
           {visibleWorks.map((work, index) => (
             <div
               key={work.id}
-              className="w-screen h-screen flex-shrink-0 flex items-center justify-center px-4 md:px-0"
+              className="w-full md:w-screen h-auto md:h-screen md:flex-shrink-0 flex items-center justify-center py-6 md:py-0 px-4 md:px-0"
             >
-              <div className="w-[85vw] sm:w-[75vw] md:w-[70vw] lg:w-[60vw] h-[65vh] max-h-[500px] relative rounded-3xl overflow-hidden flex-shrink-0 bg-card border border-border shadow-2xl flex flex-col">
+              <div className="w-full max-w-[540px] md:w-[70vw] lg:w-[60vw] h-[280px] sm:h-[340px] md:h-[60vh] md:min-h-[420px] md:max-h-[500px] relative rounded-3xl overflow-hidden flex-shrink-0 bg-card border border-border shadow-2xl flex flex-col">
                 <WorkCard work={work} index={index} />
               </div>
             </div>
@@ -291,7 +293,7 @@ export default function Works({
 
           {/* SLIDE N: End-of-Track CTA */}
           {showViewAll && (
-            <div className="w-screen h-screen flex-shrink-0 flex flex-col items-center justify-center bg-background py-20 md:py-8 px-6 text-center select-none">
+            <div className="w-full md:w-screen h-auto md:h-screen flex-shrink-0 flex flex-col items-center justify-center bg-background py-16 md:py-8 px-6 text-center select-none">
               <div className="max-w-xl flex flex-col items-center">
                 <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-muted-foreground mb-6 block">
                   MORE PROJECTS
@@ -314,7 +316,7 @@ export default function Works({
         </div>
 
         {/* Floating Progress Bar Line */}
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 w-[160px] md:w-[240px] h-[2px] bg-foreground/10 overflow-hidden rounded-full z-20">
+        <div className="hidden md:block absolute bottom-12 left-1/2 -translate-x-1/2 w-[240px] h-[2px] bg-foreground/10 overflow-hidden rounded-full z-20">
           <div className="scroll-progress-line absolute left-0 top-0 h-full w-full bg-foreground origin-left scale-x-0" />
         </div>
 

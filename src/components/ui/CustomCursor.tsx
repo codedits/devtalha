@@ -21,6 +21,9 @@ export const CustomCursor = () => {
     const isMobileDevice = window.matchMedia("(max-width: 767px)").matches;
     if (isMobileDevice) return;
 
+    // Enable custom cursor styles only after dynamic initialization is complete
+    document.documentElement.classList.add("custom-cursor-page");
+
     const handleMouseMove = (e: MouseEvent) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
@@ -69,6 +72,7 @@ export const CustomCursor = () => {
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
       document.removeEventListener("mouseover", handleMouseOver);
+      document.documentElement.classList.remove("custom-cursor-page");
     };
   }, [cursorX, cursorY]);
 

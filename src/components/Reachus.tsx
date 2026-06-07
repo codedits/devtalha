@@ -49,12 +49,12 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
   const backgroundY = useTransform(
     scrollYProgress,
     [0, 1],
-    prefersReducedMotion || isMobile ? ["0%", "0%"] : ["0%", "-20%"]
+    prefersReducedMotion ? ["0%", "0%"] : isMobile ? ["0%", "-10%"] : ["0%", "-20%"]
   );
   const backgroundScale = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    prefersReducedMotion || isMobile ? [1, 1, 1] : [0.8, 1, 1.2]
+    prefersReducedMotion ? [1, 1, 1] : isMobile ? [0.9, 1, 1.1] : [0.8, 1, 1.2]
   );
 
   return (
@@ -92,6 +92,7 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ ...BASE_REVEAL, delay: 0.25 }}
               whileHover={allowHover ? { x: 10 } : undefined}
+              whileTap={{ scale: 0.97 }}
             >
               {email} 
               <motion.span
@@ -141,15 +142,14 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
                       animate={isInView ? { opacity: 1, x: 0 } : {}}
                       transition={{ ...BASE_REVEAL, delay: 0.3 + idx * 0.08 }}
                       whileHover={allowHover ? { x: 5 } : undefined}
+                      whileTap={{ scale: 0.97 }}
                     >
                       {social.name}
-                      <motion.span 
-                        className="opacity-0 group-hover:opacity-100 transition-opacity"
-                        initial={{ x: -10 }}
-                        whileHover={allowHover ? { x: 0 } : undefined}
+                      <span 
+                        className="opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
                       >
                         <ArrowRight size={14} strokeWidth={1.5} />
-                      </motion.span>
+                      </span>
                     </motion.a>
                   ))}
                 </div>

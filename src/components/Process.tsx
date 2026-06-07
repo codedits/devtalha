@@ -54,7 +54,7 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
   const backgroundX = useTransform(
     scrollYProgress,
     [0, 1],
-    prefersReducedMotion || isMobile ? ["0%", "0%"] : ["-20%", "20%"]
+    prefersReducedMotion ? ["0%", "0%"] : isMobile ? ["-10%", "10%"] : ["-20%", "20%"]
   );
 
   return (
@@ -90,6 +90,7 @@ export default function Process({ data, meta }: { data?: ProcessStepItem[] | nul
               variants={cardVariants}
               initial="hidden"
               animate={isInView ? "visible" : "hidden"}
+              whileTap={{ scale: 0.97 }}
               className={`flex flex-col justify-between p-5 sm:p-8 md:p-10 min-h-[220px] sm:min-h-[300px] lg:min-h-[450px] bg-background group/roll cursor-default border-zinc-200 dark:border-white/15 relative overflow-hidden ${
                 idx % 2 === 0 ? "border-r" : "border-r-0"
               } ${

@@ -8,7 +8,7 @@ import type { HeroSection } from "@/types/content";
 import { useMotionPreferences } from "@/hooks/useMotionPreferences";
 
 export default function Hero({ data }: { data?: HeroSection | null }) {
-  const { allowParallax } = useMotionPreferences();
+  const { allowParallax, isMobile } = useMotionPreferences();
   const heading = data?.heading ?? 'I build brands, campaigns, and digital experience';
   const desktopBgImage = data?.background_image_url ?? 'https://images.unsplash.com/photo-1582150816999-5c92a8c15401?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
   const mobileBgImage = data?.mobile_background_image_url?.trim() || desktopBgImage;
@@ -82,32 +82,32 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
     offset: ["start start", "end start"]
   });
 
-  // Parallax scroll transitions for image and text
+  // Parallax scroll transitions for image and text (reduced intensity on mobile)
   const imageScale = useTransform(
     scrollYProgress,
     [0, 1],
-    allowParallax ? [1, 1.16] : [1, 1]
+    allowParallax ? (isMobile ? [1, 1.06] : [1, 1.16]) : [1, 1]
   );
   const imageOpacity = useTransform(
     scrollYProgress,
     [0, 0.8],
-    allowParallax ? [1, 0.08] : [1, 1]
+    allowParallax ? (isMobile ? [1, 0.3] : [1, 0.08]) : [1, 1]
   );
   const textY = useTransform(
     scrollYProgress,
     [0, 1],
-    allowParallax ? [0, 72] : [0, 0]
+    allowParallax ? (isMobile ? [0, 30] : [0, 72]) : [0, 0]
   );
 
   return (
-    <section 
+    <section
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="h-[85vh] md:h-screen w-full px-2 pt-2 relative z-10"
+      className="h-screen w-full px-0 pt-0 md:px-2 md:pt-2 relative z-10"
     >
-      <div 
-        ref={containerRef} 
-        className={`relative h-full w-full flex flex-col items-start justify-end rounded-[1.5rem] md:rounded-none overflow-hidden pb-10 md:pb-24 px-10 md:px-16 lg:px-20 border border-white/10 ${shouldAnimate ? 'is-visible' : ''}`}
+      <div
+        ref={containerRef}
+        className={`relative h-full w-full flex flex-col items-start justify-center md:justify-end rounded-none overflow-hidden pb-0 md:pb-24 px-10 md:px-16 lg:px-20 border-0 md:border border-white/10 ${shouldAnimate ? 'is-visible' : ''}`}
       >
         {/* Animated Background Container (Handles Zoom-in and Fade-in Reveal) */}
         <motion.div
@@ -204,6 +204,8 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
             </div>
           </div>
         </motion.div>
+
+
       </div>
     </section>
   );

@@ -29,13 +29,13 @@ export default function Preloader() {
     // Lock page scroll
     document.body.style.overflow = "hidden";
 
-    // Cycle through greetings at a comfortable, readable speed (380ms)
+    // Cycle through greetings at a comfortable, readable speed (240ms)
     const interval = setInterval(() => {
       setIndex((prevIndex) => {
         if (prevIndex < GREETINGS.length - 1) {
           return prevIndex + 1;
         } else {
-          // Reached TALHA, stop cycling
+          // Reached last greeting, stop cycling
           clearInterval(interval);
           return prevIndex;
         }
@@ -48,7 +48,7 @@ export default function Preloader() {
     };
   }, []);
 
-  // When we reach the final word (TALHA), pause and trigger exit
+  // When we reach the final word, pause and trigger exit
   useEffect(() => {
     if (index === GREETINGS.length - 1) {
       const timer = setTimeout(() => {
@@ -56,7 +56,8 @@ export default function Preloader() {
         if (typeof window !== "undefined") {
           window.dispatchEvent(new Event("preloader-complete"));
         }
-      }, 1000); // Keep TALHA visible for 1.0s
+      }, 400); // Keep visible for 400ms
+
 
       return () => clearTimeout(timer);
     }
@@ -89,9 +90,9 @@ export default function Preloader() {
   return (
     <div id="preloader-root" className="fixed inset-0 w-full h-full z-[99999] overflow-hidden select-none pointer-events-none touch-none flex items-center justify-center">
       {/* Background SVG Curtain */}
-      <svg 
+      <svg
         className="absolute inset-0 w-full h-full fill-[#070707] z-10 pointer-events-auto"
-        viewBox="0 0 100 100" 
+        viewBox="0 0 100 100"
         preserveAspectRatio="none"
       >
         <motion.path

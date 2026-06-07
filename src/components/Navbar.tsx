@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
-import { X, Menu } from "lucide-react";
+import { X, Menu, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -34,7 +34,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
-  // Hide the nav only on project details pages (/projects/[id])
+  // Check if we are on a project details page (/projects/[id])
   const isProjectDetailPage = pathname ? /^\/projects\/.+/.test(pathname) : false;
 
   // Prevent scrolling when menu is open
@@ -49,8 +49,6 @@ export default function Navbar() {
     };
   }, [isMenuOpen]);
 
-  if (isProjectDetailPage) return null;
-
   return (
     <>
       <motion.header
@@ -59,55 +57,65 @@ export default function Navbar() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="fixed top-8 left-0 right-0 z-[70] flex justify-between items-center px-6 md:px-10 pointer-events-none font-sans mix-blend-difference"
       >
-        {/* Logo */}
-        <MagneticWrapper className="pointer-events-auto">
-          <Link href="/" className="text-xl font-bold tracking-tighter text-white">
-            <motion.span
-              initial="initial"
-              whileHover="hover"
-              className="flex items-center"
-            >
-              {"TALHA".split("").map((char, i) => (
+        {/* Logo / Back Link */}
+        {isProjectDetailPage ? (
+          <MagneticWrapper className="pointer-events-auto group">
+            <Link href="/projects" className="text-[10px] font-bold uppercase tracking-[0.25em] text-white flex items-center gap-2 group">
+              <ArrowLeft size={12} className="transition-transform group-hover:-translate-x-1" />
+              <span className="hidden sm:inline"><RollText>BACK TO SELECTION</RollText></span>
+              <span className="sm:hidden"><RollText>BACK</RollText></span>
+            </Link>
+          </MagneticWrapper>
+        ) : (
+          <MagneticWrapper className="pointer-events-auto">
+            <Link href="/" className="text-xl font-bold tracking-tighter text-white">
+              <motion.span
+                initial="initial"
+                whileHover="hover"
+                className="flex items-center"
+              >
+                {"TALHA".split("").map((char, i) => (
+                  <motion.span
+                    key={i}
+                    variants={{
+                      initial: { y: 0, scale: 1, rotate: 0 },
+                      hover: {
+                        y: [0, -8, 2, 0],
+                        scale: [1, 1.15, 0.95, 1],
+                        rotate: [0, -12, 8, 0],
+                        transition: {
+                          duration: 0.6,
+                          ease: "easeOut",
+                          delay: i * 0.045,
+                        }
+                      }
+                    }}
+                    className="inline-block origin-bottom"
+                  >
+                    {char}
+                  </motion.span>
+                ))}
                 <motion.span
-                  key={i}
                   variants={{
-                    initial: { y: 0, scale: 1, rotate: 0 },
+                    initial: { scale: 1, rotate: 0, y: -4 },
                     hover: {
-                      y: [0, -8, 2, 0],
-                      scale: [1, 1.15, 0.95, 1],
-                      rotate: [0, -12, 8, 0],
+                      scale: [1, 1.3, 1],
+                      rotate: [0, 360],
                       transition: {
-                        duration: 0.6,
-                        ease: "easeOut",
-                        delay: i * 0.045,
+                        duration: 0.8,
+                        ease: "easeInOut",
+                        delay: 0.2,
                       }
                     }
                   }}
-                  className="inline-block origin-bottom"
+                  className="inline-block origin-center ml-0.5 text-xs font-semibold"
                 >
-                  {char}
+                  ®
                 </motion.span>
-              ))}
-              <motion.span
-                variants={{
-                  initial: { scale: 1, rotate: 0, y: -4 },
-                  hover: {
-                    scale: [1, 1.3, 1],
-                    rotate: [0, 360],
-                    transition: {
-                      duration: 0.8,
-                      ease: "easeInOut",
-                      delay: 0.2,
-                    }
-                  }
-                }}
-                className="inline-block origin-center ml-0.5 text-xs font-semibold"
-              >
-                ®
               </motion.span>
-            </motion.span>
-          </Link>
-        </MagneticWrapper>
+            </Link>
+          </MagneticWrapper>
+        )}
 
         {/* Desktop Nav */}
         <nav className="pointer-events-auto flex items-center text-white h-12 md:h-[52px] hidden md:flex font-sans">
