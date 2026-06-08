@@ -53,6 +53,7 @@
 - Reduced hover animations in works when reduced-motion is preferred.
 - Added preconnect hints for remote image hosts.
 - Disabled hover and scroll transforms on mobile for works/services/process/reachus/hero/section parallax.
+- Added smart lazy-loading for off-screen videos via IntersectionObserver in MediaRenderer to eliminate redundant initial network/decoding load.
 
 ## Validation
 - Re-run Lighthouse and compare metrics.
