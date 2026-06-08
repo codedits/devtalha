@@ -45,7 +45,7 @@ function sanitizePayload(section: AdminSection, raw: Record<string, unknown>) {
     const value = raw[field];
     if (value === undefined) continue;
 
-    if (field === 'sort_order' || field === 'featured_count') {
+    if (field === 'sort_order' || field === 'featured_count' || field === 'overlay_opacity') {
       sanitized[field] = toNonNegativeInteger(value);
       continue;
     }

@@ -181,7 +181,8 @@ export default function BlockRevealText({
 
   return (
     <span ref={wrapperRef} className={`relative block w-full ${className}`}>
-      <span aria-hidden="true" className="invisible block w-full whitespace-normal">
+      {/* Screen-reader accessible layout anchor */}
+      <span className="block w-full whitespace-normal select-text opacity-0">
         {text}
       </span>
 
@@ -191,7 +192,8 @@ export default function BlockRevealText({
         className="pointer-events-none absolute left-0 top-0 block w-full opacity-0 whitespace-normal"
       />
 
-      <span className="absolute inset-0 block w-full pointer-events-none">
+      {/* Visually animated lines (ignored by screen readers to prevent double-reading) */}
+      <span className="absolute inset-0 block w-full pointer-events-none" aria-hidden="true">
         {lines.map((lineText, index) => (
           <span
             key={`${lineText}-${index}`}

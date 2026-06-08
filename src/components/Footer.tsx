@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import Image from "next/image";
+import MediaRenderer from "@/components/ui/MediaRenderer";
 import type { FooterSection } from "@/types/content";
 
 export default function Footer({ data }: { data?: FooterSection | null }) {
@@ -37,7 +37,7 @@ export default function Footer({ data }: { data?: FooterSection | null }) {
       <div className="relative w-full bg-[#000000] overflow-hidden pt-24 pb-12">
         {hasBackgroundImage ? (
           <>
-            <Image
+            <MediaRenderer
               src={footerBackgroundImage}
               alt="Footer background"
               fill
@@ -45,6 +45,7 @@ export default function Footer({ data }: { data?: FooterSection | null }) {
               quality={80}
               sizes="100vw"
               className="object-cover"
+              videoClassName="absolute inset-0 h-full w-full object-cover"
             />
             <div className={`absolute inset-0 ${isDarkTextTheme ? "bg-white/35" : "bg-black/45"}`} />
             <div className={`absolute inset-0 ${isDarkTextTheme ? "bg-gradient-to-b from-white/10 via-white/25 to-white/50" : "bg-gradient-to-b from-black/15 via-black/35 to-black/65"}`} />
@@ -126,26 +127,24 @@ export default function Footer({ data }: { data?: FooterSection | null }) {
           </div>
 
           {/* Middle Section: Massive Typography */}
-          <div className="w-full relative flex justify-between items-end mb-12 md:mb-16 select-none overflow-hidden">
-
-            <motion.h1
+          <div className="w-full overflow-hidden mb-12 md:mb-16">
+            <motion.div
               initial={{ y: "100%" }}
               whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className={`text-[25vw] leading-[0.72] font-medium tracking-[-0.05em] m-0 p-0 ${headingClass}`}
+              className="w-full relative flex justify-between items-end select-none"
             >
-              {brandName}
-            </motion.h1>
+              <h1 className={`text-[25vw] leading-[0.72] font-medium tracking-[-0.05em] m-0 p-0 ${headingClass}`}>
+                {brandName}
+              </h1>
 
-            <div className="relative pb-[1.5vw] pr-[1vw]">
-
-
-              <span className={`text-[13vw] leading-[0.72] font-bold m-0 p-0 ${headingClass}`}>
-                &reg;
-              </span>
-            </div>
-
+              <div className="relative pb-[1.5vw] pr-[1vw]">
+                <span className={`text-[13vw] leading-[0.72] font-bold m-0 p-0 ${headingClass}`}>
+                  &reg;
+                </span>
+              </div>
+            </motion.div>
           </div>
 
           {/* Bottom Section: Legal & Credits */}

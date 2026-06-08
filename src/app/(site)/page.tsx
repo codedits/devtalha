@@ -24,6 +24,7 @@ import {
   getProcessMeta,
   getReachus,
   getWhyChooseUs,
+  getSupasection,
 } from "@/lib/queries";
 
 export const revalidate = 604800; // 7 days in seconds
@@ -40,6 +41,7 @@ export default async function Home() {
     servicesMeta,
     processSteps,
     processMeta,
+    supasection,
     reachus,
     sectionOrder,
   ] = await Promise.all([
@@ -52,6 +54,7 @@ export default async function Home() {
     getServicesMeta(),
     getProcessSteps(),
     getProcessMeta(),
+    getSupasection(),
     getReachus(),
     getHomepageSectionOrder(),
   ]);
@@ -71,7 +74,7 @@ export default async function Home() {
     ),
     services: <Services data={services} meta={servicesMeta} />,
     process: <Process data={processSteps} meta={processMeta} />,
-    supasection: <Supasection />,
+    supasection: <Supasection data={supasection} />,
     reachus: <Reachus data={reachus} />,
   } as const;
 

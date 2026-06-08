@@ -44,7 +44,7 @@ export async function DELETE(req: NextRequest) {
   const objectPath = getManagedStoragePathFromUrl(url);
 
   if (!objectPath) {
-    return NextResponse.json({ error: 'Only portfolio bucket images can be deleted' }, { status: 400 });
+    return NextResponse.json({ error: 'Only portfolio bucket media can be deleted' }, { status: 400 });
   }
 
   const supabase = createAdminClient();

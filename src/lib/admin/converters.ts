@@ -1,7 +1,7 @@
 import type { FieldType } from "@/lib/admin/types";
 
 export function toTextValue(value: unknown, type: FieldType): string {
-  if (type === "number") {
+  if (type === "number" || type === "range") {
     if (typeof value === "number") return String(value);
     if (typeof value === "string") return value;
     return "0";
@@ -11,7 +11,7 @@ export function toTextValue(value: unknown, type: FieldType): string {
 }
 
 export function fromTextValue(value: string, type: FieldType): unknown {
-  if (type === "number") {
+  if (type === "number" || type === "range") {
     const parsed = Number(value);
     return Number.isFinite(parsed) ? parsed : 0;
   }

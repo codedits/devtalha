@@ -17,6 +17,7 @@ export type FooterSection = Tables<"footer">;
 export type WorksMetaSection = Tables<"works_meta">;
 export type ServicesMetaSection = Tables<"services_meta">;
 export type ProcessMetaSection = Tables<"process_meta">;
+export type SupasectionSection = Tables<"supasection">;
 
 export type WhyChooseUsSection = {
   id: string;

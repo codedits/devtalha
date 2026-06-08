@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Plus, Minus, ArrowRight } from 'lucide-react';
-import Image from "next/image";
+import MediaRenderer from "@/components/ui/MediaRenderer";
 import { motion, AnimatePresence, useInView, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import { LiquidButton } from "./ui/LiquidButton";
 import BlockRevealText from "./BlockRevealText";
@@ -30,6 +30,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
   const isMobile = useIsMobile();
   const allowHover = !prefersReducedMotion && !isMobile;
   const label = meta?.label?.trim() || '[ OUR SERVICES ]';
+  const heading = meta?.heading?.trim() || "Creative solutions for ambitious brands";
   const profileImageUrl =
     meta?.profile_image_url?.trim() ||
     'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=800';
@@ -214,7 +215,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
             }}
           >
             {servicesList.find(s => s.id === hoveredService)?.images[0] ? (
-              <Image
+              <MediaRenderer
                 src={servicesList.find(s => s.id === hoveredService)!.images[0]}
                 alt="Preview"
                 fill
@@ -253,7 +254,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
 
             <h2 className="text-3xl md:text-[2.25rem] font-semibold leading-[0.95] md:leading-[0.92] tracking-tight mb-8 text-center lg:text-left text-foreground">
               <BlockRevealText
-                text="Creative solutions for ambitious brands"
+                text={heading}
                 blockColor="bg-foreground"
                 scrub={false}
               />
@@ -269,11 +270,12 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                 transition={{ duration: 1, ease: PREMIUM_EASE }}
                 className="w-full h-full"
               >
-                <Image
+                <MediaRenderer
                   src={profileImageUrl}
                   alt="Representative Profile"
                   fill
                   className="object-cover group-hover/profile:scale-[1.02] transition-all duration-700 ease-out"
+                  videoClassName="absolute inset-0 h-full w-full object-cover group-hover/profile:scale-[1.02] transition-all duration-700 ease-out"
                   sizes="(max-width: 1024px) 100vw, 25vw"
                   quality={90}
                 />
@@ -320,6 +322,8 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                       onClick={() => setOpenService(isOpen ? '' : service.id)}
                       className="w-full py-6 md:py-8 flex justify-between items-center group/service text-left cursor-pointer"
                       whileTap={{ scale: 0.98 }}
+                      aria-expanded={isOpen}
+                      aria-controls={`service-content-${service.id}`}
                     >
                       <div className="flex items-center gap-6 md:gap-10">
                         <span className="font-mono text-xs text-foreground group-hover/service:text-foreground transition-colors">
@@ -350,6 +354,7 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                     <AnimatePresence>
                       {isOpen && (
                         <motion.div
+                          id={`service-content-${service.id}`}
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
@@ -402,11 +407,12 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
                                     transition={allowHover ? { duration: 0.4, ease: PREMIUM_EASE } : undefined}
                                     className="relative w-full h-full"
                                   >
-                                    <Image
+                                    <MediaRenderer
                                       src={img}
                                       alt={`${service.title} detail ${imgIdx + 1}`}
                                       fill
                                       className="object-cover transition-transform duration-300"
+                                      videoClassName="absolute inset-0 h-full w-full object-cover transition-transform duration-300"
                                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 20vw"
                                       quality={80}
                                     />

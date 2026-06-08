@@ -20,6 +20,7 @@ import {
   type WorksMetaSection,
   type WorksItem,
   type WhyChooseUsSection,
+  type SupasectionSection,
 } from "@/types/content";
 import type { Tables } from "@/types/supabase";
 import {
@@ -39,7 +40,7 @@ function clampNonNegativeInteger(value: unknown, fallback: number) {
   return Math.max(0, Math.trunc(parsed));
 }
 
-async function fetchSingle<K extends "hero" | "about" | "reachus" | "footer" | "why_choose_us" | "settings">(section: K) {
+async function fetchSingle<K extends "hero" | "about" | "reachus" | "footer" | "why_choose_us" | "settings" | "supasection">(section: K) {
   const { data, error } = await supabase
     .from(section)
     .select("*")
@@ -206,6 +207,15 @@ const getSettingsCached = unstable_cache(
   }
 );
 
+const getSupasectionCached = unstable_cache(
+  async () => fetchSingle("supasection"),
+  ["portfolio-query-supasection"],
+  {
+    revalidate: PORTFOLIO_CACHE_REVALIDATE_SECONDS,
+    tags: getSectionTags("supasection"),
+  }
+);
+
 const getHomepageSectionOrderCached = unstable_cache(
   async () => {
     const { data, error } = await supabase
@@ -309,6 +319,7 @@ export async function getServicesMeta() {
     meta ?? {
       id: "",
       label: "[ OUR SERVICES ]",
+      heading: "Services.",
       profile_image_url:
         "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=800",
       intro_text:
@@ -369,6 +380,10 @@ export async function getReachus() {
 
 export async function getFooter() {
   return getFooterCached() as Promise<FooterSection>;
+}
+
+export async function getSupasection() {
+  return getSupasectionCached() as Promise<SupasectionSection>;
 }
 
 export async function getSettings() {

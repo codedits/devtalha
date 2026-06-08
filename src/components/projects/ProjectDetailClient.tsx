@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import MediaRenderer from "@/components/ui/MediaRenderer";
 import Link from "next/link";
 import { 
   ArrowLeft, 
@@ -104,13 +105,14 @@ function GalleryItem({
       className={`relative overflow-hidden rounded-3xl border border-white/5 shadow-2xl cursor-pointer group aspect-[16/10] w-full ${isEven ? "md:translate-y-12" : ""}`}
     >
       <motion.div style={{ scale: imageScale }} className="absolute inset-0 w-full h-full relative">
-        <Image
+        <MediaRenderer
           src={img}
           alt={`Showcase detail ${index}`}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
           quality={80}
           className="object-cover transition-all duration-700 group-hover:scale-[1.02]"
+          videoClassName="absolute inset-0 h-full w-full object-cover transition-all duration-700 group-hover:scale-[1.02]"
         />
       </motion.div>
       
@@ -336,7 +338,7 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
           style={{ y: heroImageY, scale: heroImageScale, opacity: heroImageOpacity }}
           className="absolute inset-0 z-0 w-full h-full will-change-transform"
         >
-          <Image
+          <MediaRenderer
             src={project.image_url}
             alt={project.title}
             fill
@@ -344,6 +346,7 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
             quality={90}
             sizes="100vw"
             className="object-cover"
+            videoClassName="absolute inset-0 h-full w-full object-cover animate-none"
           />
           {/* Dark gradient overlay to make white text pop */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-[1]" />
@@ -632,13 +635,14 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
             className="absolute inset-0 z-0 w-full h-full overflow-hidden origin-center shadow-2xl"
           >
             {/* The Background next project cover image */}
-            <Image
+            <MediaRenderer
               src={nextProject.image_url}
               alt={nextProject.title}
               fill
               quality={90}
               sizes="100vw"
-              className="object-cover"
+              className="object-cover animate-none"
+              videoClassName="absolute inset-0 h-full w-full object-cover animate-none"
             />
             {/* Dark mask overlay */}
             <div className="absolute inset-0 bg-black/70 backdrop-blur-[1px] transition-all" />
@@ -766,7 +770,7 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
                 dragElastic={0.15}
                 className="relative w-full h-full pointer-events-auto cursor-grab active:cursor-grabbing max-h-[85%] md:max-h-[90%] flex items-center justify-center"
               >
-                <Image
+                <MediaRenderer
                   src={imageSet[activeImageIndex]}
                   alt="Exhibit view"
                   fill
@@ -774,6 +778,11 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
                   sizes="(max-width: 768px) 100vw, 80vw"
                   priority
                   className="object-contain select-none pointer-events-none"
+                  videoClassName="w-full h-full max-h-[75vh] object-contain select-none pointer-events-auto"
+                  controls={true}
+                  muted={true}
+                  loop={true}
+                  autoPlay={true}
                 />
               </motion.div>
             </div>

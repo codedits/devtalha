@@ -1,6 +1,6 @@
 import type { FieldConfig, SectionRecord } from "@/lib/admin/types";
 
-const PORTFOLIO_IMAGE_BUCKET = "portfolio-images";
+const PORTFOLIO_MEDIA_BUCKET = "portfolio-images";
 
 export function getManagedStoragePathFromUrl(url: string) {
   const trimmedUrl = url.trim();
@@ -8,7 +8,7 @@ export function getManagedStoragePathFromUrl(url: string) {
 
   try {
     const parsed = new URL(trimmedUrl);
-    const prefix = `/storage/v1/object/public/${PORTFOLIO_IMAGE_BUCKET}/`;
+    const prefix = `/storage/v1/object/public/${PORTFOLIO_MEDIA_BUCKET}/`;
 
     if (!parsed.pathname.startsWith(prefix)) {
       return null;
@@ -21,9 +21,12 @@ export function getManagedStoragePathFromUrl(url: string) {
   }
 }
 
-export function isManagedPortfolioImageUrl(url: string) {
+export function isManagedPortfolioMediaUrl(url: string) {
   return Boolean(getManagedStoragePathFromUrl(url));
 }
+
+/** @deprecated Use isManagedPortfolioMediaUrl */
+export const isManagedPortfolioImageUrl = isManagedPortfolioMediaUrl;
 
 export type PendingUploadValue = {
   __type: "pending-upload";
@@ -56,17 +59,17 @@ async function uploadFile(file: File) {
   const payload = (await res.json().catch(() => null)) as { url?: string; error?: string } | null;
 
   if (!res.ok) {
-    throw new Error(payload?.error ?? "Image upload failed");
+    throw new Error(payload?.error ?? "Upload failed");
   }
 
   if (!payload?.url) {
-    throw new Error("Image upload response missing URL");
+    throw new Error("Upload response missing URL");
   }
 
   return payload.url;
 }
 
-export async function deleteStoredImage(url: string) {
+export async function deleteStoredMedia(url: string) {
   const res = await fetch("/api/admin/upload", {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
@@ -76,9 +79,18 @@ export async function deleteStoredImage(url: string) {
   const payload = (await res.json().catch(() => null)) as { error?: string } | null;
 
   if (!res.ok) {
-    throw new Error(payload?.error ?? "Image delete failed");
+    throw new Error(payload?.error ?? "Delete failed");
   }
 }
+
+/** @deprecated Use deleteStoredMedia */
+export const deleteStoredImage = deleteStoredMedia;
+
+/** Field types that resolve a single pending upload */
+const SINGLE_MEDIA_TYPES = new Set(["image", "video", "media"]);
+
+/** Field types that resolve a list of pending uploads */
+const LIST_MEDIA_TYPES = new Set(["image-list", "media-list"]);
 
 export async function resolvePendingUploads(data: SectionRecord, fields: FieldConfig[]) {
   const next: SectionRecord = { ...data };
@@ -86,12 +98,12 @@ export async function resolvePendingUploads(data: SectionRecord, fields: FieldCo
   for (const field of fields) {
     const value = next[field.key];
 
-    if (field.type === "image" && isPendingUploadValue(value)) {
+    if (SINGLE_MEDIA_TYPES.has(field.type) && isPendingUploadValue(value)) {
       try {
         const uploadedUrl = await uploadFile(value.file);
         next[field.key] = uploadedUrl;
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Image upload failed";
+        const message = error instanceof Error ? error.message : "Upload failed";
         throw new Error(`${field.label}: ${message}`);
       } finally {
         URL.revokeObjectURL(value.previewUrl);
@@ -99,7 +111,7 @@ export async function resolvePendingUploads(data: SectionRecord, fields: FieldCo
       continue;
     }
 
-    if (field.type === "image-list" && Array.isArray(value)) {
+    if (LIST_MEDIA_TYPES.has(field.type) && Array.isArray(value)) {
       const resolvedList: string[] = [];
 
       for (const item of value) {
@@ -108,7 +120,7 @@ export async function resolvePendingUploads(data: SectionRecord, fields: FieldCo
             const uploadedUrl = await uploadFile(item.file);
             resolvedList.push(uploadedUrl);
           } catch (error) {
-            const message = error instanceof Error ? error.message : "Image upload failed";
+            const message = error instanceof Error ? error.message : "Upload failed";
             throw new Error(`${field.label}: ${message}`);
           } finally {
             URL.revokeObjectURL(item.previewUrl);
@@ -125,11 +137,11 @@ export async function resolvePendingUploads(data: SectionRecord, fields: FieldCo
   return next;
 }
 
-export function getRecordStorageImages(record: unknown): string[] {
+export function getRecordStorageMedia(record: unknown): string[] {
   const urls: string[] = [];
   const scan = (val: unknown) => {
     if (typeof val === "string") {
-      if (isManagedPortfolioImageUrl(val)) {
+      if (isManagedPortfolioMediaUrl(val)) {
         urls.push(val);
       }
     } else if (Array.isArray(val)) {
@@ -142,3 +154,5 @@ export function getRecordStorageImages(record: unknown): string[] {
   return urls;
 }
 
+/** @deprecated Use getRecordStorageMedia */
+export const getRecordStorageImages = getRecordStorageMedia;

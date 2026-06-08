@@ -11,7 +11,11 @@ export type FieldType =
   | "string-list"
   | "stats"
   | "socials"
-  | "scope";
+  | "scope"
+  | "range"
+  | "video"
+  | "media"
+  | "media-list";
 
 export type SelectOption = {
   label: string;
@@ -42,6 +46,9 @@ export type FieldConfig = {
   placeholder?: string;
   description?: string;
   options?: SelectOption[];
+  min?: number;
+  max?: number;
+  step?: number;
 };
 
 export type SectionMode = "single" | "collection";

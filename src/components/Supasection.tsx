@@ -2,11 +2,17 @@
 
 import { useScroll, useTransform, useSpring, motion } from "framer-motion";
 import React, { useRef } from "react";
-import Image from "next/image";
+import MediaRenderer from "@/components/ui/MediaRenderer";
 import SvgFollowScroll from "./SvgFollowScroll";
+import type { SupasectionSection } from "@/types/content";
 
-export default function Supasection() {
+export default function Supasection({ data }: { data?: SupasectionSection | null }) {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const label = data?.label?.trim() || "[ DESIGN & DEVELOPMENT ]";
+  const heading = data?.heading?.trim() || "Designing. \nCoding. \nElevating Experience.";
+  const description = data?.description?.trim() || "Merging technical precision with interactive motion design. Scroll down to witness a signature trail of digital craftsmanship.";
+  const imageUrl = data?.image_url?.trim() || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1600";
 
   // Track scroll of the container
   const { scrollYProgress } = useScroll({
@@ -45,14 +51,13 @@ export default function Supasection() {
           className="absolute top-1/4 flex flex-col items-center justify-center gap-6 text-center z-10 pointer-events-none px-4"
         >
           <span className="text-xs font-bold tracking-[0.25em] uppercase text-muted-foreground">
-            [ DESIGN & DEVELOPMENT ]
+            {label}
           </span>
-          <h2 className="font-sans text-5xl md:text-8xl font-medium tracking-tighter leading-none">
-            Designing. <br /> Coding. <br />
-            Elevating Experience.
+          <h2 className="font-sans text-5xl md:text-8xl font-medium tracking-tighter leading-none whitespace-pre-line">
+            {heading}
           </h2>
           <p className="font-sans max-w-xl text-md md:text-lg text-muted-foreground/80 font-medium mt-4">
-            Merging technical precision with interactive motion design. Scroll down to witness a signature trail of digital craftsmanship.
+            {description}
           </p>
         </motion.div>
 
@@ -61,11 +66,12 @@ export default function Supasection() {
           style={{ scale: imageScale }}
           className="absolute inset-0 w-full h-full overflow-hidden z-20 origin-center"
         >
-          <Image
-            src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1600"
+          <MediaRenderer
+            src={imageUrl}
             alt="Abstract brand concept render"
             fill
             className="object-cover"
+            videoClassName="absolute inset-0 h-full w-full object-cover"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
             quality={90}
             priority

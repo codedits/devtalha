@@ -8,6 +8,7 @@ export const SINGLE_ROW_SECTIONS = [
   "process_meta",
   "why_choose_us",
   "settings",
+  "supasection",
 ] as const;
 
 export const MULTI_ROW_SECTIONS = ["works", "services", "process_steps", "section_order"] as const;
@@ -19,7 +20,7 @@ export type AdminMultiRowSection = (typeof MULTI_ROW_SECTIONS)[number];
 export type AdminSection = (typeof ADMIN_SECTIONS)[number];
 
 export const EDITABLE_FIELDS: Record<AdminSection, readonly string[]> = {
-  hero: ["heading", "background_image_url", "mobile_background_image_url", "name_label"],
+  hero: ["heading", "background_image_url", "mobile_background_image_url", "name_label", "media_type", "media_url", "overlay_opacity"],
   about: ["label", "heading", "description", "stats"],
   reachus: [
     "label",
@@ -43,7 +44,7 @@ export const EDITABLE_FIELDS: Record<AdminSection, readonly string[]> = {
     "email",
   ],
   works_meta: ["homepage_label", "homepage_heading", "featured_count", "archive_heading"],
-  services_meta: ["label", "profile_image_url", "intro_text", "cta_text", "cta_url"],
+  services_meta: ["label", "heading", "profile_image_url", "intro_text", "cta_text", "cta_url"],
   process_meta: ["label"],
   why_choose_us: [
     "label",
@@ -58,6 +59,7 @@ export const EDITABLE_FIELDS: Record<AdminSection, readonly string[]> = {
     "scale_description",
   ],
   settings: ["default_theme"],
+  supasection: ["label", "heading", "description", "image_url"],
   works: ["title", "client", "summary", "project_url", "image_url", "hover_image_url", "gallery_images", "scope", "sort_order"],
   services: ["title", "description", "tags", "images", "sort_order"],
   process_steps: ["number", "title", "description", "sort_order"],

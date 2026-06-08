@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import MediaRenderer from "@/components/ui/MediaRenderer";
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { AnimatePresence, motion } from "framer-motion";
 import { LiquidButton } from "./ui/LiquidButton";
@@ -35,14 +35,15 @@ const WorkCard: React.FC<{ work: WorkCardData; index: number }> = ({ work, index
       data-cursor="view"
       aria-label={`Open ${work.title} project details`}
     >
-      {/* Image Container */}
+      {/* Media Container */}
       <div className="absolute inset-0 w-full h-full overflow-hidden bg-muted">
-        <Image
+        <MediaRenderer
           src={work.imageUrl}
           alt={work.title}
           fill
           priority={index < 2}
           className="object-cover transition-transform duration-1000 ease-out scale-100 group-hover:scale-[1.03]"
+          videoClassName="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 ease-out scale-100 group-hover:scale-[1.03]"
           sizes="(max-width: 768px) 100vw, 40vw"
           quality={85}
         />

@@ -2,6 +2,7 @@
 
 import { Star } from 'lucide-react';
 import Image from 'next/image';
+import MediaRenderer from '@/components/ui/MediaRenderer';
 import { useRef, useEffect } from 'react';
 import { useInView } from 'framer-motion';
 import type { WhyChooseUsSection } from '@/types/content';
@@ -132,12 +133,13 @@ export default function WhyChooseUs({ data }: { data: WhyChooseUsSection }) {
             className="relative group min-h-[400px] sm:min-h-[450px] lg:min-h-[480px] bg-[#1a1a1a] overflow-hidden flex flex-col justify-between p-6 sm:p-8 rounded-2xl opacity-0"
           >
             {/* Background Image */}
-            <Image
+            <MediaRenderer
               src={data.studio_image_url}
               alt="Studio Portrait"
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
               className="absolute inset-0 w-full h-full object-cover grayscale contrast-125 opacity-80"
+              videoClassName="absolute inset-0 w-full h-full object-cover grayscale contrast-125 opacity-80"
               quality={80}
             />
             {/* Dark Gradient Overlay for text legibility */}

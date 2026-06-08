@@ -3,19 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const GREETINGS = [
-  "Hello",
-  "Bonjour",
-  "Ciao",
-  "Olà",
-  "こんにちは",
-  "你好",
-  "السلام علیکم"
-];
-
 export default function Preloader() {
   const [isComplete, setIsComplete] = useState(false);
-  const [index, setIndex] = useState(0);
   const [status, setStatus] = useState<"active" | "exiting">("active");
 
   useEffect(() => {
@@ -29,39 +18,19 @@ export default function Preloader() {
     // Lock page scroll
     document.body.style.overflow = "hidden";
 
-    // Cycle through greetings at a comfortable, readable speed (240ms)
-    const interval = setInterval(() => {
-      setIndex((prevIndex) => {
-        if (prevIndex < GREETINGS.length - 1) {
-          return prevIndex + 1;
-        } else {
-          // Reached last greeting, stop cycling
-          clearInterval(interval);
-          return prevIndex;
-        }
-      });
-    }, 380);
+    // Set timeout to trigger exit transition
+    const timer = setTimeout(() => {
+      setStatus("exiting");
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("preloader-complete"));
+      }
+    }, 1800); // Elegant speed: 1.8s total preloader duration
 
     return () => {
-      clearInterval(interval);
+      clearTimeout(timer);
       document.body.style.overflow = "unset";
     };
   }, []);
-
-  // When we reach the final word, pause and trigger exit
-  useEffect(() => {
-    if (index === GREETINGS.length - 1) {
-      const timer = setTimeout(() => {
-        setStatus("exiting");
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(new Event("preloader-complete"));
-        }
-      }, 400); // Keep visible for 400ms
-
-
-      return () => clearTimeout(timer);
-    }
-  }, [index]);
 
   if (isComplete) return null;
 
@@ -87,6 +56,8 @@ export default function Preloader() {
     }
   };
 
+  const name = "TALHA IRFAN";
+
   return (
     <div id="preloader-root" className="fixed inset-0 w-full h-full z-[99999] overflow-hidden select-none pointer-events-none touch-none flex items-center justify-center">
       {/* Background SVG Curtain */}
@@ -109,23 +80,56 @@ export default function Preloader() {
         />
       </svg>
 
-      {/* Center Text (Slower, elegant fade cross-transition) */}
-      <div className="z-20 pointer-events-auto flex items-center justify-center">
-        <AnimatePresence mode="wait">
+      {/* Center Text (Elegant masked slide-up letter transition) */}
+      <div className="z-20 pointer-events-auto flex items-center justify-center px-4 overflow-hidden">
+        <AnimatePresence>
           {status === "active" && (
             <motion.h1
-              key={index}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{
-                duration: 0.18,
-                ease: "easeInOut"
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              variants={{
+                visible: {
+                  transition: {
+                    staggerChildren: 0.035,
+                  }
+                },
+                exit: {
+                  opacity: 0,
+                  y: -30,
+                  transition: {
+                    duration: 0.5,
+                    ease: [0.76, 0, 0.24, 1]
+                  }
+                }
               }}
-              className="text-2xl md:text-4xl font-medium tracking-tight font-sans text-white leading-none text-center flex items-center gap-2.5"
+              className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[0.25em] font-sans text-white leading-none text-center flex items-center justify-center gap-0.5 select-none"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-white/40 shrink-0" />
-              {GREETINGS[index]}
+              {name.split("").map((char, index) => {
+                if (char === " ") {
+                  return <span key={index} className="inline-block w-2 sm:w-4" />;
+                }
+                return (
+                  <span key={index} className="inline-block overflow-hidden py-2 -my-2">
+                    <motion.span
+                      className="inline-block origin-bottom"
+                      variants={{
+                        hidden: { y: "105%", opacity: 0 },
+                        visible: {
+                          y: 0,
+                          opacity: 1,
+                          transition: {
+                            duration: 0.7,
+                            ease: [0.215, 0.61, 0.355, 1], // premium bezier
+                          }
+                        }
+                      }}
+                    >
+                      {char}
+                    </motion.span>
+                  </span>
+                );
+              })}
             </motion.h1>
           )}
         </AnimatePresence>
