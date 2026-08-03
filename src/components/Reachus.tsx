@@ -1,31 +1,19 @@
 "use client";
 
-import React, { useRef } from 'react';
-import { ArrowRight } from 'lucide-react';
-import { motion, useInView, useScroll, useTransform, useReducedMotion } from 'framer-motion';
-import BlockRevealText from "./BlockRevealText";
+import React, { useRef, useState } from 'react';
+import { X, ArrowRight } from 'lucide-react';
+import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import type { ReachSocial, ReachusSection } from "@/types/content";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { BASE_REVEAL, PREMIUM_EASE, REVEAL_VIEWPORT, staggerContainer } from "@/lib/motion";
-
-// Animation variants
-const containerVariants = staggerContainer(0.14, 0.09);
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { ...BASE_REVEAL, ease: PREMIUM_EASE }
-  }
-};
 
 export default function Reachus({ data }: { data?: ReachusSection | null }) {
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
-  const allowHover = !prefersReducedMotion && !isMobile;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Extract data with fallbacks
   const label = data?.label?.trim() || '[ REACH US ]';
-  const heading = data?.heading ?? 'Have a bold idea? Let\'s shape it.';
+  const marqueeText = data?.heading?.trim() || '"Cheaper" We Are Faster, Better And Cheaper';
   const email = data?.email ?? 'hello@talha.com';
   const officeTitle = data?.office_title?.trim() || 'OFFICE';
   const officeLine1 = data?.office_line_1?.trim() || 'Available Worldwide';
@@ -33,6 +21,8 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
   const officeLine3 = data?.office_line_3?.trim() || 'Based in PK';
   const inquiryTitle = data?.inquiry_title?.trim() || 'INQUIRIES';
   const inquiryText = data?.inquiry_text?.trim() || 'For new projects and partnership questions:';
+  const backgroundMedia = data?.background_image_url || '/assets/contact-bg.png';
+  const portraitMedia = data?.portrait_image_url || '/assets/contact-portrait.png';
   const socials: ReachSocial[] = data?.socials?.length ? data.socials : [
     { name: 'INSTAGRAM', href: '#' },
     { name: 'X / TWITTER', href: '#' },
@@ -40,138 +30,256 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
   ];
 
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, REVEAL_VIEWPORT);
+
+  // Multi-Layer Scroll Parallax targeting BOTH images
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"]
   });
 
-  const backgroundY = useTransform(
+  // Image 1: Villa Background Image Translation
+  const bgY = useTransform(
     scrollYProgress,
     [0, 1],
-    prefersReducedMotion ? ["0%", "0%"] : isMobile ? ["0%", "-10%"] : ["0%", "-20%"]
+    prefersReducedMotion ? ["0%", "0%"] : ["-16%", "16%"]
   );
-  const backgroundScale = useTransform(
+
+  // Image 1: Villa Background Image Zoom Parallax
+  const bgScale = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    prefersReducedMotion ? [1, 1, 1] : isMobile ? [0.9, 1, 1.1] : [0.8, 1, 1.2]
+    prefersReducedMotion ? [1, 1, 1] : [1.02, 1.08, 1.15]
   );
 
+  // Marquee Box & Crosshairs Parallax
+  const containerY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    prefersReducedMotion ? [0, 0] : [15, -15]
+  );
+
+  // Image 2: Foreground Portrait Card Frame Translation
+  const cardY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    prefersReducedMotion ? [0, 0] : [-40, 40]
+  );
+
+  // Image 2: Parallax Movement INSIDE the Portrait Card image frame
+  const portraitImageY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    prefersReducedMotion ? ["0%", "0%"] : ["-12%", "12%"]
+  );
+
+  // Image 2: Subtle scale shift inside the Portrait Card
+  const portraitImageScale = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    prefersReducedMotion ? [1, 1, 1] : [1.1, 1.15, 1.2]
+  );
+
+  const handleContactClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsModalOpen(true);
+  };
+
   return (
-    <section id="contact" className="py-24 md:py-48 relative overflow-hidden section-shell" ref={sectionRef}>
-      <div className="container mx-auto px-6 md:px-8 max-w-7xl relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
-          
-          {/* Left Column: Editorial Heading */}
-          <motion.div 
-            className="lg:col-span-7 flex flex-col gap-6 text-center lg:text-left"
-            initial={{ opacity: 0, x: -40 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={BASE_REVEAL}
+    <div className="px-3 py-4 md:px-6 md:py-6 w-full">
+      <section
+        id="contact"
+        className="min-h-[140vh] md:min-h-[150vh] relative overflow-hidden section-dark select-none rounded-md md:rounded-lg border border-white/15 shadow-2xl"
+        ref={sectionRef}
+      >
+        {/* Image 1: Villa Background Image with Parallax & Subtle Zoom */}
+        <motion.div
+          className="absolute inset-0 bg-cover bg-center z-0 pointer-events-none"
+          style={{
+            backgroundImage: `url('${backgroundMedia}')`,
+            y: bgY,
+            scale: bgScale
+          }}
+        />
+
+        {/* Dark Ambient Vignette Overlay */}
+        <div className="absolute inset-0 bg-black/20 bg-gradient-to-b from-black/20 via-black/10 to-black/30 z-0 pointer-events-none" />
+
+        {/* Absolute Dead Center Zone for Marquee Box & Crosshairs */}
+        <motion.div
+          className="absolute z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[64vw] md:w-[52vw] max-w-[720px] h-[140px] md:h-[175px] flex items-center justify-center pointer-events-none"
+          style={{ y: containerY }}
+        >
+
+          {/* 4 Corner Plus (+) Crosshairs */}
+          <span className="absolute top-0 left-0 text-white text-2xl md:text-3xl font-light leading-none select-none -translate-x-1/2 -translate-y-1/2 z-30">+</span>
+          <span className="absolute bottom-0 left-0 text-white text-2xl md:text-3xl font-light leading-none select-none -translate-x-1/2 translate-y-1/2 z-30">+</span>
+          <span className="absolute top-0 right-0 text-white text-2xl md:text-3xl font-light leading-none select-none translate-x-1/2 -translate-y-1/2 z-30">+</span>
+          <span className="absolute bottom-0 right-0 text-white text-2xl md:text-3xl font-light leading-none select-none translate-x-1/2 translate-y-1/2 z-30">+</span>
+
+          {/* Sliding Marquee */}
+          <div
+            className="w-full overflow-hidden flex items-center whitespace-nowrap relative z-10 pointer-events-none select-none h-full"
+            style={{
+              maskImage: 'linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)'
+            }}
           >
-            <motion.span 
-              className="text-xs font-bold uppercase tracking-[0.2em] mb-12 block text-muted-foreground"
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.2 }}
+            <motion.div
+              className="flex gap-16 whitespace-nowrap items-center"
+              animate={prefersReducedMotion ? {} : { x: ["0%", "-50%"] }}
+              transition={{
+                ease: "linear",
+                duration: isMobile ? 26 : 42,
+                repeat: Infinity
+              }}
             >
-              {label}
-            </motion.span>
-            <h2 className="text-5xl md:text-8xl lg:text-[110px] leading-[0.8] md:leading-[0.76] lg:leading-[0.72] tracking-tighter font-medium mb-12">
-              <BlockRevealText
-                text={heading}
-                blockColor="bg-foreground"
-                scrub={false}
+              <div className="flex gap-16 whitespace-nowrap text-6xl md:text-8xl lg:text-[112px] font-medium tracking-tight text-white leading-none">
+                <span>{marqueeText}</span>
+                <span>{marqueeText}</span>
+                <span>{marqueeText}</span>
+              </div>
+              <div className="flex gap-16 whitespace-nowrap text-6xl md:text-8xl lg:text-[108px] font-medium tracking-tight text-white leading-none">
+                <span>{marqueeText}</span>
+                <span>{marqueeText}</span>
+                <span>{marqueeText}</span>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Image 2: Centered Floating Portrait Card with Parallax Frame AND Internal Image Parallax */}
+          <motion.div
+            className="absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto"
+            style={{ y: cardY }}
+          >
+            <div
+              className="relative w-[190px] h-[260px] md:w-[230px] md:h-[320px] rounded-md md:rounded-lg overflow-hidden cursor-pointer"
+              onClick={() => setIsModalOpen(true)}
+            >
+              {/* Internal Image Parallax inside the card frame */}
+              <motion.img
+                src={portraitMedia}
+                alt="Contact Portrait"
+                className="w-full h-full object-cover select-none pointer-events-none"
+                style={{
+                  y: portraitImageY,
+                  scale: portraitImageScale
+                }}
               />
-            </h2>
-            
-            <motion.a 
-              href={`mailto:${email}`}
-              className="inline-flex items-center gap-4 text-2xl md:text-3xl font-medium tracking-tight hover:text-foreground/60 transition-all border-b border-foreground/20 pb-4 group"
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ ...BASE_REVEAL, delay: 0.25 }}
-              whileHover={allowHover ? { x: 10 } : undefined}
-              whileTap={{ scale: 0.97 }}
-            >
-              {email} 
-              <motion.span
-                animate={prefersReducedMotion ? undefined : { x: [0, 5, 0] }}
-                transition={prefersReducedMotion ? undefined : { duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <ArrowRight size={28} strokeWidth={1} />
-              </motion.span>
-            </motion.a>
-          </motion.div>
-
-          {/* Right Column: Details & Socials */}
-          <motion.div 
-            className="lg:col-span-5 lg:pt-32"
-            variants={containerVariants}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-              {/* HQ */}
-              <motion.div variants={itemVariants}>
-                <span className="text-xs font-bold uppercase tracking-[0.2em] mb-6 block text-muted-foreground/60">
-                  {officeTitle}
-                </span>
-                <p className="text-muted-foreground text-[15px] leading-relaxed">
-                  {officeLine1} <br />
-                  {officeLine2} <br />
-                  {officeLine3}
-                </p>
-              </motion.div>
-
-              {/* Inquiry */}
-              <motion.div variants={itemVariants}>
-                <span className="text-xs font-bold uppercase tracking-[0.2em] mb-6 block text-muted-foreground/60">
-                  {inquiryTitle}
-                </span>
-                <p className="text-muted-foreground text-[15px] leading-relaxed mb-8">
-                  {inquiryText}
-                </p>
-                <div className="flex flex-col gap-4">
-                  {socials.map((social, idx) => (
-                    <motion.a 
-                      key={social.name}
-                      href={social.href}
-                      className="group flex items-center justify-between border-b border-border pb-2 text-[11px] font-bold tracking-widest text-muted-foreground/70 hover:text-foreground transition-colors"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={isInView ? { opacity: 1, x: 0 } : {}}
-                      transition={{ ...BASE_REVEAL, delay: 0.3 + idx * 0.08 }}
-                      whileHover={allowHover ? { x: 5 } : undefined}
-                      whileTap={{ scale: 0.97 }}
-                    >
-                      {social.name}
-                      <span 
-                        className="opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
-                      >
-                        <ArrowRight size={14} strokeWidth={1.5} />
-                      </span>
-                    </motion.a>
-                  ))}
-                </div>
-              </motion.div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
             </div>
           </motion.div>
-        </div>
-      </div>
 
-      {/* Animated Background Decorative Elements */}
-      <motion.div 
-        className="absolute top-0 right-0 w-[600px] h-[600px] bg-foreground/[0.02] rounded-full blur-[120px] -mr-64 -mt-64 pointer-events-none"
-        style={{ y: backgroundY, scale: backgroundScale }}
-      />
-      <motion.div 
-        className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-foreground/[0.015] rounded-full blur-[100px] -ml-32 -mb-32 pointer-events-none"
-        animate={prefersReducedMotion ? undefined : { 
-          scale: [1, 1.1, 1],
-          opacity: [0.5, 0.8, 0.5]
-        }}
-        transition={prefersReducedMotion ? undefined : { duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
-    </section>
+        </motion.div>
+
+        {/* Bottom Action Trigger: Positioned at section base */}
+        <div className="absolute z-30 bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center">
+          <button
+            onClick={handleContactClick}
+            className="group flex flex-col items-center cursor-pointer text-white/90 hover:text-white transition-colors"
+          >
+            <div className="flex items-start gap-1 text-xs md:text-sm font-normal tracking-wide text-white select-none">
+              <span>Contact Now</span>
+              <span className="text-[9px] relative top-0.5 leading-none">⌝</span>
+            </div>
+            <div className="w-[160px] md:w-[210px] h-[1px] bg-white/60 mt-1.5 relative overflow-hidden">
+              <div className="absolute inset-0 bg-white translate-x-[-100%] group-hover:translate-x-[0%] transition-transform duration-500 ease-out" />
+            </div>
+          </button>
+        </div>
+
+        {/* Contact Details Glassmorphic Overlay Modal */}
+        <AnimatePresence>
+          {isModalOpen && (
+            <motion.div
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xl p-4 md:p-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <motion.div
+                className="bg-neutral-950/90 border border-white/10 rounded-2xl max-w-4xl w-full overflow-hidden relative shadow-2xl"
+                initial={{ scale: 0.95, y: 20 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.95, y: 20 }}
+                transition={{ type: "spring", damping: 25, stiffness: 240 }}
+              >
+                {/* Close Button */}
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="absolute top-6 right-6 text-white/60 hover:text-white bg-white/5 hover:bg-white/10 p-3 rounded-full transition-all duration-200 z-50 cursor-pointer"
+                >
+                  <X size={20} />
+                </button>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 p-8 md:p-14">
+
+                  {/* Left Column */}
+                  <div className="flex flex-col justify-between gap-8">
+                    <div className="flex flex-col gap-4">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/40">
+                        {inquiryTitle}
+                      </span>
+                      <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-white font-display">
+                        Let's shape your idea.
+                      </h3>
+                      <p className="text-white/60 text-sm leading-relaxed max-w-sm">
+                        {inquiryText}
+                      </p>
+                    </div>
+
+                    <a
+                      href={`mailto:${email}`}
+                      className="inline-flex items-center gap-3 text-xl md:text-2xl font-medium tracking-tight text-white hover:text-white/70 transition-colors border-b border-white/20 pb-2 w-fit group"
+                    >
+                      {email}
+                      <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    </a>
+                  </div>
+
+                  {/* Right Column */}
+                  <div className="flex flex-col gap-8 justify-between md:border-l md:border-white/10 md:pl-10">
+
+                    {/* Office Info */}
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/40 mb-3 block">
+                        {officeTitle}
+                      </span>
+                      <p className="text-white/80 text-sm leading-relaxed">
+                        {officeLine1} <br />
+                        {officeLine2} <br />
+                        {officeLine3}
+                      </p>
+                    </div>
+
+                    {/* Socials */}
+                    <div className="flex flex-col gap-3">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/40 mb-1 block">
+                        FIND US
+                      </span>
+                      <div className="flex flex-col gap-2">
+                        {socials.map((social) => (
+                          <a
+                            key={social.name}
+                            href={social.href}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex items-center justify-between border-b border-white/10 pb-2 text-xs font-bold tracking-widest text-white/60 hover:text-white transition-colors group"
+                          >
+                            <span>{social.name}</span>
+                            <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </section>
+    </div>
   );
 }

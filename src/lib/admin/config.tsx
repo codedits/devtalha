@@ -222,6 +222,8 @@ export const SECTION_CONFIGS: SectionConfig[] = [
       { key: "office_line_3", label: "Office Line 3", type: "text", placeholder: "Based in PK" },
       { key: "inquiry_title", label: "Inquiry Block Title", type: "text", placeholder: "INQUIRIES" },
       { key: "inquiry_text", label: "Inquiry Text", type: "textarea", placeholder: "For new projects and partnership questions:" },
+      { key: "background_image_url", label: "Background Media", type: "media", description: "Background image for the contact section (sunset villa)." },
+      { key: "portrait_image_url", label: "Portrait Media", type: "media", description: "Portrait image in the center (woman)." },
       {
         key: "socials",
         label: "Social Links",

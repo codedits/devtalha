@@ -181,6 +181,7 @@ export type Database = {
       }
       reachus: {
         Row: {
+          background_image_url: string
           email: string
           heading: string
           id: string
@@ -191,10 +192,12 @@ export type Database = {
           office_line_2: string
           office_line_3: string
           office_title: string
+          portrait_image_url: string
           socials: Json
           updated_at: string | null
         }
         Insert: {
+          background_image_url?: string
           email?: string
           heading?: string
           id?: string
@@ -205,10 +208,12 @@ export type Database = {
           office_line_2?: string
           office_line_3?: string
           office_title?: string
+          portrait_image_url?: string
           socials?: Json
           updated_at?: string | null
         }
         Update: {
+          background_image_url?: string
           email?: string
           heading?: string
           id?: string
@@ -219,6 +224,7 @@ export type Database = {
           office_line_2?: string
           office_line_3?: string
           office_title?: string
+          portrait_image_url?: string
           socials?: Json
           updated_at?: string | null
         }

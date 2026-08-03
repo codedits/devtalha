@@ -33,6 +33,8 @@ export const EDITABLE_FIELDS: Record<AdminSection, readonly string[]> = {
     "inquiry_title",
     "inquiry_text",
     "socials",
+    "background_image_url",
+    "portrait_image_url",
   ],
   footer: [
     "background_mode",
