@@ -2,7 +2,7 @@
 
 import React, { useRef, useState } from 'react';
 import { X, ArrowRight } from 'lucide-react';
-import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion, useSpring } from 'framer-motion';
 import type { ReachSocial, ReachusSection } from "@/types/content";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
@@ -37,44 +37,50 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
     offset: ["start end", "end start"]
   });
 
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
   // Image 1: Villa Background Image Translation
   const bgY = useTransform(
-    scrollYProgress,
+    smoothProgress,
     [0, 1],
-    prefersReducedMotion ? ["0%", "0%"] : ["-16%", "16%"]
+    prefersReducedMotion ? ["0%", "0%"] : (isMobile ? ["-8%", "8%"] : ["-16%", "16%"])
   );
 
   // Image 1: Villa Background Image Zoom Parallax
   const bgScale = useTransform(
-    scrollYProgress,
+    smoothProgress,
     [0, 0.5, 1],
     prefersReducedMotion ? [1, 1, 1] : [1.02, 1.08, 1.15]
   );
 
   // Marquee Box & Crosshairs Parallax
   const containerY = useTransform(
-    scrollYProgress,
+    smoothProgress,
     [0, 1],
-    prefersReducedMotion ? [0, 0] : [15, -15]
+    prefersReducedMotion ? [0, 0] : (isMobile ? [5, -5] : [15, -15])
   );
 
   // Image 2: Foreground Portrait Card Frame Translation
   const cardY = useTransform(
-    scrollYProgress,
+    smoothProgress,
     [0, 1],
-    prefersReducedMotion ? [0, 0] : [-40, 40]
+    prefersReducedMotion ? [0, 0] : (isMobile ? [-15, 15] : [-40, 40])
   );
 
   // Image 2: Parallax Movement INSIDE the Portrait Card image frame
   const portraitImageY = useTransform(
-    scrollYProgress,
+    smoothProgress,
     [0, 1],
-    prefersReducedMotion ? ["0%", "0%"] : ["-12%", "12%"]
+    prefersReducedMotion ? ["0%", "0%"] : (isMobile ? ["-6%", "6%"] : ["-12%", "12%"])
   );
 
   // Image 2: Subtle scale shift inside the Portrait Card
   const portraitImageScale = useTransform(
-    scrollYProgress,
+    smoothProgress,
     [0, 0.5, 1],
     prefersReducedMotion ? [1, 1, 1] : [1.1, 1.15, 1.2]
   );
@@ -85,10 +91,10 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
   };
 
   return (
-    <div className="px-3 py-4 md:px-6 md:py-6 w-full">
+    <div className="px-0 py-0 md:px-6 md:py-6 w-full">
       <section
         id="contact"
-        className="min-h-[140vh] md:min-h-[150vh] relative overflow-hidden section-dark select-none rounded-md md:rounded-lg border border-white/15 shadow-2xl"
+        className="min-h-[140vh] md:min-h-[150vh] relative overflow-hidden section-dark select-none rounded-none md:rounded-lg border-0 border-transparent md:border md:border-white/15 shadow-none md:shadow-2xl"
         ref={sectionRef}
       >
         {/* Image 1: Villa Background Image with Parallax & Subtle Zoom */}
@@ -106,7 +112,7 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
 
         {/* Absolute Dead Center Zone for Marquee Box & Crosshairs */}
         <motion.div
-          className="absolute z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[64vw] md:w-[52vw] max-w-[720px] h-[140px] md:h-[175px] flex items-center justify-center pointer-events-none"
+          className="absolute z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[78vw] md:w-[52vw] max-w-[720px] h-[140px] md:h-[175px] flex items-center justify-center pointer-events-none"
           style={{ y: containerY }}
         >
 
@@ -152,7 +158,7 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
             style={{ y: cardY }}
           >
             <div
-              className="relative w-[190px] h-[260px] md:w-[230px] md:h-[320px] rounded-md md:rounded-lg overflow-hidden cursor-pointer"
+              className="relative w-[145px] h-[200px] md:w-[230px] md:h-[320px] rounded-md md:rounded-lg overflow-hidden cursor-pointer"
               onClick={() => setIsModalOpen(true)}
             >
               {/* Internal Image Parallax inside the card frame */}

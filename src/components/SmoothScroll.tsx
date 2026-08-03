@@ -26,7 +26,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       if ((lenis as any)._tickerCallback) {
         gsap.ticker.remove((lenis as any)._tickerCallback);
       }
-      
+
       lenis.destroy();
       lenisRef.current = null;
     };
@@ -35,10 +35,10 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       if (lenisRef.current) return;
 
       const lenis = new Lenis({
-        lerp: 0.08,
+        lerp: 0.06,
         smoothWheel: true,
         syncTouch: false,
-        wheelMultiplier: 1,
+        wheelMultiplier: 0.8,
       });
 
       lenisRef.current = lenis;
@@ -52,7 +52,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       };
 
       gsap.ticker.add(tickerCallback);
-      
+
       // Store reference on lenis object for cleanup
       (lenis as any)._tickerCallback = tickerCallback;
 
