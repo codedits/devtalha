@@ -5,6 +5,9 @@ import { X, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion, useSpring } from 'framer-motion';
 import type { ReachSocial, ReachusSection } from "@/types/content";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import Image from 'next/image';
+
+const MotionImage = motion(Image);
 
 export default function Reachus({ data }: { data?: ReachusSection | null }) {
   const prefersReducedMotion = useReducedMotion();
@@ -98,14 +101,21 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
         ref={sectionRef}
       >
         {/* Image 1: Villa Background Image with Parallax & Subtle Zoom */}
-        <motion.div
-          className="absolute inset-0 bg-cover bg-center z-0 pointer-events-none"
-          style={{
-            backgroundImage: `url('${backgroundMedia}')`,
-            y: bgY,
-            scale: bgScale
-          }}
-        />
+        <div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
+          <MotionImage
+            src={backgroundMedia}
+            alt="Villa Background"
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+            quality={95}
+            style={{
+              y: bgY,
+              scale: bgScale
+            }}
+          />
+        </div>
 
         {/* Dark Ambient Vignette Overlay */}
         <div className="absolute inset-0 bg-black/20 bg-gradient-to-b from-black/20 via-black/10 to-black/30 z-0 pointer-events-none" />
@@ -162,15 +172,20 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
               onClick={() => setIsModalOpen(true)}
             >
               {/* Internal Image Parallax inside the card frame */}
-              <motion.img
-                src={portraitMedia}
-                alt="Contact Portrait"
-                className="w-full h-full object-cover select-none pointer-events-none"
-                style={{
-                  y: portraitImageY,
-                  scale: portraitImageScale
-                }}
-              />
+              <div className="w-full h-full relative overflow-hidden select-none pointer-events-none">
+                <MotionImage
+                  src={portraitMedia}
+                  alt="Contact Portrait"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 145px, 230px"
+                  quality={95}
+                  style={{
+                    y: portraitImageY,
+                    scale: portraitImageScale
+                  }}
+                />
+              </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
             </div>
           </motion.div>
