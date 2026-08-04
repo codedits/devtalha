@@ -108,8 +108,8 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
             fill
             className="object-cover"
             priority
-            sizes="100vw"
-            quality={95}
+            sizes="(max-width: 768px) 1920px, 100vw"
+            quality={100}
             style={{
               y: bgY,
               scale: bgScale
