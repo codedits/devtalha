@@ -1,7 +1,20 @@
 import type { Metadata } from "next";
+import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { getSettings } from "@/lib/queries";
 import { ThemeProvider } from "@/components/ui/ThemeProvider";
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-plus-jakarta",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Talha Irfan — Web Developer",
@@ -17,15 +30,17 @@ export default async function RootLayout({
   const defaultTheme = settings?.default_theme || "light";
 
   return (
-    <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
+    <html 
+      lang="en" 
+      suppressHydrationWarning 
+      data-scroll-behavior="smooth"
+      className={`${plusJakartaSans.variable} ${spaceGrotesk.variable}`}
+    >
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet" />
-        <link rel="preconnect" href="https://images.unsplash.com" />
-        <link rel="preconnect" href="https://framerusercontent.com" />
+        {/* Preconnect to essential origins only (Max 2 origins to prevent warnings) */}
         <link rel="preconnect" href="https://fregldukggdkbemysbho.supabase.co" />
+        <link rel="preconnect" href="https://images.unsplash.com" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -48,7 +63,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className="relative antialiased bg-background text-foreground overflow-x-hidden"
+        className="relative antialiased bg-background text-foreground overflow-x-hidden font-sans"
       >
         <ThemeProvider defaultTheme={defaultTheme}>
           <div className="relative min-h-screen w-full">
@@ -59,4 +74,3 @@ export default async function RootLayout({
     </html>
   );
 }
-

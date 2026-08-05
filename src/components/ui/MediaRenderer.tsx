@@ -95,7 +95,7 @@ const MediaRenderer = forwardRef<HTMLVideoElement, MediaRendererProps>(
           muted={muted}
           loop={loop}
           controls={controls}
-          preload={priority ? "auto" : "metadata"}
+          preload={priority ? "auto" : shouldLoadVideo ? "metadata" : "none"}
           playsInline
           onLoadedData={() => onLoad?.()}
           className={videoClassName ?? className ?? (fill ? "absolute inset-0 h-full w-full object-cover" : "")}
