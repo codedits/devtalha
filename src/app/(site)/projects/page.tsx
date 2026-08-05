@@ -22,7 +22,7 @@ function ProjectGridCard({ work }: ProjectCardProps) {
       aria-label={`Open ${work.title} project details`}
     >
       {/* Premium Image Container */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-card rounded-2xl border border-foreground/10 shadow-sm mb-6">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-card rounded-lg border border-foreground/10 shadow-sm mb-6">
         <Image
           src={work.imageUrl}
           alt={work.title}
