@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -11,7 +12,16 @@ if (typeof window !== "undefined") {
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
+  const pathname = usePathname();
 
+  // 1. Prevent default browser scroll restoration on route navigation
+  useEffect(() => {
+    if (typeof window !== "undefined" && "scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
+
+  // 2. Initialize and manage Lenis instance
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -81,6 +91,26 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       destroyLenis();
     };
   }, []);
+
+  // 3. Reset scroll position to top (0, 0) immediately whenever pathname changes
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    // Reset native window scroll
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+
+    // Reset Lenis smooth scroll
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, { immediate: true });
+    }
+
+    // Refresh GSAP ScrollTrigger bounds for the new page layout
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [pathname]);
 
   return <>{children}</>;
 }

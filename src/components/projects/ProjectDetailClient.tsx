@@ -241,7 +241,7 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
                 alt={`${project.title} showcase slide ${idx + 1}`}
                 fill
                 priority={idx === 0}
-                quality={92}
+                quality={90}
                 sizes="100vw"
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.01]"
                 videoClassName="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.01]"
@@ -472,7 +472,7 @@ export default function ProjectDetailClient({ project, nextProject }: ProjectDet
                   src={imageSet[activeImageIndex]}
                   alt="Gallery exhibit detail"
                   fill
-                  quality={92}
+                  quality={90}
                   sizes="90vw"
                   priority
                   className="object-contain select-none"

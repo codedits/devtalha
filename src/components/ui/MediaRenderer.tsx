@@ -22,6 +22,16 @@ type MediaRendererProps = {
   autoPlay?: boolean;
 };
 
+const ALLOWED_QUALITIES = [70, 80, 85, 90] as const;
+
+function getValidQuality(q?: number): number {
+  if (!q) return 80;
+  if (q >= 90) return 90;
+  if (q >= 85) return 85;
+  if (q >= 80) return 80;
+  return 70;
+}
+
 /**
  * Universal media renderer. Detects whether `src` is a video URL
  * (by file extension) and renders either a Next.js `<Image>` or a
@@ -110,7 +120,7 @@ const MediaRenderer = forwardRef<HTMLVideoElement, MediaRendererProps>(
         alt={alt}
         fill={fill}
         sizes={sizes}
-        quality={quality ?? 80}
+        quality={getValidQuality(quality)}
         priority={priority}
         fetchPriority={fetchPriority}
         className={className ?? "object-cover"}

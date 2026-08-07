@@ -109,7 +109,7 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
             className="object-cover"
             priority
             sizes="(max-width: 768px) 1920px, 100vw"
-            quality={100}
+            quality={90}
             style={{
               y: bgY,
               scale: bgScale
@@ -179,7 +179,7 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 145px, 230px"
-                  quality={95}
+                  quality={90}
                   style={{
                     y: portraitImageY,
                     scale: portraitImageScale
