@@ -40,16 +40,10 @@ const itemVariants = {
 
 export default function About({ data }: { data?: AboutSection | null }) {
   const { allowHover, allowParallax } = useMotionPreferences();
-  const defaultStats = [
-    { value: 15, suffix: "+", label: "Projects Delivered" },
-    { value: 8, suffix: "+", label: "Core Technologies" },
-    { value: 2, suffix: "x", label: "Faster with AI" },
-    { value: 100, suffix: "%", label: "Code Quality Focus" },
-  ];
-  const stats: AboutStat[] = data?.stats?.length ? data.stats : defaultStats;
-  const label = data?.label?.trim() || '[ WHO I AM ]';
-  const heading = data?.heading ?? 'A student and developer building premium digital products at unprecedented speed';
-  const description = data?.description;
+  const stats: AboutStat[] = data?.stats ?? [];
+  const label = data?.label?.trim() ?? '';
+  const heading = data?.heading?.trim() ?? '';
+  const description = data?.description?.trim() ?? '';
 
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -70,33 +64,37 @@ export default function About({ data }: { data?: AboutSection | null }) {
       <div className="container mx-auto px-6 md:px-8 max-w-7xl relative z-10">
 
         {/* Section label with line animation */}
-        <motion.div
-          initial={{ opacity: 0, width: 0 }}
-          whileInView={{ opacity: 1, width: "100%" }}
-          viewport={REVEAL_VIEWPORT}
-          transition={{ duration: 0.9, ease: PREMIUM_EASE }}
-          className="mb-16"
-        >
-          <motion.span
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+        {label ? (
+          <motion.div
+            initial={{ opacity: 0, width: 0 }}
+            whileInView={{ opacity: 1, width: "100%" }}
             viewport={REVEAL_VIEWPORT}
-            transition={{ ...BASE_REVEAL, delay: 0.2 }}
-            className="text-xs font-bold tracking-[0.2em] uppercase text-muted-foreground block"
+            transition={{ duration: 0.9, ease: PREMIUM_EASE }}
+            className="mb-16"
           >
-            {label}
-          </motion.span>
-        </motion.div>
+            <motion.span
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={REVEAL_VIEWPORT}
+              transition={{ ...BASE_REVEAL, delay: 0.2 }}
+              className="text-xs font-bold tracking-[0.2em] uppercase text-muted-foreground block"
+            >
+              {label}
+            </motion.span>
+          </motion.div>
+        ) : null}
 
         {/* Main text */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 mb-32">
-          <h2 className="text-3xl md:text-[2.75rem] font-medium leading-[0.95] md:leading-[0.9] tracking-tight text-center md:text-left">
-            <BlockRevealText
-              text={heading}
-              blockColor="bg-foreground"
-              scrub={false}
-            />
-          </h2>
+          {heading ? (
+            <h2 className="text-3xl md:text-[2.75rem] font-medium leading-[0.95] md:leading-[0.9] tracking-tight text-center md:text-left">
+              <BlockRevealText
+                text={heading}
+                blockColor="bg-foreground"
+                scrub={false}
+              />
+            </h2>
+          ) : <div />}
 
           <motion.div
             variants={containerVariants}
@@ -109,53 +107,43 @@ export default function About({ data }: { data?: AboutSection | null }) {
               <motion.p variants={itemVariants} className="text-muted-foreground text-lg leading-relaxed">
                 {description}
               </motion.p>
-            ) : (
-              <>
-                <motion.p variants={itemVariants} className="text-muted-foreground text-lg leading-relaxed mb-6">
-                  By deeply integrating AI into every phase of development — from architecture 
-                  to deployment — I deliver complete, production-grade applications in a fraction 
-                  of the traditional timeline.
-                </motion.p>
-                <motion.p variants={itemVariants} className="text-muted-foreground text-lg leading-relaxed">
-                  My focus is on clean code, stunning interfaces, and performance that scales. 
-                  Every project is built with modern frameworks and obsessive attention to detail.
-                </motion.p>
-              </>
-            )}
+            ) : null}
           </motion.div>
         </div>
 
         {/* Stats — Animated bento grid */}
-        <motion.div 
-          className="grid grid-cols-2 md:grid-cols-4 gap-[1px] bg-border"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={REVEAL_VIEWPORT}
-        >
-          {stats.map((stat, idx) => (
-            <motion.div
-              key={idx}
-              variants={itemVariants}
-              className={`bg-background p-8 md:p-12 flex flex-col group cursor-default ${
-                allowHover ? "hover:bg-card transition-colors duration-300" : ""
-              }`}
-            >
-              <motion.span 
-                className="text-4xl md:text-5xl font-semibold tracking-tight mb-3"
-                whileHover={allowHover ? { scale: 1.05, x: 5 } : undefined}
-                transition={allowHover ? { type: "spring", stiffness: 260, damping: 22 } : undefined}
+        {stats.length > 0 ? (
+          <motion.div 
+            className="grid grid-cols-2 md:grid-cols-4 gap-[1px] bg-border"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={REVEAL_VIEWPORT}
+          >
+            {stats.map((stat, idx) => (
+              <motion.div
+                key={idx}
+                variants={itemVariants}
+                className={`bg-background p-8 md:p-12 flex flex-col group cursor-default ${
+                  allowHover ? "hover:bg-card transition-colors duration-300" : ""
+                }`}
               >
-                <AnimatedCounter target={stat.value} suffix={stat.suffix} />
-              </motion.span>
-              <motion.span 
-                className="text-muted-foreground text-sm group-hover:text-foreground transition-colors duration-300"
-              >
-                {stat.label}
-              </motion.span>
-            </motion.div>
-          ))}
-        </motion.div>
+                <motion.span 
+                  className="text-4xl md:text-5xl font-semibold tracking-tight mb-3"
+                  whileHover={allowHover ? { scale: 1.05, x: 5 } : undefined}
+                  transition={allowHover ? { type: "spring", stiffness: 260, damping: 22 } : undefined}
+                >
+                  <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                </motion.span>
+                <motion.span 
+                  className="text-muted-foreground text-sm group-hover:text-foreground transition-colors duration-300"
+                >
+                  {stat.label}
+                </motion.span>
+              </motion.div>
+            ))}
+          </motion.div>
+        ) : null}
       </div>
     </section>
   );

@@ -14,23 +14,19 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
   const isMobile = useIsMobile();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Extract data with fallbacks
-  const label = data?.label?.trim() || '[ REACH US ]';
-  const marqueeText = data?.heading?.trim() || '"Cheaper" We Are Faster, Better And Cheaper';
-  const email = data?.email ?? 'hello@talha.com';
-  const officeTitle = data?.office_title?.trim() || 'OFFICE';
-  const officeLine1 = data?.office_line_1?.trim() || 'Available Worldwide';
-  const officeLine2 = data?.office_line_2?.trim() || 'Working Remotely';
-  const officeLine3 = data?.office_line_3?.trim() || 'Based in PK';
-  const inquiryTitle = data?.inquiry_title?.trim() || 'INQUIRIES';
-  const inquiryText = data?.inquiry_text?.trim() || 'For new projects and partnership questions:';
-  const backgroundMedia = data?.background_image_url || '/assets/contact-bg.png';
-  const portraitMedia = data?.portrait_image_url || '/assets/contact-portrait.png';
-  const socials: ReachSocial[] = data?.socials?.length ? data.socials : [
-    { name: 'INSTAGRAM', href: '#' },
-    { name: 'X / TWITTER', href: '#' },
-    { name: 'LINKEDIN', href: '#' },
-  ];
+  // Extract data from props
+  const label = data?.label?.trim() ?? '';
+  const marqueeText = data?.heading?.trim() ?? '';
+  const email = data?.email?.trim() ?? '';
+  const officeTitle = data?.office_title?.trim() ?? '';
+  const officeLine1 = data?.office_line_1?.trim() ?? '';
+  const officeLine2 = data?.office_line_2?.trim() ?? '';
+  const officeLine3 = data?.office_line_3?.trim() ?? '';
+  const inquiryTitle = data?.inquiry_title?.trim() ?? '';
+  const inquiryText = data?.inquiry_text?.trim() ?? '';
+  const backgroundMedia = data?.background_image_url ?? '';
+  const portraitMedia = data?.portrait_image_url ?? '';
+  const socials: ReachSocial[] = data?.socials ?? [];
 
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -101,21 +97,23 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
         ref={sectionRef}
       >
         {/* Image 1: Villa Background Image with Parallax & Subtle Zoom */}
-        <div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
-          <MotionImage
-            src={backgroundMedia}
-            alt="Villa Background"
-            fill
-            className="object-cover"
-            priority
-            sizes="(max-width: 768px) 1920px, 100vw"
-            quality={90}
-            style={{
-              y: bgY,
-              scale: bgScale
-            }}
-          />
-        </div>
+        {backgroundMedia ? (
+          <div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
+            <MotionImage
+              src={backgroundMedia}
+              alt="Villa Background"
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 768px) 1920px, 100vw"
+              quality={90}
+              style={{
+                y: bgY,
+                scale: bgScale
+              }}
+            />
+          </div>
+        ) : null}
 
         {/* Dark Ambient Vignette Overlay */}
         <div className="absolute inset-0 bg-black/20 bg-gradient-to-b from-black/20 via-black/10 to-black/30 z-0 pointer-events-none" />
@@ -173,18 +171,20 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
             >
               {/* Internal Image Parallax inside the card frame */}
               <div className="w-full h-full relative overflow-hidden select-none pointer-events-none">
-                <MotionImage
-                  src={portraitMedia}
-                  alt="Contact Portrait"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 145px, 230px"
-                  quality={90}
-                  style={{
-                    y: portraitImageY,
-                    scale: portraitImageScale
-                  }}
-                />
+                {portraitMedia ? (
+                  <MotionImage
+                    src={portraitMedia}
+                    alt="Contact Portrait"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 145px, 230px"
+                    quality={90}
+                    style={{
+                      y: portraitImageY,
+                      scale: portraitImageScale
+                    }}
+                  />
+                ) : null}
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
             </div>
@@ -248,29 +248,38 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
                       </p>
                     </div>
 
-                    <a
-                      href={`mailto:${email}`}
-                      className="inline-flex items-center gap-3 text-xl md:text-2xl font-medium tracking-tight text-white hover:text-white/70 transition-colors border-b border-white/20 pb-2 w-fit group"
-                    >
-                      {email}
-                      <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                    </a>
+                    {email ? (
+                      <a
+                        href={`mailto:${email}`}
+                        className="inline-flex items-center gap-3 text-xl md:text-2xl font-medium tracking-tight text-white hover:text-white/70 transition-colors border-b border-white/20 pb-2 w-fit group"
+                      >
+                        {email}
+                        <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                      </a>
+                    ) : null}
                   </div>
 
                   {/* Right Column */}
                   <div className="flex flex-col gap-8 justify-between md:border-l md:border-white/10 md:pl-10">
 
                     {/* Office Info */}
-                    <div>
-                      <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/40 mb-3 block">
-                        {officeTitle}
-                      </span>
-                      <p className="text-white/80 text-sm leading-relaxed">
-                        {officeLine1} <br />
-                        {officeLine2} <br />
-                        {officeLine3}
-                      </p>
-                    </div>
+                    {(officeTitle || officeLine1 || officeLine2 || officeLine3) ? (
+                      <div>
+                        {officeTitle ? (
+                          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-white/40 mb-3 block">
+                            {officeTitle}
+                          </span>
+                        ) : null}
+                        <p className="text-white/80 text-sm leading-relaxed">
+                          {[officeLine1, officeLine2, officeLine3].filter(Boolean).map((line, idx, arr) => (
+                            <React.Fragment key={idx}>
+                              {line}
+                              {idx < arr.length - 1 && <br />}
+                            </React.Fragment>
+                          ))}
+                        </p>
+                      </div>
+                    ) : null}
 
                     {/* Socials */}
                     <div className="flex flex-col gap-3">

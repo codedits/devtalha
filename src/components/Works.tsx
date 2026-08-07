@@ -189,7 +189,7 @@ export default function Works({
   sectionId = "work",
   label = "[ SELECTED PROJECTS ]",
   heading = "Projects.",
-  showViewAll = false,
+  showViewAll = true,
 }: WorksProps) {
   const works: WorkCardData[] = data && data.length > 0
     ? data.map((w) => ({
@@ -284,18 +284,18 @@ export default function Works({
           ))}
         </div>
 
-        {/* Bottom CTA / View Full Archive */}
+        {/* Bottom CTA / Explore More Works */}
         {showViewAll && (
-          <div className="mt-16 md:mt-36 flex flex-col items-center text-center">
+          <div className="mt-16 md:mt-32 flex flex-col items-center text-center relative z-20">
             <span className="text-[10px] font-bold tracking-[0.25em] uppercase text-muted-foreground mb-4 block">
-              MORE EXPERIMENTS
+              MORE EXPERIMENTS & WORKS
             </span>
             <h3 className="text-xl md:text-4xl font-medium tracking-tight mb-8 text-foreground">
               Discover the complete project archive
             </h3>
             <Link href="/projects">
               <LiquidButton variant="secondary" size="default" rounded="full">
-                View Full Archive →
+                Explore More Works →
               </LiquidButton>
             </Link>
           </div>

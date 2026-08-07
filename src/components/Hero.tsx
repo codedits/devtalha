@@ -17,14 +17,18 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
   const isVideoMode = data?.media_type === "video" && !!data?.media_url;
   const activeVideoUrl = isVideoMode ? data.media_url : null;
   const isVideo = isVideoMode ? isVideoUrl(data.media_url) : isVideoUrl(data?.background_image_url ?? "");
-  const heading = data?.heading ?? 'I build brands, campaigns, and digital experience';
-  const desktopBgImage = data?.background_image_url ?? 'https://images.unsplash.com/photo-1582150816999-5c92a8c15401?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+  const heading = data?.heading?.trim() ?? '';
+  const desktopBgImage = data?.background_image_url?.trim() ?? '';
   const mobileBgImage = data?.mobile_background_image_url?.trim() || desktopBgImage;
-  const hasMobileImage = !isVideo && mobileBgImage !== desktopBgImage;
-  const nameLabel = data?.name_label ?? 'TALHA IRFAN';
+  const hasMobileImage = !isVideo && !!mobileBgImage && mobileBgImage !== desktopBgImage;
+  const nameLabel = data?.name_label?.trim() ?? '';
   const [isDesktopLoaded, setIsDesktopLoaded] = useState(false);
   const [isMobileLoaded, setIsMobileLoaded] = useState(false);
-  const isLoaded = isVideo ? isDesktopLoaded : (hasMobileImage ? (isDesktopLoaded || isMobileLoaded) : isDesktopLoaded);
+  const isLoaded = isVideo
+    ? isDesktopLoaded
+    : (hasMobileImage
+        ? (isDesktopLoaded || isMobileLoaded)
+        : (desktopBgImage ? isDesktopLoaded : true));
   const [preloaderFinished, setPreloaderFinished] = useState(false);
   const shouldAnimate = isLoaded && preloaderFinished;
   const desktopImageRef = useRef<HTMLImageElement>(null);
@@ -184,20 +188,22 @@ export default function Hero({ data }: { data?: HeroSection | null }) {
               />
             ) : (
               <>
-                <div className={`absolute inset-0 ${hasMobileImage ? 'hidden md:block' : ''}`}>
-                  <MediaRenderer
-                    imageRef={desktopImageRef}
-                    src={desktopBgImage}
-                    alt="Hero Background"
-                    fill
-                    priority
-                    fetchPriority="high"
-                    quality={80}
-                    className="object-cover animate-none"
-                    sizes="(max-width: 768px) 100vw, calc(100vw - 1rem)"
-                    onLoad={() => setIsDesktopLoaded(true)}
-                  />
-                </div>
+                {desktopBgImage ? (
+                  <div className={`absolute inset-0 ${hasMobileImage ? 'hidden md:block' : ''}`}>
+                    <MediaRenderer
+                      imageRef={desktopImageRef}
+                      src={desktopBgImage}
+                      alt="Hero Background"
+                      fill
+                      priority
+                      fetchPriority="high"
+                      quality={80}
+                      className="object-cover animate-none"
+                      sizes="(max-width: 768px) 100vw, calc(100vw - 1rem)"
+                      onLoad={() => setIsDesktopLoaded(true)}
+                    />
+                  </div>
+                ) : null}
 
                 {hasMobileImage && (
                   <div className="absolute inset-0 md:hidden">

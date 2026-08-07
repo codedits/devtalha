@@ -29,16 +29,12 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
   const allowHover = !prefersReducedMotion && !isMobile;
-  const label = meta?.label?.trim() || '[ OUR SERVICES ]';
-  const heading = meta?.heading?.trim() || "Creative solutions for ambitious brands";
-  const profileImageUrl =
-    meta?.profile_image_url?.trim() ||
-    'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=800';
-  const introText =
-    meta?.intro_text?.trim() ||
-    'We define the foundation of your brand voice, visuals, and values shaped into a system built for long-term clarity.';
-  const ctaText = meta?.cta_text?.trim() || 'Start a project';
-  const ctaUrl = meta?.cta_url?.trim() || '#contact';
+  const label = meta?.label?.trim() ?? '';
+  const heading = meta?.heading?.trim() ?? '';
+  const profileImageUrl = meta?.profile_image_url?.trim() ?? '';
+  const introText = meta?.intro_text?.trim() ?? '';
+  const ctaText = meta?.cta_text?.trim() ?? '';
+  const ctaUrl = meta?.cta_url?.trim() ?? '';
 
   const servicesList: Service[] = data && data.length > 0
     ? data.map((s) => ({
@@ -243,65 +239,75 @@ export default function Services({ data, meta }: { data?: ServicesItem[] | null;
             ref={leftColRef}
             className="gsap-services-left lg:col-span-4 flex flex-col items-center text-center lg:items-start lg:text-left opacity-0"
           >
-            <motion.span
-              className="text-xs font-bold uppercase tracking-[0.2em] mb-8 text-foreground block"
-              initial={{ opacity: 0 }}
-              animate={isInView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.2 }}
-            >
-              {label}
-            </motion.span>
-
-            <h2 className="text-3xl md:text-[2.25rem] font-semibold leading-[0.95] md:leading-[0.92] tracking-tight mb-8 text-center lg:text-left text-foreground">
-              <BlockRevealText
-                text={heading}
-                blockColor="bg-foreground"
-                scrub={false}
-              />
-            </h2>
-
-            <motion.div
-              className="w-full aspect-[4/5] relative overflow-hidden mb-6 bg-card rounded-2xl border border-zinc-200 dark:border-white/5 shadow-lg group/profile"
-              style={{ y: imageY }}
-            >
-              <motion.div
-                initial={{ opacity: 0, scale: 1.15 }}
-                animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 1, ease: PREMIUM_EASE }}
-                className="w-full h-full"
+            {label ? (
+              <motion.span
+                className="text-xs font-bold uppercase tracking-[0.2em] mb-8 text-foreground block"
+                initial={{ opacity: 0 }}
+                animate={isInView ? { opacity: 1 } : {}}
+                transition={{ delay: 0.2 }}
               >
-                <MediaRenderer
-                  src={profileImageUrl}
-                  alt="Representative Profile"
-                  fill
-                  className="object-cover group-hover/profile:scale-[1.02] transition-all duration-700 ease-out"
-                  videoClassName="absolute inset-0 h-full w-full object-cover group-hover/profile:scale-[1.02] transition-all duration-700 ease-out"
-                  sizes="(max-width: 1024px) 100vw, 25vw"
-                  quality={90}
+                {label}
+              </motion.span>
+            ) : null}
+
+            {heading ? (
+              <h2 className="text-3xl md:text-[2.25rem] font-semibold leading-[0.95] md:leading-[0.92] tracking-tight mb-8 text-center lg:text-left text-foreground">
+                <BlockRevealText
+                  text={heading}
+                  blockColor="bg-foreground"
+                  scrub={false}
                 />
+              </h2>
+            ) : null}
+
+            {profileImageUrl ? (
+              <motion.div
+                className="w-full aspect-[4/5] relative overflow-hidden mb-6 bg-card rounded-2xl border border-zinc-200 dark:border-white/5 shadow-lg group/profile"
+                style={{ y: imageY }}
+              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 1.15 }}
+                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ duration: 1, ease: PREMIUM_EASE }}
+                  className="w-full h-full"
+                >
+                  <MediaRenderer
+                    src={profileImageUrl}
+                    alt="Representative Profile"
+                    fill
+                    className="object-cover group-hover/profile:scale-[1.02] transition-all duration-700 ease-out"
+                    videoClassName="absolute inset-0 h-full w-full object-cover group-hover/profile:scale-[1.02] transition-all duration-700 ease-out"
+                    sizes="(max-width: 1024px) 100vw, 25vw"
+                    quality={90}
+                  />
+                </motion.div>
               </motion.div>
-            </motion.div>
+            ) : null}
 
-            <motion.p
-              className="text-xs md:text-sm text-foreground leading-[1.6] max-w-[300px] mb-8 font-medium"
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.4, duration: 0.6 }}
-            >
-              {introText}
-            </motion.p>
+            {introText ? (
+              <motion.p
+                className="text-xs md:text-sm text-foreground leading-[1.6] max-w-[300px] mb-8 font-medium"
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.4, duration: 0.6 }}
+              >
+                {introText}
+              </motion.p>
+            ) : null}
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.5, duration: 0.6 }}
-              className="w-full flex justify-center md:justify-start"
-            >
-              <LiquidButton as="a" href={ctaUrl} className="w-full max-w-[260px]" rounded="full">
-                <span>{ctaText}</span>
-                <ArrowRight size={14} strokeWidth={2.5} className="ml-1.5" />
-              </LiquidButton>
-            </motion.div>
+            {ctaText && ctaUrl ? (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.5, duration: 0.6 }}
+                className="w-full flex justify-center md:justify-start"
+              >
+                <LiquidButton as="a" href={ctaUrl} className="w-full max-w-[260px]" rounded="full">
+                  <span>{ctaText}</span>
+                  <ArrowRight size={14} strokeWidth={2.5} className="ml-1.5" />
+                </LiquidButton>
+              </motion.div>
+            ) : null}
           </div>
 
           {/* Right Column (Accordion) */}

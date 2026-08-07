@@ -9,10 +9,10 @@ import type { SupasectionSection } from "@/types/content";
 export default function Supasection({ data }: { data?: SupasectionSection | null }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const label = data?.label?.trim() || "[ DESIGN & DEVELOPMENT ]";
-  const heading = data?.heading?.trim() || "Designing. \nCoding. \nElevating Experience.";
-  const description = data?.description?.trim() || "Merging technical precision with interactive motion design. Scroll down to witness a signature trail of digital craftsmanship.";
-  const imageUrl = data?.image_url?.trim() || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1600";
+  const label = data?.label?.trim() ?? '';
+  const heading = data?.heading?.trim() ?? '';
+  const description = data?.description?.trim() ?? '';
+  const imageUrl = data?.image_url?.trim() ?? '';
 
   // Track scroll of the container
   const { scrollYProgress } = useScroll({
@@ -46,37 +46,47 @@ export default function Supasection({ data }: { data?: SupasectionSection | null
         <SvgFollowScroll scrollYProgress={smoothProgress} />
 
         {/* Intro Block (Sticky & Fades out) */}
-        <motion.div
-          style={{ opacity: headerOpacity, scale: headerScale }}
-          className="absolute top-1/4 flex flex-col items-center justify-center gap-6 text-center z-10 pointer-events-none px-4"
-        >
-          <span className="text-xs font-bold tracking-[0.25em] uppercase text-muted-foreground">
-            {label}
-          </span>
-          <h2 className="font-sans text-5xl md:text-8xl font-medium tracking-tighter leading-none whitespace-pre-line">
-            {heading}
-          </h2>
-          <p className="font-sans max-w-xl text-md md:text-lg text-muted-foreground/80 font-medium mt-4">
-            {description}
-          </p>
-        </motion.div>
+        {(label || heading || description) ? (
+          <motion.div
+            style={{ opacity: headerOpacity, scale: headerScale }}
+            className="absolute top-1/4 flex flex-col items-center justify-center gap-6 text-center z-10 pointer-events-none px-4"
+          >
+            {label ? (
+              <span className="text-xs font-bold tracking-[0.25em] uppercase text-muted-foreground">
+                {label}
+              </span>
+            ) : null}
+            {heading ? (
+              <h2 className="font-sans text-5xl md:text-8xl font-medium tracking-tighter leading-none whitespace-pre-line">
+                {heading}
+              </h2>
+            ) : null}
+            {description ? (
+              <p className="font-sans max-w-xl text-md md:text-lg text-muted-foreground/80 font-medium mt-4">
+                {description}
+              </p>
+            ) : null}
+          </motion.div>
+        ) : null}
 
         {/* Full Viewport Image (Sticky & Scales from 0 to 1 after drawing completes) */}
-        <motion.div
-          style={{ scale: imageScale }}
-          className="absolute inset-0 w-full h-full overflow-hidden z-20 origin-center"
-        >
-          <MediaRenderer
-            src={imageUrl}
-            alt="Abstract brand concept render"
-            fill
-            className="object-cover"
-            videoClassName="absolute inset-0 h-full w-full object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
-            quality={90}
-            priority
-          />
-        </motion.div>
+        {imageUrl ? (
+          <motion.div
+            style={{ scale: imageScale }}
+            className="absolute inset-0 w-full h-full overflow-hidden z-20 origin-center"
+          >
+            <MediaRenderer
+              src={imageUrl}
+              alt="Abstract brand concept render"
+              fill
+              className="object-cover"
+              videoClassName="absolute inset-0 h-full w-full object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+              quality={90}
+              priority
+            />
+          </motion.div>
+        ) : null}
       </div>
     </section>
   );

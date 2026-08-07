@@ -3,15 +3,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import MediaRenderer from "@/components/ui/MediaRenderer";
+import CurvedLoop from "@/components/ui/CurvedLoop";
 import type { FooterSection } from "@/types/content";
 
 export default function Footer({ data }: { data?: FooterSection | null }) {
   const backgroundMode = data?.background_mode === "image" ? "image" : "solid";
   const textTheme = data?.text_theme === "dark" ? "dark" : "light";
-  const newsletterHeading = data?.newsletter_heading ?? 'Stay connected';
-  const newsletterDescription = data?.newsletter_description ?? 'Join our newsletter and stay updated on the latest trends in digital design';
-  const brandName = data?.brand_name ?? 'Talha';
-  const email = data?.email ?? 'hello@talha.com';
+  const newsletterHeading = data?.newsletter_heading?.trim() ?? '';
+  const newsletterDescription = data?.newsletter_description?.trim() ?? '';
+  const brandName = data?.brand_name?.trim() ?? '';
+  const email = data?.email?.trim() ?? '';
   const footerBackgroundImage = data?.background_image_url?.trim() ?? '';
   const hasBackgroundImage = footerBackgroundImage.length > 0 && backgroundMode === "image";
   const isDarkTextTheme = hasBackgroundImage && textTheme === "dark";
@@ -58,10 +59,14 @@ export default function Footer({ data }: { data?: FooterSection | null }) {
 
             {/* Newsletter (Left) */}
             <div className="w-full lg:max-w-[420px]">
-              <h2 className={`text-[36px] font-medium tracking-tight mb-4 ${headingClass}`}>{newsletterHeading}</h2>
-              <p className={`text-[16px] leading-[1.6] mb-10 max-w-[340px] ${bodyClass}`}>
-                {newsletterDescription}
-              </p>
+              {newsletterHeading ? (
+                <h2 className={`text-[36px] font-medium tracking-tight mb-4 ${headingClass}`}>{newsletterHeading}</h2>
+              ) : null}
+              {newsletterDescription ? (
+                <p className={`text-[16px] leading-[1.6] mb-10 max-w-[340px] ${bodyClass}`}>
+                  {newsletterDescription}
+                </p>
+              ) : null}
 
               <form
                 className={`flex flex-col sm:flex-row gap-0 w-full border-b ${isDarkTextTheme ? "border-black/20" : "border-white/20"}`}
@@ -118,7 +123,7 @@ export default function Footer({ data }: { data?: FooterSection | null }) {
                   Contact Us
                 </h4>
                 <div className="flex flex-col gap-5">
-                  <a href={`mailto:${email}`} className={linkClass}>{email}</a>
+                  {email ? <a href={`mailto:${email}`} className={linkClass}>{email}</a> : null}
                   <span className={linkClass}>Available Worldwide</span>
                 </div>
               </div>
@@ -127,26 +132,41 @@ export default function Footer({ data }: { data?: FooterSection | null }) {
           </div>
 
           {/* Middle Section: Massive Typography */}
-          <div className="w-full overflow-hidden mb-12 md:mb-16">
-            <motion.div
-              initial={{ y: "100%" }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="w-full relative flex justify-between items-end select-none"
-            >
-              <h1 className={`text-[25vw] leading-[0.72] font-medium tracking-[-0.05em] m-0 p-0 ${headingClass}`}>
-                {brandName}
-              </h1>
+          {brandName ? (
+            <div className="w-full overflow-hidden mb-12 md:mb-16 pb-4 md:pb-8 pt-2">
+              <motion.div
+                initial={{ y: "100%" }}
+                whileInView={{ y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="w-full relative flex justify-between items-end select-none"
+              >
+                <h1 className={`text-[25vw] leading-[0.8] font-medium tracking-[-0.05em] m-0 p-0 ${headingClass}`}>
+                  {brandName}
+                </h1>
 
-              <div className="relative pb-[1.5vw] pr-[1vw]">
-                <span className={`text-[13vw] leading-[0.72] font-bold m-0 p-0 ${headingClass}`}>
-                  &reg;
-                </span>
-              </div>
-            </motion.div>
-          </div>
+                <div className="relative pb-[1.5vw] pr-[1vw]">
+                  <span className={`text-[13vw] leading-[0.8] font-bold m-0 p-0 ${headingClass}`}>
+                    &reg;
+                  </span>
+                </div>
+              </motion.div>
+            </div>
+          ) : null}
+        </div>
 
+        {/* Full Bleed Curved Marquee Loop */}
+        <div className="w-full relative z-10 my-4 md:my-8 overflow-hidden">
+          <CurvedLoop
+            marqueeText="✦ CREATIVE DIGITAL EXPERIENCES ✦ TALHA IRFAN ✦ DESIGN & DEVELOPMENT ✦"
+            speed={2.5}
+            curveAmount={180}
+            interactive={true}
+            className={isDarkTextTheme ? "fill-zinc-900" : "fill-white/85"}
+          />
+        </div>
+
+        <div className="relative z-10 container mx-auto px-6 md:px-8 max-w-7xl">
           {/* Bottom Section: Legal & Credits */}
           <div className={legalClass}>
             <div className="flex gap-12">

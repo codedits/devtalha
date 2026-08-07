@@ -67,7 +67,7 @@ export default async function Home() {
       <Works
         data={works}
         featuredCount={worksMeta.featured_count}
-        showViewAll={works.length > worksMeta.featured_count}
+        showViewAll={true}
         label={worksMeta.homepage_label}
         heading={worksMeta.homepage_heading}
       />
