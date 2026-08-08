@@ -20,6 +20,7 @@ type MediaRendererProps = {
   muted?: boolean;
   loop?: boolean;
   autoPlay?: boolean;
+  unoptimized?: boolean;
 };
 
 const ALLOWED_QUALITIES = [70, 80, 85, 90] as const;
@@ -56,6 +57,7 @@ const MediaRenderer = forwardRef<HTMLVideoElement, MediaRendererProps>(
       muted = true,
       loop = true,
       autoPlay = true,
+      unoptimized,
     },
     videoRef
   ) {
@@ -123,6 +125,7 @@ const MediaRenderer = forwardRef<HTMLVideoElement, MediaRendererProps>(
         quality={getValidQuality(quality)}
         priority={priority}
         fetchPriority={fetchPriority}
+        unoptimized={unoptimized}
         className={className ?? "object-cover"}
         onLoad={() => onLoad?.()}
       />

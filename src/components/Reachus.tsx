@@ -2,16 +2,13 @@
 
 import React, { useRef, useState } from 'react';
 import { X, ArrowRight } from 'lucide-react';
-import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion, useSpring } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 import type { ReachSocial, ReachusSection } from "@/types/content";
-import { useIsMobile } from "@/hooks/useIsMobile";
-import Image from 'next/image';
-
-const MotionImage = motion(Image);
+import { useMotionPreferences } from "@/hooks/useMotionPreferences";
+import MediaRenderer from "@/components/ui/MediaRenderer";
 
 export default function Reachus({ data }: { data?: ReachusSection | null }) {
-  const prefersReducedMotion = useReducedMotion();
-  const isMobile = useIsMobile();
+  const { prefersReducedMotion, isMobile, allowParallax } = useMotionPreferences();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Extract data from props
@@ -46,42 +43,42 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
   const bgY = useTransform(
     smoothProgress,
     [0, 1],
-    prefersReducedMotion ? ["0%", "0%"] : (isMobile ? ["-8%", "8%"] : ["-16%", "16%"])
+    !allowParallax ? ["0%", "0%"] : (isMobile ? ["-5%", "5%"] : ["-10%", "10%"])
   );
 
   // Image 1: Villa Background Image Zoom Parallax
   const bgScale = useTransform(
     smoothProgress,
     [0, 0.5, 1],
-    prefersReducedMotion ? [1, 1, 1] : [1.02, 1.08, 1.15]
+    !allowParallax ? [1, 1, 1] : (isMobile ? [1.08, 1.14, 1.20] : [1.10, 1.18, 1.25])
   );
 
   // Marquee Box & Crosshairs Parallax
   const containerY = useTransform(
     smoothProgress,
     [0, 1],
-    prefersReducedMotion ? [0, 0] : (isMobile ? [5, -5] : [15, -15])
+    !allowParallax ? [0, 0] : (isMobile ? [5, -5] : [15, -15])
   );
 
   // Image 2: Foreground Portrait Card Frame Translation
   const cardY = useTransform(
     smoothProgress,
     [0, 1],
-    prefersReducedMotion ? [0, 0] : (isMobile ? [-15, 15] : [-40, 40])
+    !allowParallax ? [0, 0] : (isMobile ? [-15, 15] : [-40, 40])
   );
 
   // Image 2: Parallax Movement INSIDE the Portrait Card image frame
   const portraitImageY = useTransform(
     smoothProgress,
     [0, 1],
-    prefersReducedMotion ? ["0%", "0%"] : (isMobile ? ["-6%", "6%"] : ["-12%", "12%"])
+    !allowParallax ? ["0%", "0%"] : (isMobile ? ["-5%", "5%"] : ["-10%", "10%"])
   );
 
   // Image 2: Subtle scale shift inside the Portrait Card
   const portraitImageScale = useTransform(
     smoothProgress,
     [0, 0.5, 1],
-    prefersReducedMotion ? [1, 1, 1] : [1.1, 1.15, 1.2]
+    !allowParallax ? [1, 1, 1] : [1.1, 1.15, 1.2]
   );
 
   const handleContactClick = (e: React.MouseEvent) => {
@@ -99,19 +96,24 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
         {/* Image 1: Villa Background Image with Parallax & Subtle Zoom */}
         {backgroundMedia ? (
           <div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
-            <MotionImage
-              src={backgroundMedia}
-              alt="Villa Background"
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 768px) 1920px, 100vw"
-              quality={90}
+            <motion.div
+              className="absolute -inset-y-[12%] -inset-x-[2%] z-0"
               style={{
                 y: bgY,
                 scale: bgScale
               }}
-            />
+            >
+              <MediaRenderer
+                src={backgroundMedia}
+                alt="Villa Background"
+                fill
+                className="object-cover"
+                priority
+                fetchPriority="high"
+                quality={90}
+                unoptimized
+              />
+            </motion.div>
           </div>
         ) : null}
 
@@ -172,18 +174,22 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
               {/* Internal Image Parallax inside the card frame */}
               <div className="w-full h-full relative overflow-hidden select-none pointer-events-none">
                 {portraitMedia ? (
-                  <MotionImage
-                    src={portraitMedia}
-                    alt="Contact Portrait"
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 145px, 230px"
-                    quality={90}
+                  <motion.div
+                    className="absolute -inset-y-[10%] inset-x-0 w-full h-[120%]"
                     style={{
                       y: portraitImageY,
                       scale: portraitImageScale
                     }}
-                  />
+                  >
+                    <MediaRenderer
+                      src={portraitMedia}
+                      alt="Contact Portrait"
+                      fill
+                      className="object-cover"
+                      quality={90}
+                      unoptimized
+                    />
+                  </motion.div>
                 ) : null}
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
