@@ -110,8 +110,8 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
                 className="object-cover"
                 priority
                 fetchPriority="high"
+                sizes="(max-width: 768px) 1920px, 100vw"
                 quality={90}
-                unoptimized
               />
             </motion.div>
           </div>
@@ -186,8 +186,8 @@ export default function Reachus({ data }: { data?: ReachusSection | null }) {
                       alt="Contact Portrait"
                       fill
                       className="object-cover"
+                      sizes="(max-width: 768px) 500px, 500px"
                       quality={90}
-                      unoptimized
                     />
                   </motion.div>
                 ) : null}
